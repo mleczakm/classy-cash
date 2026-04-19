@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use libphonenumber\PhoneNumber;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -54,30 +52,9 @@ class User implements UserInterface
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $confirmedAt = null;
 
-    /**
-     * @var Collection<int, Tenant>
-     */
-    #[ORM\ManyToMany(targetEntity: Tenant::class, mappedBy: 'users')]
-    private Collection $tenants;
-
-    /**
-     * @var Collection<int, Booking>
-     */
-    #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: 'user')]
-    private Collection $bookings;
-
-    /**
-     * @var Collection<int, Child>
-     */
-    #[ORM\OneToMany(targetEntity: Child::class, mappedBy: 'owner', cascade: ['remove'])]
-    private Collection $children;
-
     public function __construct(?string $email = null, ?string $name = null)
     {
         $this->createdAt = Clock::get()->now();
-        $this->tenants = new ArrayCollection();
-        $this->bookings = new ArrayCollection();
-        $this->children = new ArrayCollection();
         if ($email !== null) {
             $this->setEmail($email);
         }
@@ -89,14 +66,6 @@ class User implements UserInterface
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    /**
-     * @return Collection<int, Child>
-     */
-    public function getChildren(): Collection
-    {
-        return $this->children;
     }
 
     /**
@@ -206,37 +175,5 @@ class User implements UserInterface
     public function setConfirmedAt(?\DateTimeImmutable $confirmedAt): void
     {
         $this->confirmedAt = $confirmedAt;
-    }
-
-    /**
-     * @return Collection<int, Tenant>
-     */
-    public function getTenants(): Collection
-    {
-        return $this->tenants;
-    }
-
-    public function addTenant(Tenant $tenant): void
-    {
-        if (! $this->tenants->contains($tenant)) {
-            $this->tenants->add($tenant);
-            $tenant->addUser($this);
-        }
-    }
-
-    public function removeTenant(Tenant $tenant): void
-    {
-        if ($this->tenants->contains($tenant)) {
-            $this->tenants->removeElement($tenant);
-            $tenant->removeUser($this);
-        }
-    }
-
-    /**
-     * @return Collection<int, Booking>
-     */
-    public function getBookings(): Collection
-    {
-        return $this->bookings;
     }
 }

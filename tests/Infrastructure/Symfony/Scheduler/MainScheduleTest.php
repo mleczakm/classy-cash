@@ -17,6 +17,6 @@ class MainScheduleTest extends TestCase
         $schedule = new MainSchedule(new NullAdapter())
             ->getSchedule();
 
-        self::assertCount(7, $schedule->getRecurringMessages());
+        self::assertCount(3, $schedule->getRecurringMessages());
     }
 }

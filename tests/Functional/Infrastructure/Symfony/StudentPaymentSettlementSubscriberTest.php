@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Infrastructure\Symfony;
 
+use App\Tests\Functional\FunctionalTestSettingsTrait;
 use PHPUnit\Framework\Attributes\Group;
 use App\Entity\ClassCouncil\ClassRoom;
 use App\Entity\ClassCouncil\Student;
 use App\Entity\ClassCouncil\StudentPayment;
 use App\Entity\Payment;
-use App\Entity\Tenant;
 use App\Entity\Transfer;
 use App\Entity\User;
 use Brick\Money\Money;
@@ -23,6 +23,7 @@ use Symfony\Component\Workflow\WorkflowInterface;
 final class StudentPaymentSettlementSubscriberTest extends KernelTestCase
 {
     use MailerAssertionsTrait;
+    use FunctionalTestSettingsTrait;
 
     public function testEmailIsSentWhenPaymentIsMarkedPaid(): void
     {
@@ -32,11 +33,11 @@ final class StudentPaymentSettlementSubscriberTest extends KernelTestCase
         /** @var EntityManagerInterface $em */
         $em = $container->get(EntityManagerInterface::class);
 
+        $this->setupDefaultSettings($em);
+
         // Arrange: minimal data graph
-        $tenant = new Tenant('Test School', null);
         $user = new User('parent@example.com', 'Parent Name');
-        $tenant->addUser($user);
-        $class = new ClassRoom($tenant, '1A');
+        $class = new ClassRoom('1A');
         $student = new Student($class, 'Jan', 'Kowalski');
         $student->addParent($user);
 
@@ -48,7 +49,7 @@ final class StudentPaymentSettlementSubscriberTest extends KernelTestCase
             '12 3456 7890 1234 5678 9012 3456',
             'Jan Kowalski',
             'WPŁATA',
-            '100,00',
+            '100.00',
             new \DateTimeImmutable()
         );
         $transfer->setPayment($payment);
@@ -56,7 +57,6 @@ final class StudentPaymentSettlementSubscriberTest extends KernelTestCase
         $sp = new StudentPayment($student, 'Rada rodziców', $amount);
         $sp->setPayment($payment);
 
-        $em->persist($tenant);
         $em->persist($user);
         $em->persist($class);
         $em->persist($student);

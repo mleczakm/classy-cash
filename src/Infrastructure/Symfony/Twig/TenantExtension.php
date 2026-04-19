@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Symfony\Twig;
 
-use App\Tenant\TenantContext;
+use App\Settings\Settings;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 final class TenantExtension extends AbstractExtension
 {
     public function __construct(
-        private readonly TenantContext $context
+        private readonly Settings $settings
     ) {}
 
     #[\Override]
@@ -25,23 +25,23 @@ final class TenantExtension extends AbstractExtension
         ];
     }
 
-    public function phone(): ?string
+    public function phone(): string
     {
-        return $this->context->getBlikPhone();
+        return $this->settings->getBlikPhone();
     }
 
-    public function account(): ?string
+    public function account(): string
     {
-        return $this->context->getTransferAccount();
+        return $this->settings->getTransferAccount();
     }
 
-    public function name(): ?string
+    public function name(): string
     {
-        return $this->context->getTenant()?->getName();
+        return $this->settings->getName();
     }
 
-    public function emailFrom(): ?string
+    public function emailFrom(): string
     {
-        return $this->context->getEmailFrom();
+        return $this->settings->getEmailFrom();
     }
 }

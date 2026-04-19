@@ -8,6 +8,5 @@ class SendSettlementConfirmationEmail
 {
     public function __construct(
         public readonly string $paymentId,
-        public readonly string $tenantId,
     ) {}
 }

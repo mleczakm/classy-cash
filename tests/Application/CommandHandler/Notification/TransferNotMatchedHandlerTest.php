@@ -6,7 +6,9 @@ namespace App\Tests\Application\CommandHandler\Notification;
 
 use App\Entity\Payment;
 use App\Tests\Assembler\PaymentAssembler;
+use App\Tests\Functional\FunctionalTestSettingsTrait;
 use Brick\Money\Money;
+use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\Group;
 use App\Application\Command\Notification\TransferNotMatchedCommand;
 use App\Application\CommandHandler\Notification\TransferNotMatchedHandler;
@@ -21,6 +23,7 @@ use Zenstruck\Mailer\Test\InteractsWithMailer;
 class TransferNotMatchedHandlerTest extends KernelTestCase
 {
     use InteractsWithMailer;
+    use FunctionalTestSettingsTrait;
 
     private TransferNotMatchedHandler $handler;
 
@@ -33,6 +36,11 @@ class TransferNotMatchedHandlerTest extends KernelTestCase
         $container = self::getContainer();
         $this->handler = $container->get(TransferNotMatchedHandler::class);
         $this->cache = $container->get('cache.app');
+
+        /** @var EntityManagerInterface $em */
+        $em = $container->get('doctrine')
+            ->getManager();
+        $this->setupDefaultSettings($em);
 
         // Clear any existing cache
         $this->cache->clear();

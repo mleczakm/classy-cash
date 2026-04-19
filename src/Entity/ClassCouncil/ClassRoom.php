@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Entity\ClassCouncil;
 
-use App\Entity\Tenant;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -32,9 +31,6 @@ class ClassRoom
     private Collection $memberships;
 
     public function __construct(
-        #[ORM\ManyToOne(targetEntity: Tenant::class)]
-        #[ORM\JoinColumn(nullable: false)]
-        private Tenant $tenant,
         #[ORM\Column(length: 128)]
         private string $name
     ) {
@@ -46,11 +42,6 @@ class ClassRoom
     public function getId(): Ulid
     {
         return $this->id;
-    }
-
-    public function getTenant(): Tenant
-    {
-        return $this->tenant;
     }
 
     public function getName(): string

@@ -6,7 +6,6 @@ namespace App\Application\CommandHandler\Notification;
 
 use App\Application\Command\Notification\SendSettlementConfirmationEmail;
 use App\Entity\ClassCouncil\StudentPayment;
-use App\Entity\Payment;
 use App\Repository\PaymentRepository;
 use App\Repository\ClassCouncil\StudentPaymentRepository;
 use App\Entity\ClassCouncil\ClassMembership;
@@ -28,10 +27,7 @@ final readonly class SendSettlementConfirmationEmailHandler
 
     public function __invoke(SendSettlementConfirmationEmail $command): void
     {
-        $payment = $this->payments->find($command->paymentId);
-        if (! $payment instanceof Payment) {
-            return;
-        }
+        $payment = $this->payments->find($command->paymentId) ?? throw new \InvalidArgumentException();
 
         $user = $payment->getUser();
         $userEmailAddress = $user->getEmail();

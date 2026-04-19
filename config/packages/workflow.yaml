@@ -1,45 +1,5 @@
 framework:
     workflows:
-        booking:
-            type: 'state_machine'
-            audit_trail:
-                enabled: true
-            marking_store:
-                type: 'method'
-                property: 'status'
-            supports:
-                - App\Entity\Booking
-            initial_marking: pending
-            places:
-                - pending
-                - active
-                - cancelled
-                - past
-            transitions:
-                confirm:
-                    guard: "subject.canBeConfirmed()"
-                    from: pending
-                    to: active
-                cancel:
-                    guard: "subject.canBeCancelled()"
-                    from: [pending, active]
-                    to: cancelled
-                request_refund:
-                    guard: "subject.canRequestRefund()"
-                    from: [active]
-                    to: active
-                attend:
-                    from: [active]
-                    to: active
-                complete:
-                    guard: "subject.canBeCompleted()"
-                    from: active
-                    to: past
-                reschedule:
-                    guard: "subject.canBeRescheduled()"
-                    from: [active]
-                    to: active
-
         payment:
             type: 'state_machine'
             audit_trail:

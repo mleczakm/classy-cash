@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Security;
 
+use App\Tests\Functional\FunctionalTestSettingsTrait;
+use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -14,6 +16,7 @@ use Zenstruck\Mailer\Test\InteractsWithMailer;
 class SecurityControllerTest extends WebTestCase
 {
     use InteractsWithMailer;
+    use FunctionalTestSettingsTrait;
 
     private const string LOGIN_URL = '/login';
 
@@ -22,6 +25,8 @@ class SecurityControllerTest extends WebTestCase
     protected function setUp(): void
     {
         $this->client = static::createClient();
+        $em = self::getContainer()->get(EntityManagerInterface::class);
+        $this->setupDefaultSettings($em);
     }
 
     public function testLoginPageLoadsSuccessfully(): void

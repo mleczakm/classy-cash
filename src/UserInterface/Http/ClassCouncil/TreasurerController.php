@@ -13,7 +13,6 @@ use App\Entity\ClassCouncil\Student;
 use App\Entity\ClassCouncil\StudentPayment;
 use App\Entity\Payment;
 use App\Entity\PaymentCode;
-use App\Entity\Tenant;
 use App\Entity\User;
 use App\Repository\ClassCouncil\ClassExpenseRepository;
 use App\Repository\ClassCouncil\ClassMembershipRepository;
@@ -21,7 +20,6 @@ use App\Repository\ClassCouncil\ClassRoomRepository;
 use App\Repository\ClassCouncil\StudentPaymentRepository;
 use App\Repository\ClassCouncil\StudentRepository;
 use App\Repository\UserRepository;
-use App\Tenant\TenantContext;
 use Brick\Money\Money;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -40,31 +38,23 @@ final class TreasurerController extends AbstractController
         private readonly UserRepository $users,
         private readonly StudentPaymentRepository $studentPayments,
         private readonly ClassExpenseRepository $expenses,
-        private readonly TenantContext $tenantContext,
         private readonly EntityManagerInterface $em,
     ) {}
 
-    #[Route('/', name: 'cc_dashboard', methods: [
-        'GET',
-    ], condition: "request.attributes.get('_tenant') and (request.attributes.get('_tenant').getName() matches '/classpay/i' or request.attributes.get('_tenant').getName() matches '/Skarbiec Mleczki/i')")]
+    #[Route('/', name: 'homepage', methods: ['GET'])]
     public function index(): Response
     {
         if (! $this->getUser()) {
             return $this->redirectToRoute('app_login');
         }
 
-
-        /** @var ?Tenant $tenant */
-        $tenant = $this->tenantContext->getTenant();
-        $class = $tenant ? $this->classRooms->findOneBy([
-            'tenant' => $tenant,
-        ]) : null;
+        $class = $this->classRooms->findOneBy([]);
 
         $myStudents = [];
         $paymentsByStudent = [];
         $hasMissingPayments = false;
 
-        if ($tenant && $class && $this->getUser()) {
+        if ($class && $this->getUser()) {
             // Fetch students linked to current user in this class
             $qb = $this->students->createQueryBuilder('s');
             $qb->innerJoin('s.parents', 'p')
@@ -105,17 +95,10 @@ final class TreasurerController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     public function createClass(Request $request): Response
     {
-        $tenant = $this->tenantContext->getTenant();
-        if (! $tenant instanceof Tenant) {
-            throw $this->createNotFoundException();
-        }
-
         // Only allow one class for now
-        $existing = $this->classRooms->findOneBy([
-            'tenant' => $tenant,
-        ]);
+        $existing = $this->classRooms->findOneBy([]);
         if ($existing) {
-            return $this->redirectToRoute('cc_dashboard');
+            return $this->redirectToRoute('homepage');
         }
 
         if ($request->isMethod('POST')) {
@@ -123,10 +106,10 @@ final class TreasurerController extends AbstractController
             if ($name === '') {
                 $this->addFlash('error', 'Nazwa klasy jest wymagana');
             } else {
-                $class = new ClassRoom($tenant, $name);
+                $class = new ClassRoom($name);
                 $this->em->persist($class);
                 $this->em->flush();
-                return $this->redirectToRoute('cc_dashboard');
+                return $this->redirectToRoute('homepage');
             }
         }
 
@@ -137,13 +120,7 @@ final class TreasurerController extends AbstractController
     #[Route('/students', name: 'cc_students', methods: ['GET', 'POST'])]
     public function students(Request $request): Response
     {
-        $tenant = $this->tenantContext->getTenant();
-        if (! $tenant instanceof Tenant) {
-            throw $this->createNotFoundException();
-        }
-        $class = $this->classRooms->findOneBy([
-            'tenant' => $tenant,
-        ]);
+        $class = $this->classRooms->findOneBy([]);
         if (! $class) {
             return $this->redirectToRoute('cc_create_class');
         }
@@ -165,7 +142,7 @@ final class TreasurerController extends AbstractController
 
                 $this->addFlash('success', 'Dodano ucznia');
 
-                return $this->redirectToRoute('cc_dashboard');
+                return $this->redirectToRoute('homepage');
             }
         }
 
@@ -234,10 +211,7 @@ final class TreasurerController extends AbstractController
     ], methods: ['GET', 'POST'])]
     public function editStudent(string $id, Request $request): Response
     {
-        $tenant = $this->tenantContext->getTenant();
-        $class = $tenant ? $this->classRooms->findOneBy([
-            'tenant' => $tenant,
-        ]) : null;
+        $class = $this->classRooms->findOneBy([]);
         if (! $class) {
             throw $this->createNotFoundException();
         }
@@ -286,10 +260,7 @@ final class TreasurerController extends AbstractController
     ], methods: ['POST'])]
     public function deleteStudent(string $id): Response
     {
-        $tenant = $this->tenantContext->getTenant();
-        $class = $tenant ? $this->classRooms->findOneBy([
-            'tenant' => $tenant,
-        ]) : null;
+        $class = $this->classRooms->findOneBy([]);
         if (! $class) {
             throw $this->createNotFoundException();
         }
@@ -325,13 +296,10 @@ final class TreasurerController extends AbstractController
      */
     private function initializeStudentPayments(Student $student): void
     {
-        // Read templates for tenant
-        $tenant = $student->getClassRoom()
-            ->getTenant();
+        // Read templates from global settings
         $settingRepo = $this->em->getRepository(Setting::class);
         /** @var ?Setting $tpl */
         $tpl = $settingRepo->findOneBy([
-            'tenant' => $tenant,
             'key' => 'cc.required_payments',
         ]);
         $items = is_array($tpl?->getContent()) ? $tpl->getContent() : [];
@@ -364,13 +332,7 @@ final class TreasurerController extends AbstractController
     #[Route('/students/link-parent', name: 'cc_link_parent', methods: ['GET', 'POST'])]
     public function linkParent(Request $request): Response
     {
-        $tenant = $this->tenantContext->getTenant();
-        if (! $tenant instanceof Tenant) {
-            throw $this->createNotFoundException();
-        }
-        $class = $this->classRooms->findOneBy([
-            'tenant' => $tenant,
-        ]);
+        $class = $this->classRooms->findOneBy([]);
         if (! $class) {
             return $this->redirectToRoute('cc_create_class');
         }
@@ -397,8 +359,6 @@ final class TreasurerController extends AbstractController
             } else {
                 // Link parent to student
                 $student->addParent($user);
-                // Ensure user is linked to tenant
-                $user->addTenant($tenant);
                 // Ensure user has membership as parent
                 $membership = $this->memberships->findOneBy([
                     'user' => $user,
@@ -429,10 +389,7 @@ final class TreasurerController extends AbstractController
     #[Route('/treasurer', name: 'cc_treasurer_overview', methods: ['GET'])]
     public function treasurerOverview(): Response
     {
-        $tenant = $this->tenantContext->getTenant();
-        $class = $tenant ? $this->classRooms->findOneBy([
-            'tenant' => $tenant,
-        ]) : null;
+        $class = $this->classRooms->findOneBy([]);
         if (! $class) {
             return $this->redirectToRoute('cc_create_class');
         }
@@ -505,10 +462,7 @@ final class TreasurerController extends AbstractController
     #[Route('/expenses', name: 'cc_expenses', methods: ['GET', 'POST'])]
     public function expenses(Request $request): Response
     {
-        $tenant = $this->tenantContext->getTenant();
-        $class = $tenant ? $this->classRooms->findOneBy([
-            'tenant' => $tenant,
-        ]) : null;
+        $class = $this->classRooms->findOneBy([]);
         if (! $class) {
             return $this->redirectToRoute('cc_create_class');
         }
@@ -545,13 +499,7 @@ final class TreasurerController extends AbstractController
     #[Route('/payments/templates', name: 'cc_payment_templates', methods: ['GET', 'POST'])]
     public function paymentTemplates(Request $request): Response
     {
-        $tenant = $this->tenantContext->getTenant();
-        if (! $tenant instanceof Tenant) {
-            throw $this->createNotFoundException();
-        }
-        $class = $this->classRooms->findOneBy([
-            'tenant' => $tenant,
-        ]);
+        $class = $this->classRooms->findOneBy([]);
         if (! $class) {
             return $this->redirectToRoute('cc_create_class');
         }
@@ -560,13 +508,11 @@ final class TreasurerController extends AbstractController
         $settingRepo = $this->em->getRepository(Setting::class);
         /** @var ?Setting $setting */
         $setting = $settingRepo->findOneBy([
-            'tenant' => $tenant,
             'key' => 'cc.required_payments',
         ]);
         if (! $setting) {
             $setting = new Setting();
             $setting->setKey('cc.required_payments');
-            $setting->setTenant($tenant);
             $setting->setContent([]);
             $this->em->persist($setting);
             $this->em->flush();
@@ -599,10 +545,7 @@ final class TreasurerController extends AbstractController
     #[Route('/payments/templates/apply', name: 'cc_payment_templates_apply', methods: ['POST'])]
     public function applyTemplates(): Response
     {
-        $tenant = $this->tenantContext->getTenant();
-        $class = $tenant ? $this->classRooms->findOneBy([
-            'tenant' => $tenant,
-        ]) : null;
+        $class = $this->classRooms->findOneBy([]);
         if (! $class) {
             return $this->redirectToRoute('cc_create_class');
         }
@@ -624,10 +567,7 @@ final class TreasurerController extends AbstractController
     ], methods: ['POST'])]
     public function deleteTemplate(int $index): Response
     {
-        $tenant = $this->tenantContext->getTenant();
-        $class = $tenant ? $this->classRooms->findOneBy([
-            'tenant' => $tenant,
-        ]) : null;
+        $class = $this->classRooms->findOneBy([]);
         if (! $class) {
             return $this->redirectToRoute('cc_create_class');
         }
@@ -636,7 +576,6 @@ final class TreasurerController extends AbstractController
         $settingRepo = $this->em->getRepository(Setting::class);
         /** @var ?Setting $setting */
         $setting = $settingRepo->findOneBy([
-            'tenant' => $tenant,
             'key' => 'cc.required_payments',
         ]);
         if (! $setting) {
@@ -663,10 +602,7 @@ final class TreasurerController extends AbstractController
     #[Route('/student-payment/{id}/generate', name: 'cc_generate_payment', methods: ['POST'])]
     public function generatePayment(string $id): Response
     {
-        $tenant = $this->tenantContext->getTenant();
-        $class = $tenant ? $this->classRooms->findOneBy([
-            'tenant' => $tenant,
-        ]) : null;
+        $class = $this->classRooms->findOneBy([]);
         if (! $class) {
             throw $this->createNotFoundException();
         }
@@ -687,7 +623,7 @@ final class TreasurerController extends AbstractController
             throw $this->createNotFoundException('Parent user not found');
         }
 
-        // Create Payment and PaymentCode
+        // Create Payment
         $payment = new Payment($user, $sp->getAmount());
         $this->em->persist($payment);
         $code = new PaymentCode($payment);
@@ -697,7 +633,7 @@ final class TreasurerController extends AbstractController
         $sp->setPayment($payment);
         $this->em->flush();
 
-        $this->addFlash('success', 'Utworzono płatność dla składki. Kod: ' . $code->getCode());
+        $this->addFlash('success', 'Utworzono płatność dla składki.');
         return $this->redirectToRoute('cc_treasurer_overview');
     }
 
@@ -705,10 +641,7 @@ final class TreasurerController extends AbstractController
     #[Route('/student-payment/{id}/mark-paid', name: 'cc_mark_student_payment_paid', methods: ['POST'])]
     public function markStudentPaymentPaid(string $id): Response
     {
-        $tenant = $this->tenantContext->getTenant();
-        $class = $tenant ? $this->classRooms->findOneBy([
-            'tenant' => $tenant,
-        ]) : null;
+        $class = $this->classRooms->findOneBy([]);
         if (! $class) {
             throw $this->createNotFoundException();
         }

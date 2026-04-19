@@ -7,7 +7,6 @@ namespace App\Infrastructure\Symfony\Twig;
 use App\Entity\ClassCouncil\ClassRole;
 use App\Repository\ClassCouncil\ClassMembershipRepository;
 use App\Repository\ClassCouncil\ClassRoomRepository;
-use App\Tenant\TenantContext;
 use Symfony\Bundle\SecurityBundle\Security;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -15,7 +14,6 @@ use Twig\TwigFunction;
 final class ClassCouncilExtension extends AbstractExtension
 {
     public function __construct(
-        private readonly TenantContext $tenantContext,
         private readonly ClassRoomRepository $classRooms,
         private readonly ClassMembershipRepository $memberships,
         private readonly Security $security,
@@ -37,14 +35,7 @@ final class ClassCouncilExtension extends AbstractExtension
             return false;
         }
 
-        $tenant = $this->tenantContext->getTenant();
-        if (! $tenant) {
-            return false;
-        }
-
-        $class = $this->classRooms->findOneBy([
-            'tenant' => $tenant,
-        ]);
+        $class = $this->classRooms->findOneBy([]);
         if (! $class) {
             return false;
         }
@@ -63,14 +54,7 @@ final class ClassCouncilExtension extends AbstractExtension
             return false;
         }
 
-        $tenant = $this->tenantContext->getTenant();
-        if (! $tenant) {
-            return false;
-        }
-
-        $class = $this->classRooms->findOneBy([
-            'tenant' => $tenant,
-        ]);
+        $class = $this->classRooms->findOneBy([]);
         if (! $class) {
             return false;
         }

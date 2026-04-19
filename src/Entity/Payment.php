@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Application\Service\TransferMoneyParser;
 use App\Repository\PaymentRepository;
 use Brick\Money\Money;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -65,12 +64,6 @@ class Payment
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private ?\DateTimeImmutable $paidAt = null;
 
-    /**
-     * @var Collection<int, Booking>
-     */
-    #[ORM\OneToMany(mappedBy: 'payment', targetEntity: Booking::class)]
-    private Collection $bookings;
-
     #[ORM\OneToOne(targetEntity: PaymentCode::class, mappedBy: 'payment', cascade: [
         'persist',
         'remove',
@@ -92,7 +85,6 @@ class Payment
     ) {
         $this->id = new Ulid();
         $this->createdAt = new \DateTimeImmutable();
-        $this->bookings = new ArrayCollection();
         $this->transfers = new ArrayCollection();
     }
 
@@ -144,36 +136,6 @@ class Payment
     public function getPaidAt(): ?\DateTimeImmutable
     {
         return $this->paidAt;
-    }
-
-    /**
-     * @return Collection<int, Booking>
-     */
-    public function getBookings(): Collection
-    {
-        return $this->bookings;
-    }
-
-    public function addBooking(Booking $booking): self
-    {
-        if (! $this->bookings->contains($booking)) {
-            $this->bookings[] = $booking;
-            $booking->setPayment($this);
-        }
-
-        return $this;
-    }
-
-    public function removeBooking(Booking $booking): self
-    {
-        if ($this->bookings->removeElement($booking)) {
-            // set the owning side to null (unless already changed)
-            if ($booking->getPayment() === $this) {
-                $booking->setPayment(null);
-            }
-        }
-
-        return $this;
     }
 
     public function getPaymentCode(): ?PaymentCode
@@ -230,26 +192,17 @@ class Payment
     public function getAmountPaid(): Money
     {
         return $this->transfers->map(
-            fn(Transfer $transfer): Money => TransferMoneyParser::transferMoneyStringToMoneyObject(
-                $transfer->amount
-            )
+            fn(Transfer $transfer): Money => Money::of($transfer->amount, 'PLN')
         )->reduce(fn(Money $carry, Money $transfer) => $carry->plus($transfer), Money::zero('PLN'));
     }
 
     public function amountMatch(Transfer $transfer): bool
     {
-        return $this->amount->isEqualTo(
-            TransferMoneyParser::transferMoneyStringToMoneyObject($transfer->amount)->getAmount()
-        );
+        return $this->amount->isEqualTo(Money::of($transfer->amount, 'PLN')->getAmount());
     }
 
     public function getAmount(): Money
     {
         return $this->amount;
-    }
-
-    public function getBookingsSummary(): string
-    {
-        return implode(', ', $this->bookings->map(fn(Booking $booking) => $booking->getTextSummary()) ->toArray());
     }
 }

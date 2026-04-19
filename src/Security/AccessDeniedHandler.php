@@ -38,9 +38,9 @@ readonly class AccessDeniedHandler implements EventSubscriberInterface
         $path = $event->getRequest()
             ->getPathInfo();
 
-        if (! str_starts_with($path, $this->router->generate('dashboard')) && ! str_starts_with(
+        if (! str_starts_with($path, $this->router->generate('cc_treasurer_overview')) && ! str_starts_with(
             $path,
-            $this->router->generate('app_admin_dashboard')
+            $this->router->generate('homepage')
         )) {
             return;
         }

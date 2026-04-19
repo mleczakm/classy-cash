@@ -20,7 +20,6 @@ framework:
         buses:
             messenger.bus.default:
                 middleware:
-                    - 'App\Infrastructure\Symfony\Messenger\TenantMiddleware'
                     - messenger.middleware.doctrine_close_connection
                     - messenger.middleware.doctrine_transaction
                     - messenger.middleware.validation

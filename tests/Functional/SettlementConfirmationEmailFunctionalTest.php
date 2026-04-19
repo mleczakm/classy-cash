@@ -11,7 +11,6 @@ use App\Tests\Assembler\UserAssembler;
 use Brick\Money\Money;
 use App\Tests\Assembler\PaymentAssembler;
 use App\Entity\Payment;
-use App\Entity\Tenant;
 use App\Entity\ClassCouncil\ClassRoom;
 use App\Entity\ClassCouncil\Student;
 use App\Entity\ClassCouncil\StudentPayment;
@@ -28,6 +27,8 @@ use Doctrine\ORM\EntityManagerInterface;
 #[Group('functional')]
 class SettlementConfirmationEmailFunctionalTest extends WebTestCase
 {
+    use FunctionalTestSettingsTrait;
+
     public function testSettlementConfirmationEmailIsSent(): void
     {
         $client = static::createClient();
@@ -39,6 +40,8 @@ class SettlementConfirmationEmailFunctionalTest extends WebTestCase
         $mailer = $container->get(MailerInterface::class);
         $twig = $container->get(TwigEnvironment::class);
         $em = $container->get(EntityManagerInterface::class);
+
+        $this->setupDefaultSettings($em);
 
         // Create and persist User using UserAssembler
         $user = UserAssembler::new()
@@ -61,9 +64,7 @@ class SettlementConfirmationEmailFunctionalTest extends WebTestCase
 
 
         // Create and persist Student, ClassRoom, StudentPayment
-        $tenant = $em->getRepository(Tenant::class)->findOneBy([]) ?? new Tenant('TestTenant', 'tenant.test');
-        $em->persist($tenant);
-        $classRoom = new ClassRoom($tenant, '1A');
+        $classRoom = new ClassRoom('1A');
         $em->persist($classRoom);
         $student = new Student($classRoom, 'Jan', 'Kowalski');
         $em->persist($student);
@@ -79,10 +80,7 @@ class SettlementConfirmationEmailFunctionalTest extends WebTestCase
         $em->flush();
 
         $handler = $container->get(SendSettlementConfirmationEmailHandler::class);
-        $command = new SendSettlementConfirmationEmail(
-            paymentId: (string) $payment->getId(),
-            tenantId: (string) $tenant->getId()
-        );
+        $command = new SendSettlementConfirmationEmail(paymentId: (string) $payment->getId());
 
         $handler->__invoke($command);
 

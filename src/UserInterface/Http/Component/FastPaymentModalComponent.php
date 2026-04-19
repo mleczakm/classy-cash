@@ -12,7 +12,7 @@ use App\Entity\User;
 use App\Repository\ClassCouncil\ClassRoomRepository;
 use App\Repository\ClassCouncil\StudentPaymentRepository;
 use App\Repository\ClassCouncil\StudentRepository;
-use App\Tenant\TenantContext;
+use App\Settings\Settings;
 use Brick\Money\Money;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -57,11 +57,14 @@ final class FastPaymentModalComponent extends AbstractController
     public array $generated = [];
 
     public function __construct(
-        private readonly TenantContext $tenantContext,
         private readonly ClassRoomRepository $classRooms,
         private readonly StudentRepository $students,
         private readonly StudentPaymentRepository $studentPayments,
         private readonly EntityManagerInterface $em,
+        /**
+         * @phpstan-ignore-next-line
+         */
+        private readonly Settings $settings,
     ) {}
 
     /**
@@ -76,10 +79,7 @@ final class FastPaymentModalComponent extends AbstractController
             return; // not logged in
         }
 
-        $tenant = $this->tenantContext->getTenant();
-        $class = $tenant ? $this->classRooms->findOneBy([
-            'tenant' => $tenant,
-        ]) : null;
+        $class = $this->classRooms->findOneBy([]);
         if (! $class) {
             return;
         }

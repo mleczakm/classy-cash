@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Tests\Application\CommandHandler\Notification;
 
-use PHPUnit\Framework\Attributes\Group;
 use App\Application\Command\Notification\NewUser;
 use App\Application\CommandHandler\Notification\NewUserHandler;
 use App\Tests\Assembler\UserAssembler;
+use App\Tests\Functional\FunctionalTestSettingsTrait;
+use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Bundle\FrameworkBundle\Test\NotificationAssertionsTrait;
 use Zenstruck\Mailer\Test\InteractsWithMailer;
@@ -18,9 +20,14 @@ class NewUserHandlerTest extends KernelTestCase
 {
     use NotificationAssertionsTrait;
     use InteractsWithMailer;
+    use FunctionalTestSettingsTrait;
 
     public function testSendEmailsToUserAndAdmins(): void
     {
+        /** @var EntityManagerInterface $em */
+        $em = self::getContainer()->get('doctrine')->getManager();
+        $this->setupDefaultSettings($em);
+
         // Arrange
         $user = UserAssembler::new()
             ->withEmail('user@example.com')
@@ -35,7 +42,6 @@ class NewUserHandlerTest extends KernelTestCase
             ->withRoles('ROLE_ADMIN')
             ->assemble();
 
-        $em = self::getContainer()->get('doctrine')->getManager();
         $em->persist($user);
         $em->persist($admin1);
         $em->persist($admin2);

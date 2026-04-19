@@ -7,9 +7,9 @@ namespace App\Tests\Functional\ClassCouncil;
 use App\Entity\ClassCouncil\ClassMembership;
 use App\Entity\ClassCouncil\ClassRole;
 use App\Entity\ClassCouncil\ClassRoom;
-use App\Entity\Tenant;
 use App\Entity\User;
 use App\Tests\Assembler\UserAssembler;
+use App\Tests\Functional\FunctionalTestSettingsTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -17,6 +17,8 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 #[Group('functional')]
 final class SecurityTest extends WebTestCase
 {
+    use FunctionalTestSettingsTrait;
+
     private EntityManagerInterface $em {
         get {
             return $this->em ??= self::getContainer()->get(EntityManagerInterface::class);
@@ -41,10 +43,8 @@ final class SecurityTest extends WebTestCase
 
     private function ensureTenantAndClass(): ClassRoom
     {
-        $tenant = new Tenant(name: 'ClassPay', domain: $this->host);
-        $this->em->persist($tenant);
-
-        $class = new ClassRoom($tenant, '1E');
+        $this->setupDefaultSettings($this->em);
+        $class = new ClassRoom('1E');
         $this->em->persist($class);
         $this->em->flush();
         $this->em->clear();
@@ -52,9 +52,7 @@ final class SecurityTest extends WebTestCase
         /** @var ClassRoom $reloaded */
         $reloaded = self::getContainer()->get('doctrine')->getRepository(ClassRoom::class)
             ->findOneBy([
-                'tenant' => $tenant->getId(),
-            ], [
-                'name' => 'ASC',
+                'name' => '1E',
             ]) ?? throw new \LogicException('Class not found');
         return $reloaded;
     }
@@ -64,12 +62,13 @@ final class SecurityTest extends WebTestCase
         $client = static::createClient(server: [
             'HTTP_HOST' => $this->host,
         ]);
+        $client->followRedirects(false);
 
         $this->ensureTenantAndClass();
 
         $client->request('GET', '/students');
 
-        self::assertResponseStatusCodeSame(401);
+        self::assertTrue($client->getResponse()->isRedirect(), 'Should redirect to login');
     }
 
     public function testTreasurerOnlyEndpointsForbiddenForNonTreasurer(): void
@@ -91,15 +90,27 @@ final class SecurityTest extends WebTestCase
 
         // Treasurer overview
         $client->request('GET', '/treasurer');
-        self::assertSame(403, $client->getResponse()->getStatusCode(), 'Non-treasurer should get 403');
+        self::assertTrue(
+            $client->getResponse()
+                ->isRedirect(),
+            'Non-treasurer should get redirected to login by handler'
+        );
 
         // Expenses page
         $client->request('GET', '/expenses');
-        self::assertSame(403, $client->getResponse()->getStatusCode(), 'Non-treasurer should get 403');
+        self::assertTrue(
+            $client->getResponse()
+                ->isRedirect(),
+            'Non-treasurer should get redirected to login by handler'
+        );
 
         // Payment templates
         $client->request('GET', '/payments/templates');
-        self::assertSame(403, $client->getResponse()->getStatusCode(), 'Non-treasurer should get 403');
+        self::assertTrue(
+            $client->getResponse()
+                ->isRedirect(),
+            'Non-treasurer should get redirected to login by handler'
+        );
     }
 
     public function testTreasurerHasAccess(): void
