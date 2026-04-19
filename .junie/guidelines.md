@@ -1,6 +1,6 @@
-# Kiddo – Project Development Guidelines
+# Classy-Cash – Project Development Guidelines
 
-Audience: Advanced PHP/Symfony developers contributing to Kiddo. This document captures project-specific knowledge: how we build, test, analyze, and common pitfalls. Commands are given for Docker-first workflow (preferred), with local equivalents when useful.
+Audience: Advanced PHP/Symfony developers contributing to Classy-Cash. This document captures project-specific knowledge: how we build, test, analyze, and common pitfalls. Commands are given for Docker-first workflow (preferred), with local equivalents when useful.
 
 ## 1) Build and Configuration
 

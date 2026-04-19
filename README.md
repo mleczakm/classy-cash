@@ -1,4 +1,4 @@
-# Kiddo Project
+# Classy-Cash Project
 
 ## Overview
 This is a PHP-based application for managing workshops and email communications.

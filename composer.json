@@ -3,7 +3,7 @@
   "license": "proprietary",
   "minimum-stability": "stable",
   "prefer-stable": true,
-  "name": "mleczakm/kiddo",
+  "name": "mleczakm/classy-cash",
   "description": "App for bookings",
   "require": {
     "php": ">=8.4",
