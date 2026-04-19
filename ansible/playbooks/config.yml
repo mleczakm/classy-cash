@@ -1,0 +1,14 @@
+---
+# Classy-Cash Deployment Configuration
+apps:
+  - name: classy-cash
+    domain: skarbiec2.mleczki.pl
+    port: 9501
+    image: ghcr.io/mleczakm/classy-cash:{{ app_version | default('latest') }}
+    env:
+      APP_ENV: prod
+      APP_VERSION: "{{ app_version | default('latest') }}"
+    healthcheck_enabled: true
+    ipv4: "{{ mikrus_ipv4 }}"
+    cytrus_host: "{{ mikrus_ipv4 }}"
+    proxied: true
