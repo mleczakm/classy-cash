@@ -13,6 +13,12 @@ services:
     bind:
       $appVersion: '%env(APP_VERSION)%'
 
+  App\Infrastructure\Doctrine\Middleware\SchemaSearchPathMiddleware:
+    arguments:
+      $schema: '%env(DATABASE_SCHEMA)%'
+    tags:
+      - { name: 'doctrine.middleware', connection: 'default' }
+
   # makes classes in src/ available to be used as services
   # this creates a service per class whose id is the fully-qualified class name
   App\:
@@ -21,6 +27,7 @@ services:
       - '../src/DependencyInjection/'
       - '../src/Entity/'
       - '../src/Kernel.php'
+      - '../src/Infrastructure/Doctrine/Middleware/SchemaSearchPathMiddleware.php'
 
   # add more service definitions when explicit configuration is needed
   # please note that last definitions always *replace* previous ones
@@ -103,6 +110,7 @@ services:
   Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler:
     arguments:
       - '%env(DATABASE_URL)%'
+      - { db_table: '%env(DATABASE_SCHEMA)%.sessions' }
 
   App\Infrastructure\Twig\MoneyExtension:
     tags: [ 'twig.extension' ]
