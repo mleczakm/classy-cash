@@ -77,4 +77,15 @@ class UserRepository extends ServiceEntityRepository
 
         return $result;
     }
+
+    /**
+     * Count total number of users in the database
+     */
+    public function countUsers(): int
+    {
+        return (int) $this->createQueryBuilder('u')
+            ->select('COUNT(u.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }

@@ -13,6 +13,8 @@ final class SchemaSearchPathConnection extends AbstractConnectionMiddleware
     {
         parent::__construct($connection);
 
+        // Set the search path - if schema doesn't exist, this will fail
+        // but the schema creation should be handled separately
         $this->exec("SET search_path TO {$schema}");
     }
 }

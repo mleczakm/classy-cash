@@ -15,6 +15,15 @@ form:
     verify_mail: Please check your inbox!
     mail_sent_header: Welcome!
 
+  first_admin:
+    title: "Create Administrator Account"
+    description: "Welcome to Classy Cash! Let's create your administrator account to get started."
+    submit: "Create Administrator Account"
+    success:
+      title: "Administrator Account Created!"
+      message: "Your administrator account has been created successfully. Please check your email for a login link."
+      continue: "Continue to Dashboard"
+
 page:
   default:
     header: "Warsztatownia sensoryczna"
@@ -116,6 +125,23 @@ carnets:
 admin:
   dashboard:
     title: Admin Dashboard
+  settings:
+    title: "Application Settings"
+    description: "Configure your application settings and preferences."
+    app_name:
+      label: "Application Name"
+      help: "The name of your application displayed in emails and UI."
+    email_from:
+      label: "From Email Address"
+      help: "Email address used for sending system notifications."
+    blik_phone:
+      label: "BLIK Phone Number"
+      help: "Phone number for BLIK payments."
+    transfer_account:
+      label: "Bank Transfer Account"
+      help: "Bank account number for traditional transfers."
+    save_button: "Save Settings"
+    back_to_app: "← Back to Application"
   tabs:
     dashboard: Dashboard
     lessons: Lessons

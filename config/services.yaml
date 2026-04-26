@@ -19,6 +19,7 @@ services:
     tags:
       - { name: 'doctrine.middleware', connection: 'default' }
 
+  
   # makes classes in src/ available to be used as services
   # this creates a service per class whose id is the fully-qualified class name
   App\:
@@ -28,6 +29,7 @@ services:
       - '../src/Entity/'
       - '../src/Kernel.php'
       - '../src/Infrastructure/Doctrine/Middleware/SchemaSearchPathMiddleware.php'
+      - '../src/Infrastructure/Doctrine/Middleware/SchemaAutoCreationMiddleware.php'
 
   # add more service definitions when explicit configuration is needed
   # please note that last definitions always *replace* previous ones
@@ -128,3 +130,15 @@ services:
     tags:
       - { name: 'doctrine.event_listener', event: 'onFlush' }
       - { name: 'doctrine.event_listener', event: 'loadClassMetadata' }
+
+  # Schema commands configuration
+  App\Application\Command\EnsureSchemaCommand:
+    arguments:
+      $schemaName: '%env(DATABASE_SCHEMA)%'
+
+  App\Application\Command\DoctrineSchemaUpdateCommand:
+    arguments:
+      $schemaName: '%env(DATABASE_SCHEMA)%'
+
+  
+  

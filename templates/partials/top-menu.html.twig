@@ -4,7 +4,7 @@
             {% set isClassPay = true %}
             <a class="flex items-center gap-2" href="{{ isClassPay ? path('homepage') : path('homepage') }}"
                title="{{ 'last_update'|trans }}{{ last_release()|format_date(pattern: 'HH:mm, dd MMM') }}">
-                <span class="font-display text-2xl font-bold text-workshop-brown">skarbiec mleczki</span>
+                <span class="font-display text-2xl font-bold text-workshop-brown">{{ tenant_name() }}</span>
             </a>
             <nav class="hidden md:flex items-center gap-8">
 
@@ -25,6 +25,11 @@
                                href="{{ path('cc_payment_templates') }}">Szablony</a>
                             <a class="font-medium text-workshop-brown hover:text-workshop-red transition-colors"
                                href="{{ path('cc_expenses') }}">Wydatki</a>
+                        {% endif %}
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <span class="mx-2 text-muted-foreground">|</span>
+                            <a class="font-medium text-workshop-brown hover:text-workshop-red transition-colors"
+                               href="{{ path('admin_settings') }}">Ustawienia</a>
                         {% endif %}
                 {% endif %}
             </nav>

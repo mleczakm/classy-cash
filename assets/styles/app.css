@@ -1,6 +1,5 @@
 @import 'tailwindcss' source('../../');
 
-@source "assets/";
 @source "templates/";
 @source "templates/partials/";
 @source "templates/components/";

@@ -28,6 +28,16 @@ final readonly class Settings
         ));
     }
 
+    public function getOptional(string $key, mixed $default = null): mixed
+    {
+        $setting = $this->repository->findOneByKey($key);
+        if ($setting === null) {
+            return $default;
+        }
+
+        return $setting->getContent()['value'] ?? $default;
+    }
+
     public function set(string $key, mixed $value): void
     {
         $setting = $this->repository->findOneByKey($key);
@@ -75,7 +85,7 @@ final readonly class Settings
 
     public function getName(): string
     {
-        $value = $this->get('app_name');
+        $value = $this->getOptional('app_name', 'Classy Cash');
         if (! is_string($value)) {
             throw new \LogicException('Setting "app_name" must be a string.');
         }
