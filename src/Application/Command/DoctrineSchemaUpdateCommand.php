@@ -20,9 +20,9 @@ use Symfony\Component\Process\Process;
 final class DoctrineSchemaUpdateCommand extends Command
 {
     public function __construct(
-        private Connection $connection,
-        private LoggerInterface $logger,
-        private string $schemaName
+        private readonly Connection $connection,
+        private readonly LoggerInterface $logger,
+        private readonly string $schemaName
     ) {
         parent::__construct();
     }
@@ -44,15 +44,15 @@ final class DoctrineSchemaUpdateCommand extends Command
 
             // Build the doctrine command arguments
             $args = ['bin/console', 'doctrine:schema:update'];
-            
+
             if ($input->getOption('dump-sql')) {
                 $args[] = '--dump-sql';
             }
-            
+
             if ($input->getOption('force')) {
                 $args[] = '--force';
             }
-            
+
             if ($input->getOption('complete')) {
                 $args[] = '--complete';
             }
@@ -89,11 +89,15 @@ final class DoctrineSchemaUpdateCommand extends Command
                 [$this->schemaName]
             );
 
-            if (!$schemaExists) {
+            if (! $schemaExists) {
                 $output->writeln('Creating database schema: ' . $this->schemaName);
-                $this->connection->executeStatement('CREATE SCHEMA ' . $this->connection->quoteIdentifier($this->schemaName));
+                $this->connection->executeStatement(
+                    'CREATE SCHEMA ' . $this->connection->quoteIdentifier($this->schemaName)
+                );
                 $output->writeln('Database schema created successfully');
-                $this->logger->info('Database schema created successfully', ['schema' => $this->schemaName]);
+                $this->logger->info('Database schema created successfully', [
+                    'schema' => $this->schemaName,
+                ]);
             } else {
                 $output->writeln('Database schema already exists: ' . $this->schemaName);
             }
@@ -112,16 +116,16 @@ final class DoctrineSchemaUpdateCommand extends Command
     {
         try {
             $tableName = $this->schemaName . '.sessions';
-            
+
             // Check if sessions table exists
             $tableExists = $this->connection->fetchOne(
                 'SELECT 1 FROM information_schema.tables WHERE table_schema = ? AND table_name = ?',
                 [$this->schemaName, 'sessions']
             );
 
-            if (!$tableExists) {
+            if (! $tableExists) {
                 $output->writeln('Creating sessions table: ' . $tableName);
-                
+
                 // Create sessions table with proper schema for Symfony PDO session handler
                 $this->connection->executeStatement("
                     CREATE TABLE {$this->connection->quoteIdentifier($tableName)} (
@@ -131,15 +135,19 @@ final class DoctrineSchemaUpdateCommand extends Command
                         sess_lifetime INTEGER NOT NULL
                     )
                 ");
-                
+
                 // Create index for session cleanup
                 $this->connection->executeStatement("
-                    CREATE INDEX sessions_sess_lifetime_idx 
-                    ON {$this->connection->quoteIdentifier($tableName)} (sess_lifetime)
+                    CREATE INDEX sessions_sess_lifetime_idx
+                    ON {$this->connection->quoteIdentifier(
+                    $tableName
+                )} (sess_lifetime)
                 ");
-                
+
                 $output->writeln('Sessions table created successfully');
-                $this->logger->info('Sessions table created successfully', ['table' => $tableName]);
+                $this->logger->info('Sessions table created successfully', [
+                    'table' => $tableName,
+                ]);
             } else {
                 $output->writeln('Sessions table already exists: ' . $tableName);
             }

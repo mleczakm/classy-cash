@@ -10,6 +10,6 @@ final class SchemaAssetsFilter
     {
         // Exclude sessions table from Doctrine management
         // Allow all other tables
-        return !str_contains($assetName, 'sessions');
+        return ! str_contains($assetName, 'sessions');
     }
 }

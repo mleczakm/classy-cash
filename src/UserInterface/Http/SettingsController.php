@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\UserInterface\Http;
 
 use App\Settings\Settings;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,7 +16,6 @@ final class SettingsController extends AbstractController
 {
     public function __construct(
         private readonly Settings $settings,
-        private readonly EntityManagerInterface $em,
     ) {}
 
     #[Route('/admin/settings', name: 'admin_settings', methods: ['GET', 'POST'])]

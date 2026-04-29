@@ -6,7 +6,6 @@ namespace App\UserInterface\Http\Component;
 
 use App\Application\Command\SendLoginNotification;
 use App\Entity\User;
-use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -35,7 +34,6 @@ class FirstAdminUser extends AbstractController
     public function __construct(
         private EntityManagerInterface $entityManager,
         private MessageBusInterface $messageBus,
-        private UserRepository $userRepository,
     ) {}
 
     /**
@@ -77,7 +75,7 @@ class FirstAdminUser extends AbstractController
             /** @var User $user */
             $user = $this->getForm()
                 ->getData();
-            
+
             // Grant admin role to first user
             $user->setRoles(['ROLE_ADMIN']);
 

@@ -11,16 +11,13 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-#[AsCommand(
-    name: 'app:ensure-schema',
-    description: 'Ensures the database schema exists'
-)]
+#[AsCommand(name: 'app:ensure-schema', description: 'Ensures the database schema exists')]
 final class EnsureSchemaCommand extends Command
 {
     public function __construct(
-        private Connection $connection,
-        private LoggerInterface $logger,
-        private string $schemaName
+        private readonly Connection $connection,
+        private readonly LoggerInterface $logger,
+        private readonly string $schemaName
     ) {
         parent::__construct();
     }
@@ -34,11 +31,15 @@ final class EnsureSchemaCommand extends Command
                 [$this->schemaName]
             );
 
-            if (!$schemaExists) {
+            if (! $schemaExists) {
                 $output->writeln('Creating database schema: ' . $this->schemaName);
-                $this->connection->executeStatement('CREATE SCHEMA ' . $this->connection->quoteIdentifier($this->schemaName));
+                $this->connection->executeStatement(
+                    'CREATE SCHEMA ' . $this->connection->quoteIdentifier($this->schemaName)
+                );
                 $output->writeln('Database schema created successfully');
-                $this->logger->info('Database schema created successfully', ['schema' => $this->schemaName]);
+                $this->logger->info('Database schema created successfully', [
+                    'schema' => $this->schemaName,
+                ]);
             } else {
                 $output->writeln('Database schema already exists: ' . $this->schemaName);
             }
