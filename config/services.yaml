@@ -140,5 +140,7 @@ services:
     arguments:
       $schemaName: '%env(DATABASE_SCHEMA)%'
 
-  
-  
+  App\Application\Command\DoctrineSchemaDropCreateCommand:
+    arguments:
+      $schemaName: '%env(DATABASE_SCHEMA)%'
+

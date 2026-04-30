@@ -27,13 +27,32 @@ final class SecurityTest extends WebTestCase
 
     private string $host = 'classpay.test';
 
-    public function testDashboardRequiresLogin(): void
+    public function testFirstLoginRedirectsToSetup(): void
     {
         $client = static::createClient(server: [
             'HTTP_HOST' => $this->host,
         ]);
 
         $this->ensureTenantAndClass();
+
+        $client->request('GET', '/');
+
+        self::assertTrue(in_array($client->getResponse()->getStatusCode(), [302, 303], true), 'Should redirect');
+        self::assertStringContainsString('/setup/admin', (string) $client->getResponse()->headers->get('Location'));
+    }
+
+    public function testDashboardRequiresToLogin(): void
+    {
+        $client = static::createClient(server: [
+            'HTTP_HOST' => $this->host,
+        ]);
+        $this->setupDefaultSettings($this->em);
+        $class = $this->ensureTenantAndClass();
+
+        $treasurer = UserAssembler::new()->assemble();
+        $this->em->persist($treasurer);
+        $this->em->persist(new ClassMembership($treasurer, $class, ClassRole::TREASURER));
+        $this->em->flush();
 
         $client->request('GET', '/');
 

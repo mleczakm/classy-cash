@@ -149,6 +149,7 @@
     },
     "tests:functional:setup": {
       "Functional tests setup": "bin/console doctrine:database:create --if-not-exists --env=test",
+      "Drop and recreate schema": "bin/console app:doctrine:schema-drop-create --env=test",
       "Functional tests schema": "bin/console app:doctrine:schema-update --force --env=test"
     },
     "qa:fix": [
