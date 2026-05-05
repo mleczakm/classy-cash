@@ -1,10 +1,26 @@
 form:
   login:
     submit: Zaloguj się za pomocą linku wysłanego na e-mail
-    header: Witamy ponownie!
+    header: Witaj z powrotem, skarbniku.
+    lead: Zaloguj się, aby zarządzać finansami swojej klasy.
+    divider: lub
+    continue_with_google: Kontynuuj z Google
+    no_account: Nie masz konta?
+    join_as_parent: Dołącz jako rodzic
+    create_class: Załóż klasę
     success:
       title: Wysłano link do zalogowania
       message: "Na podany adres e-mail wysłano link do zalogowania. Sprawdź swoją skrzynkę pocztową!"
+
+brand:
+  name: Classy Cash
+  tagline: Nowoczesne zarządzanie finansami dla szkół.
+  description: Upraszczaj. Automatyzuj. Edukuj. Pełna kontrola nad każdą złotówką klasowej kasy.
+  feature:
+    fundraising: Efektywne zbieranie funduszy
+    blik: Zautomatyzowane płatności BLIK
+    reporting: Przejrzyste raportowanie
+    email_confirmations: Automatyczne potwierdzenia z e-maila
 
   register:
     title: "Utwórz konto"

@@ -1,65 +1,85 @@
 body {
-    font-family: 'Quicksand', Arial, sans-serif;
+    /* Inter jest fontem systemowym w nowym stylu app.css */
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
     line-height: 1.6;
-    color: #4c2e11;
+    color: #1a2a3a; /* Ciemny granat (foreground) */
     max-width: 600px;
     margin: 0 auto;
     padding: 20px;
+    background-color: #f8fafc; /* Jasne tło z app.css */
 }
+
 .email-container {
-    background-color: #f9f1de;
+    background-color: #ffffff;
     border-radius: 12px;
-    padding: 30px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    padding: 40px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
+
 .header {
     text-align: center;
     margin-bottom: 30px;
 }
+
 .logo {
     font-size: 28px;
     font-weight: bold;
-    color: hsl(30 76% 18%);
+    color: #1a2a3a; /* Primary: Granat */
+    letter-spacing: -0.02em;
 }
-.logo span {
-    display: inline-block;
-}
-.red { color: #e34646; }
-.green { color: #98c93c; }
-.yellow { color: #f7c343; }
-.blue { color: #71c3db; }
-.pink { color: #eecbe9; }
+
+/* Kolory akcentowe z baneru */
+.primary { color: #1a2a3a; } /* Granat */
+.teal { color: #45a092; }    /* Morski / Secondary */
+.gold { color: #eab308; }    /* Złoto / Accent */
+.green { color: #22c55e; }   /* Sukces / Listek w logo */
+
 h1 {
-    color: #4c2e11;
+    color: #1a2a3a;
     margin-top: 0;
+    font-size: 24px;
+    font-weight: 700;
 }
+
 .button {
     display: inline-block;
-    background-color: #e34646;
-    color: white;
+    /* Gradient nawiązujący do przycisku w aplikacji */
+    background: #1a2a3a linear-gradient(135deg, #1a2a3a, #2c3e50);
+    color: #ffffff !important;
     text-decoration: none;
-    padding: 12px 24px;
-    border-radius: 6px;
+    padding: 14px 28px;
+    border-radius: 8px;
     font-weight: 600;
     margin: 25px 0;
+    text-align: center;
 }
-.button:hover {
-    background-color: #d33636;
-}
+
 .note {
-    background-color: rgba(247, 195, 67, 0.1);
+    /* Styl notatki nawiązujący do koloru morskiego/teal */
+    background-color: rgba(69, 160, 146, 0.05);
     padding: 15px;
-    border-left: 4px solid #f7c343;
+    border-left: 4px solid #45a092;
     margin: 20px 0;
+    color: #1a2a3a;
 }
+
 .footer {
     margin-top: 30px;
     text-align: center;
-    font-size: 14px;
-    color: #738f3e;
+    font-size: 13px;
+    color: #64748b; /* Muted foreground */
 }
+
+.footer b {
+    color: #1a2a3a;
+}
+
 .help-text {
-    font-size: 14px;
-    color: #666;
+    font-size: 12px;
+    color: #94a3b8;
     overflow-wrap: break-word;
+    margin-top: 20px;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 10px;
 }

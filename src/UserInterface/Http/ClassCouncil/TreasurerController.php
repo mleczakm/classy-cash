@@ -87,6 +87,38 @@ final class TreasurerController extends AbstractController
             }
         }
 
+        return $this->render('homepage.html.twig');
+    }
+
+    #[Route('/dashboard', name: 'cc_dashboard', methods: ['GET'])]
+    public function dashboard(): Response
+    {
+        if (! $this->getUser()) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        $class = $this->classRooms->findOneBy([]);
+
+        $myStudents = [];
+        $paymentsByStudent = [];
+        $hasMissingPayments = false;
+
+        if ($class) {
+            $myStudents = $this->students->findBy(['classRoom' => $class]);
+            foreach ($myStudents as $student) {
+                $studentPayments = $this->studentPayments->findBy(['student' => $student]);
+                foreach ($studentPayments as $sp) {
+                    $sid = $sp->getStudent()
+                        ->getId();
+                    $paymentsByStudent[$sid] ??= [];
+                    $paymentsByStudent[$sid][] = $sp;
+                    if ($sp->getStatus() !== StudentPayment::STATUS_PAID) {
+                        $hasMissingPayments = true;
+                    }
+                }
+            }
+        }
+
         return $this->render('class_council/dashboard.html.twig', [
             'classRoom' => $class,
             'students' => $myStudents,
