@@ -108,7 +108,7 @@ final class TreasurerController extends AbstractController
             foreach ($myStudents as $student) {
                 $studentPayments = $this->studentPayments->findBy(['student' => $student]);
                 foreach ($studentPayments as $sp) {
-                    $sid = $sp->getStudent()
+                    $sid = (string) $sp->getStudent()
                         ->getId();
                     $paymentsByStudent[$sid] ??= [];
                     $paymentsByStudent[$sid][] = $sp;
@@ -138,7 +138,7 @@ final class TreasurerController extends AbstractController
         }
 
         if ($request->isMethod('POST')) {
-            if (! $this->isCsrfTokenValid('submit', $request->request->get('_token'))) {
+            if (! $this->isCsrfTokenValid('submit', (string) $request->request->get('_token'))) {
                 throw $this->createAccessDeniedException('Nieprawidłowy token CSRF.');
             }
 
@@ -166,7 +166,7 @@ final class TreasurerController extends AbstractController
         }
 
         if ($request->isMethod('POST')) {
-            if (! $this->isCsrfTokenValid('submit', $request->request->get('_token'))) {
+            if (! $this->isCsrfTokenValid('submit', (string) $request->request->get('_token'))) {
                 throw $this->createAccessDeniedException('Nieprawidłowy token CSRF.');
             }
 
@@ -256,7 +256,7 @@ final class TreasurerController extends AbstractController
     public function editStudent(string $id, Request $request): Response
     {
         if ($request->isMethod('POST')) {
-            if (! $this->isCsrfTokenValid('submit', $request->request->get('_token'))) {
+            if (! $this->isCsrfTokenValid('submit', (string) $request->request->get('_token'))) {
                 throw $this->createAccessDeniedException('Nieprawidłowy token CSRF.');
             }
         }
@@ -310,7 +310,7 @@ final class TreasurerController extends AbstractController
     ], methods: ['POST'])]
     public function deleteStudent(string $id, Request $request): Response
     {
-        if (! $this->isCsrfTokenValid('submit', $request->request->get('_token'))) {
+        if (! $this->isCsrfTokenValid('submit', (string) $request->request->get('_token'))) {
             throw $this->createAccessDeniedException('Nieprawidłowy token CSRF.');
         }
 
@@ -392,7 +392,7 @@ final class TreasurerController extends AbstractController
         }
 
         if ($request->isMethod('POST')) {
-            if (! $this->isCsrfTokenValid('submit', $request->request->get('_token'))) {
+            if (! $this->isCsrfTokenValid('submit', (string) $request->request->get('_token'))) {
                 throw $this->createAccessDeniedException('Nieprawidłowy token CSRF.');
             }
 
@@ -527,7 +527,7 @@ final class TreasurerController extends AbstractController
         $this->assertTreasurer($class);
 
         if ($request->isMethod('POST')) {
-            if (! $this->isCsrfTokenValid('submit', $request->request->get('_token'))) {
+            if (! $this->isCsrfTokenValid('submit', (string) $request->request->get('_token'))) {
                 throw $this->createAccessDeniedException('Nieprawidłowy token CSRF.');
             }
 
@@ -611,7 +611,7 @@ final class TreasurerController extends AbstractController
     #[Route('/payments/templates/apply', name: 'cc_payment_templates_apply', methods: ['POST'])]
     public function applyTemplates(Request $request): Response
     {
-        if (! $this->isCsrfTokenValid('submit', $request->request->get('_token'))) {
+        if (! $this->isCsrfTokenValid('submit', (string) $request->request->get('_token'))) {
             throw $this->createAccessDeniedException('Nieprawidłowy token CSRF.');
         }
 
@@ -637,7 +637,7 @@ final class TreasurerController extends AbstractController
     ], methods: ['POST'])]
     public function deleteTemplate(int $index, Request $request): Response
     {
-        if (! $this->isCsrfTokenValid('submit', $request->request->get('_token'))) {
+        if (! $this->isCsrfTokenValid('submit', (string) $request->request->get('_token'))) {
             throw $this->createAccessDeniedException('Nieprawidłowy token CSRF.');
         }
 
@@ -676,7 +676,7 @@ final class TreasurerController extends AbstractController
     #[Route('/student-payment/{id}/generate', name: 'cc_generate_payment', methods: ['POST'])]
     public function generatePayment(string $id, Request $request): Response
     {
-        if (! $this->isCsrfTokenValid('submit', $request->request->get('_token'))) {
+        if (! $this->isCsrfTokenValid('submit', (string) $request->request->get('_token'))) {
             throw $this->createAccessDeniedException('Nieprawidłowy token CSRF.');
         }
 
@@ -719,7 +719,7 @@ final class TreasurerController extends AbstractController
     #[Route('/student-payment/{id}/mark-paid', name: 'cc_mark_student_payment_paid', methods: ['POST'])]
     public function markStudentPaymentPaid(string $id, Request $request): Response
     {
-        if (! $this->isCsrfTokenValid('submit', $request->request->get('_token'))) {
+        if (! $this->isCsrfTokenValid('submit', (string) $request->request->get('_token'))) {
             throw $this->createAccessDeniedException('Nieprawidłowy token CSRF.');
         }
 

@@ -22,7 +22,7 @@ final class SettingsController extends AbstractController
     public function index(Request $request): Response
     {
         if ($request->isMethod('POST')) {
-            if (! $this->isCsrfTokenValid('submit', $request->request->get('_token'))) {
+            if (! $this->isCsrfTokenValid('submit', (string) $request->request->get('_token'))) {
                 throw $this->createAccessDeniedException('Nieprawidłowy token CSRF.');
             }
 
