@@ -6,6 +6,7 @@
   <div class="mb-6">Klasa: <strong>{{ classRoom.name }}</strong></div>
 
   <form method="post" class="space-y-4 max-w-xl mb-8 p-4 border rounded bg-white">
+    <input type="hidden" name="_token" value="{{ csrf_token('submit') }}">
     <h2 class="text-lg font-semibold">Dodaj szablon składki</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div>
@@ -22,6 +23,7 @@
 
   <div class="mb-4 flex gap-3">
     <form method="post" action="{{ path('cc_payment_templates_apply') }}">
+      <input type="hidden" name="_token" value="{{ csrf_token('submit') }}">
       <button class="btn-outline" type="submit">Zastosuj do wszystkich uczniów</button>
     </form>
     <a class="btn-outline" href="{{ path('cc_treasurer_overview') }}">Powrót do podsumowania</a>
@@ -43,6 +45,7 @@
             <td class="py-2 px-2">{{ (t.amount_pln ?? t['amount_pln']) ~ ' PLN' }}</td>
             <td class="py-2 px-2">
               <form method="post" action="{{ path('cc_payment_templates_delete', {index: loop.index0}) }}" onsubmit="return confirm('Usunąć ten szablon?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('submit') }}">
                 <button class="btn-outline" type="submit">Usuń</button>
               </form>
             </td>

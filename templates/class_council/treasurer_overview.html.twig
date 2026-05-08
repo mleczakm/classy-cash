@@ -68,11 +68,13 @@
               <div class="flex gap-2">
                 {% if not sp.payment %}
                 <form method="post" action="{{ path('cc_generate_payment', {id: sp.id}) }}">
+                  <input type="hidden" name="_token" value="{{ csrf_token('submit') }}">
                   <button class="btn-outline" type="submit">Utwórz płatność</button>
                 </form>
                 {% endif %}
                 {% if status != 'paid' %}
                 <form method="post" action="{{ path('cc_mark_student_payment_paid', {id: sp.id}) }}">
+                  <input type="hidden" name="_token" value="{{ csrf_token('submit') }}">
                   <button class="btn-outline" type="submit">Oznacz jako opłacone</button>
                 </form>
                 {% endif %}

@@ -6,6 +6,7 @@
   <div class="mb-6">Klasa: <strong>{{ classRoom.name }}</strong></div>
 
   <form method="post" class="space-y-4 max-w-xl p-4 border rounded bg-white">
+    <input type="hidden" name="_token" value="{{ csrf_token('submit') }}">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div>
         <label class="block text-sm font-medium mb-1">Imię</label>

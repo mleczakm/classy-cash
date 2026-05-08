@@ -6,6 +6,7 @@
   <div class="mb-6">Klasa: <strong>{{ classRoom.name }}</strong></div>
 
   <form method="post" class="space-y-4 max-w-xl mb-8 p-4 border rounded bg-white">
+    <input type="hidden" name="_token" value="{{ csrf_token('submit') }}">
     <h2 class="text-lg font-semibold">Dodaj wydatek</h2>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
       <div class="md:col-span-2">

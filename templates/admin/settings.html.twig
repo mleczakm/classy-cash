@@ -27,6 +27,7 @@
 
             <div class="card-dark p-6 space-y-6 max-w-2xl">
                 <form method="post">
+                    <input type="hidden" name="_token" value="{{ csrf_token('submit') }}">
                     <div>
                         <label for="app_name" class="block text-sm font-medium mb-2">
                             {{ 'admin.settings.app_name.label'|trans }}

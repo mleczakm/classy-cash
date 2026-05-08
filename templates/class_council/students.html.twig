@@ -6,6 +6,7 @@
   <div class="mb-6">Klasa: <strong>{{ classRoom.name }}</strong></div>
 
   <form method="post" class="space-y-4 max-w-xl mb-8 p-4 border rounded bg-white">
+    <input type="hidden" name="_token" value="{{ csrf_token('submit') }}">
     <h2 class="text-lg font-semibold">Dodaj ucznia</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div>
@@ -81,6 +82,7 @@
                 {% endif %}
                 {% if isTreasurer %}
                   <form method="post" action="{{ path('cc_student_delete', {id: sid}) }}" onsubmit="return confirm('Usunąć tego ucznia? Spowoduje to usunięcie jego przypisanych składek.');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('submit') }}">
                     <button class="btn-outline" type="submit">Usuń</button>
                   </form>
                 {% endif %}
