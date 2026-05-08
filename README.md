@@ -1,4 +1,4 @@
-![Classy Cash - Nowoczesne zarządzanie finansami dla skrbnika klasowego](assets/images/classy-cash-banner.jpg)
+![Classy Cash - Nowoczesne zarządzanie finansami dla skrbnika klasowego](assets/images/classy-cash-banner.png)
 
 
 **Classy Cash** to nowoczesna aplikacja webowa stworzona z myślą o skarbnikach szkolnych. Jej zadaniem jest automatyzacja zbierania składek, monitorowanie wpłat oraz ułatwienie rozliczeń z rodzicami i uczniami.

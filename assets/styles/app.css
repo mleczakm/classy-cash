@@ -7,123 +7,43 @@
 @source "vendor/symfony/twig-bridge/Resources/views/Form/*.html.twig";
 
 :root {
-    /* Main Background & Text */
-    --bg: #f7f6f0;               /* Noble Ivory - Warm, paper-like background */
-    --fg: #15203d;               /* Deep Navy Text - High contrast for readability */
-    --muted: #6b7796;            /* Steel Muted - Secondary text and icons */
-
-    /* Layout Elements */
-    --card: #ffffff;             /* Pure White - For interactive cards */
-    --border: #e2e6ee;           /* Light Grey - Subtle separators */
-
-    /* Brand Colors */
-    --primary: #1a2a52;          /* Deep Navy - Authority and stability */
-    --primary-light: #2a4a7a;    /* Lighter Navy - For hover states and accents */
-    --secondary: #2aa57f;        /* Emerald Green - Growth and success status */
-    --secondary-soft: #e6f5ee;   /* Soft Mint - Background for success notifications */
-
-    /* Interactive & Feedback */
-    --accent: #e8b441;           /* Golden Amber - Premium actions and rewards */
-    --accent-hover: #d19f35;     /* Darker Gold - Hover state for gold buttons */
-    --danger: #d65a4a;           /* Crimson - Alerts and negative balances */
-
-    /* Component Specs */
-    --radius: 14px;              /* Standard elegant rounding for cards and buttons */
-
-    /* Elevation & Depth */
-    --shadow-card: 0 2px 12px -4px rgba(26, 42, 82, 0.12);
-    --shadow-elegant: 0 18px 50px -18px rgba(26, 42, 82, 0.35);
-
-    /* Dynamic Backgrounds */
+    /* Brand Colors from Brand Book */
+    --bg: #f7f6f0;               /* Noble Ivory */
+    --fg: #15203d;               /* Deep Navy Text */
+    --muted: #6b7796;            /* Steel Muted */
+    --card: #ffffff;             /* Pure White */
+    --border: #e2e6ee;
+    --primary: #1a2a52;          /* Deep Navy */
+    --primary-2: #2a4a7a;
+    --secondary: #2aa57f;        /* Emerald Green */
+    --secondary-soft: #e6f5ee;
+    --accent: #e8b441;           /* Golden Amber */
+    --danger: #d65a4a;
+    --radius: 14px;
+    --shadow-card: 0 4px 20px -6px rgba(26, 42, 82, 0.08);
     --gradient-hero: linear-gradient(135deg, #1a2a52 0%, #2a4a7a 50%, #2aa57f 100%);
-    --gradient-soft: linear-gradient(180deg, #f7f6f0 0%, #e6f5ee 100%);
 }
 
-/* Optional helper classes to maintain brand consistency */
-.btn-primary {
-    background-color: var(--primary);
-    color: white;
-    border-radius: var(--radius);
-    padding: 10px 20px;
-    transition: all 0.3s ease;
-}
+body { background-color: var(--bg); color: var(--fg); font-family: 'Inter', sans-serif; }
+.font-serif-brand { font-family: 'Playfair Display', serif; }
 
-.btn-primary:hover {
-    background-color: var(--primary-light);
-    transform: translateY(-1px);
-}
+/* Interactive Elements */
+.btn-primary { background-color: var(--primary); color: white; border-radius: var(--radius); padding: 12px 24px; font-weight: 600; transition: all 0.2s; text-align: center; }
+.btn-primary:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(26, 42, 82, 0.15); }
+.btn-accent { background-color: var(--accent); color: var(--primary); border-radius: var(--radius); padding: 12px 24px; font-weight: 700; transition: all 0.2s; text-align: center; }
+.btn-accent:hover { filter: brightness(0.95); transform: translateY(-1px); box-shadow: 0 4px 15px rgba(232, 180, 65, 0.3); }
+.btn-outline { border: 1px solid var(--border); color: var(--fg); border-radius: var(--radius); padding: 10px 20px; font-weight: 600; transition: all 0.2s; background: white; }
+.btn-outline:hover { border-color: var(--primary); color: var(--primary); }
 
-.btn-accent {
-    background-color: var(--accent);
-    color: var(--primary);
-    font-weight: 700;
-    border-radius: var(--radius);
-    padding: 10px 20px;
-    box-shadow: 0 4px 15px -5px rgba(232, 180, 65, 0.4);
-}
+/* Inputs & Cards */
+.input-elegant { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; width: 100%; font-size: 0.95rem; outline: none; transition: border-color 0.2s; }
+.input-elegant:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26, 42, 82, 0.05); }
+.card-elegant { background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow-card); padding: 2rem; }
 
-.card-elegant {
-    background: var(--card);
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow-card);
-    padding: 24px;
-}
+/* Status Badges */
+.status-badge { padding: 4px 12px; border-radius: 99px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; display: inline-block; }
 
-* { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; }
-body {
-    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    color: var(--fg);
-    background: var(--bg);
-    line-height: 1.5;
-    -webkit-font-smoothing: antialiased;
-}
-a { color: inherit; text-decoration: none; }
-h1, h2, h3 { margin: 0; line-height: 1.2; }
-p { margin: 0; }
-
-/* Layout */
-.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
-
-/* Background animations for HTML-based background elements */
-@keyframes float {
-    0%, 100% { transform: translateY(0px) rotate(0deg); }
-    33% { transform: translateY(-20px) rotate(120deg); }
-    66% { transform: translateY(10px) rotate(240deg); }
-}
-
-.animate-float-slow {
-    animation: float 20s ease-in-out infinite;
-}
-
-.animate-float-reverse {
-    animation: float 25s ease-in-out infinite reverse;
-}
-
-/* Ensure background elements are visible */
-.bg-secondary\/20 {
-    background-color: rgba(42, 165, 127, 0.2) !important;
-}
-
-.bg-primary\/15 {
-    background-color: rgba(26, 42, 82, 0.15) !important;
-}
-
-.bg-accent\/15 {
-    background-color: rgba(232, 180, 65, 0.15) !important;
-}
-
-/* Fix Tailwind CSS opacity syntax */
-.opacity-\[0\.07\] {
-    opacity: 0.07 !important;
-}
-
-.opacity-20 {
-    opacity: 0.2 !important;
-}
-
-.to-secondary {
-    --tw-gradient-to: var(--secondary);
-    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
-}
+/* Layout Utilities */
+.custom-scroll::-webkit-scrollbar { width: 6px; }
+.custom-scroll::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+.custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }

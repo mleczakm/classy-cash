@@ -3,71 +3,41 @@
 {% block body %}
     <div class="container relative z-10 pb-16 pt-12 sm:pb-20 sm:pt-16 lg:pb-24 lg:pt-20">
         <!-- Hero Section -->
-        <section class="relative text-white pt-20 pb-16 px-12 rounded-2xl overflow-hidden shadow-lg mt-8"
-                 style="background: var(--gradient-hero); color: white; border: none;">
+        <section class="relative text-white pt-20 pb-16 px-12 rounded-2xl overflow-hidden shadow-lg mt-8">
             <div class="max-w-2xl z-10">
                 <p class="text-sm font-semibold mb-2 opacity-80">CLASS CASH - ROK SZKOLNY 2023/24</p>
                 <h1 class="text-5xl font-bold leading-tight mb-4">NOWOCZESNE ZARZĄDZANIE FINANSAMI KLASY</h1>
-                <p class="text-lg opacity-90 mb-8">Upraszczaj, Automatyzuj, Edukuj. Pełna przejrzystość zbiórek, składek
-                    i wydatków w jednym miejscu.</p>
-
-                <div class="mt-6 flex flex-wrap gap-3"><a href="/payments"
-                                                          class="inline-flex items-center gap-2 rounded-full bg-background px-5 py-2.5 text-sm font-semibold text-primary shadow-sm transition hover:bg-background/90">Przeglądaj
-                        płatności
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                             class="lucide lucide-arrow-up-right h-4 w-4" aria-hidden="true">
-                            <path d="M7 7h10v10"></path>
-                            <path d="M7 17 17 7"></path>
-                        </svg>
-                    </a>
-                    <button class="inline-flex items-center gap-2 rounded-full border border-primary-foreground/30 px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary-foreground/10">
-                        Nowa zbiórka
-                    </button>
-                </div>
+                <p class="text-lg opacity-90 mb-8">Upraszczaj, Automatyzuj, Edukuj. Pełna przejrzystość zbiórek, składek i wydatków w jednym miejscu.</p>
                 <div class="flex space-x-4">
                     {% if app.user %}
-                        <a href="{{ path('cc_dashboard') }}"
-                           class="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-primary shadow-sm transition hover:bg-gray-100">
-                            Przeglądaj płatności
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                 stroke-linejoin="round" class="lucide lucide-arrow-up-right h-4 w-4"
-                                 aria-hidden="true">
-                                <path d="M7 7h10v10"/>
-                                <path d="M7 17 17 7"/>
+                        <a href="{{ path('cc_dashboard') }}" class="bg-white text-indigo-600 px-8 py-4 rounded-full font-semibold shadow-lg hover:bg-gray-100 transition-colors flex items-center">
+                            Panel główny
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2">
+                                <path d="M5 12h14"/>
+                                <path d="M12 5l7 7-7 7"/>
                             </svg>
                         </a>
                         {% if cc_is_treasurer() %}
-                            <a href="{{ path('cc_payment_templates') }}"
-                               class="bg-white/20 backdrop-blur-sm text-white px-8 py-4 rounded-full font-semibold shadow-lg hover:bg-white/30 transition-colors flex items-center">
-                                Nowa zbiórka
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                     stroke-linejoin="round" class="ml-2">
-                                    <path d="M12 5v14"/>
-                                    <path d="M5 12h14"/>
-                                </svg>
-                            </a>
+                        <a href="{{ path('cc_payment_templates') }}" class="bg-white/20 backdrop-blur-sm text-white px-8 py-4 rounded-full font-semibold shadow-lg hover:bg-white/30 transition-colors flex items-center">
+                            Nowa zbiórka
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2">
+                                <path d="M12 5v14"/>
+                                <path d="M5 12h14"/>
+                            </svg>
+                        </a>
                         {% endif %}
                     {% else %}
-                        <a href="{{ path('app_login') }}"
-                           class="bg-white text-indigo-600 px-8 py-4 rounded-full font-semibold shadow-lg hover:bg-gray-100 transition-colors flex items-center">
+                        <a href="{{ path('app_login') }}" class="bg-white text-indigo-600 px-8 py-4 rounded-full font-semibold shadow-lg hover:bg-gray-100 transition-colors flex items-center">
                             Zaloguj się
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                 stroke-linejoin="round" class="ml-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2">
                                 <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
                                 <polyline points="10 17 15 12 10 7"/>
                                 <line x1="15" y1="12" x2="3" y2="12"/>
                             </svg>
                         </a>
-                        <a href="{{ path('app_login') }}"
-                           class="bg-white/90 backdrop-blur-sm text-gray-800 px-8 py-4 rounded-full font-semibold shadow-lg hover:bg-white transition-colors flex items-center">
+                        <a href="{{ path('app_login') }}" class="bg-white/90 backdrop-blur-sm text-gray-800 px-8 py-4 rounded-full font-semibold shadow-lg hover:bg-white transition-colors flex items-center">
                             Dołącz do klasy
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                 stroke-linejoin="round" class="ml-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2">
                                 <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
                                 <circle cx="8.5" cy="7" r="4"/>
                                 <line x1="20" y1="8" x2="20" y2="14"/>
@@ -79,133 +49,171 @@
             </div>
         </section>
 
-        <!-- Stats Section -->
-        <section class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
-                <div class="flex items-center justify-between">
-                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-100 text-indigo-600">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                             class="lucide lucide-wallet h-5 w-5" aria-hidden="true">
-                            <path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"></path>
-                            <path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"></path>
-                        </svg>
+            <!-- Stats Section -->
+            <section class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary/15 text-secondary">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wallet h-5 w-5" aria-hidden="true">
+                                <path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"></path>
+                                <path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"></path>
+                            </svg>
+                        </div>
+                        <span class="text-xs font-medium text-secondary">+12%</span>
                     </div>
-                    <span class="text-xs font-medium text-secondary">+12%</span>
+                    <p class="mt-4 text-2xl font-bold text-foreground">4 280,50 zł</p>
+                    <p class="text-sm text-muted-foreground">Saldo klasy</p>
                 </div>
-                <p class="mt-4 text-2xl font-bold text-foreground">4 280,50 zł</p>
-                <p class="text-sm text-muted-foreground">Saldo klasy</p>
-            </div>
 
-            <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
-                <div class="flex items-center justify-between">
-                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-100 text-indigo-600">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                             class="lucide lucide-trending-up h-5 w-5" aria-hidden="true">
-                            <path d="M16 7h6v6"></path>
-                            <path d="m22 7-8.5 8.5-5-5L2 17"></path>
-                        </svg>
+                <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary/15 text-secondary">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trending-up h-5 w-5" aria-hidden="true">
+                                <path d="M16 7h6v6"></path>
+                                <path d="m22 7-8.5 8.5-5-5L2 17"></path>
+                            </svg>
+                        </div>
+                        <span class="text-xs font-medium text-secondary">+8%</span>
                     </div>
-                    <span class="text-xs font-medium text-secondary">+8%</span>
+                    <p class="mt-4 text-2xl font-bold text-foreground">1 240,00 zł</p>
+                    <p class="text-sm text-muted-foreground">Zebrane w tym miesiącu</p>
                 </div>
-                <p class="mt-4 text-2xl font-bold text-foreground">1 240,00 zł</p>
-                <p class="text-sm text-muted-foreground">Zebrane w tym miesiącu</p>
-            </div>
 
-            <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
-                <div class="flex items-center justify-between">
-                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-100 text-indigo-600">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                             class="lucide lucide-users h-5 w-5" aria-hidden="true">
-                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                            <path d="M16 3.128a4 4 0 0 1 0 7.744"></path>
-                            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
-                            <circle cx="9" cy="7" r="4"></circle>
-                        </svg>
+                <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary/15 text-secondary">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-users h-5 w-5" aria-hidden="true">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                <path d="M16 3.128a4 4 0 0 1 0 7.744"></path>
+                                <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                            </svg>
+                        </div>
+                        <span class="text-xs font-medium text-secondary">100% opłaceni</span>
                     </div>
-                    <span class="text-xs font-medium text-secondary">100% opłaceni</span>
+                    <p class="mt-4 text-2xl font-bold text-foreground">28</p>
+                    <p class="text-sm text-muted-foreground">Uczniowie</p>
                 </div>
-                <p class="mt-4 text-2xl font-bold text-foreground">28</p>
-                <p class="text-sm text-muted-foreground">Uczniowie</p>
-            </div>
 
-            <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
-                <div class="flex items-center justify-between">
-                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-100 text-indigo-600">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                             class="lucide lucide-circle-check h-5 w-5" aria-hidden="true">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <path d="m9 12 2 2 4-4"></path>
-                        </svg>
+                <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary/15 text-secondary">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check h-5 w-5" aria-hidden="true">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="m9 12 2 2 4-4"></path>
+                            </svg>
+                        </div>
+                        <span class="text-xs font-medium text-secondary">−3 vs. ub. mies.</span>
                     </div>
-                    <span class="text-xs font-medium text-secondary">−3 vs. ub. mies.</span>
+                    <p class="mt-4 text-2xl font-bold text-foreground">2</p>
+                    <p class="text-sm text-muted-foreground">Zaległości</p>
                 </div>
-                <p class="mt-4 text-2xl font-bold text-foreground">2</p>
-                <p class="text-sm text-muted-foreground">Zaległości</p>
-            </div>
-        </section>
+            </section>
 
-        <!-- Main Content Grid -->
-        <div class="grid gap-6 lg:grid-cols-3 mt-8">
-            <!-- Aktywne zbiórki -->
-            <div class="lg:col-span-2">
-                <div class="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
-                    <div class="flex items-center justify-between mb-6">
-                        <h2 class="text-xl font-semibold text-foreground">Aktywne zbiórki</h2>
-                        <button class="text-sm text-secondary hover:text-foreground transition-colors">Zobacz
-                            wszystkie
-                        </button>
+            <!-- Main Content Grid -->
+            <div class="grid gap-6 lg:grid-cols-3 mt-8">
+                <!-- Aktywne zbiórki -->
+                <div class="lg:col-span-2">
+                    <div class="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-xl font-semibold text-foreground">Aktywne zbiórki</h2>
+                            <button class="text-sm text-secondary hover:text-foreground transition-colors">Zobacz wszystkie</button>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-4 rounded-xl border border-gray-50 bg-white">
+                                <div class="flex items-center gap-4">
+                                    <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-medium text-foreground">Wycieczka do Krakowa</h3>
+                                        <p class="text-sm text-muted-foreground">Cel: 2 500 zł</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-lg font-semibold text-foreground">1 850 zł</p>
+                                    <p class="text-sm text-secondary">74%</p>
+                                    <div class="mt-2 w-32 bg-gray-100 rounded-full h-2">
+                                        <div class="bg-gradient-to-r from-indigo-500 to-purple-600 h-2 rounded-full" style="width: 74%"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between p-4 rounded-xl border border-gray-50 bg-white">
+                                <div class="flex items-center gap-4">
+                                    <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-secondary/10 text-secondary">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-medium text-foreground">Materiały edukacyjne</h3>
+                                        <p class="text-sm text-muted-foreground">Cel: 500 zł</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-lg font-semibold text-foreground">460 zł</p>
+                                    <p class="text-sm text-secondary">92%</p>
+                                    <div class="mt-2 w-32 bg-gray-100 rounded-full h-2">
+                                        <div class="bg-gradient-to-r from-indigo-500 to-purple-600 h-2 rounded-full" style="width: 92%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                </div>
 
-                    <div class="space-y-4">
-                        <div class="flex items-center justify-between p-4 rounded-xl border border-gray-50 bg-white">
-                            <div class="flex items-center gap-4">
-                                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-100 text-indigo-600">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                         stroke-linejoin="round">
+                <!-- Ostatnia aktywność -->
+                <div class="lg:col-span-1">
+                    <div class="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-xl font-semibold text-foreground">Ostatnia aktywność</h2>
+                            <button class="text-sm text-secondary hover:text-foreground transition-colors">Zobacz wszystkie</button>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div class="flex items-start gap-3">
+                                <div class="flex h-8 w-8 items-center justify-center rounded-full bg-green-100 text-green-600 mt-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                        <polyline points="22 4 12 14.01 9 11.01"/>
+                                    </svg>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium text-foreground">Anna Kowalska wpłaciła</p>
+                                    <p class="text-xs text-muted-foreground">150 zł - Wycieczka do Krakowa</p>
+                                    <p class="text-xs text-muted-foreground mt-1">2 godziny temu</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-3">
+                                <div class="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 text-blue-600 mt-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
                                     </svg>
                                 </div>
-                                <div>
-                                    <h3 class="font-medium text-foreground">Wycieczka do Krakowa</h3>
-                                    <p class="text-sm text-muted-foreground">Cel: 2 500 zł</p>
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium text-foreground">Nowa zbiórka utworzona</p>
+                                    <p class="text-xs text-muted-foreground">Kieszonkowe - wrzesień</p>
+                                    <p class="text-xs text-muted-foreground mt-1">5 godzin temu</p>
                                 </div>
                             </div>
-                            <div class="text-right">
-                                <p class="text-lg font-semibold text-foreground">1 850 zł</p>
-                                <p class="text-sm text-secondary">74%</p>
-                                <div class="mt-2 w-32 bg-gray-100 rounded-full h-2">
-                                    <div class="bg-gradient-to-r from-indigo-500 to-purple-600 h-2 rounded-full"
-                                         style="width: 74%"></div>
-                                </div>
-                            </div>
-                        </div>
 
-                        <div class="flex items-center justify-between p-4 rounded-xl border border-gray-50 bg-white">
-                            <div class="flex items-center gap-4">
-                                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-100 text-purple-600">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                         stroke-linejoin="round">
-                                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
-                                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                            <div class="flex items-start gap-3">
+                                <div class="flex h-8 w-8 items-center justify-center rounded-full bg-green-100 text-green-600 mt-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                        <polyline points="22 4 12 14.01 9 11.01"/>
                                     </svg>
                                 </div>
-                                <div>
-                                    <h3 class="font-medium text-foreground">Materiały edukacyjne</h3>
-                                    <p class="text-sm text-muted-foreground">Cel: 500 zł</p>
-                                </div>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-lg font-semibold text-foreground">460 zł</p>
-                                <p class="text-sm text-secondary">92%</p>
-                                <div class="mt-2 w-32 bg-gray-100 rounded-full h-2">
-                                    <div class="bg-gradient-to-r from-indigo-500 to-purple-600 h-2 rounded-full"
-                                         style="width: 92%"></div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium text-foreground">Jan Nowak wpłacił</p>
+                                    <p class="text-xs text-muted-foreground">50 zł - Kieszonkowe</p>
+                                    <p class="text-xs text-muted-foreground mt-1">Wczoraj</p>
                                 </div>
                             </div>
                         </div>
@@ -213,101 +221,35 @@
                 </div>
             </div>
 
-            <!-- Ostatnia aktywność -->
-            <div class="lg:col-span-1">
-                <div class="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
-                    <div class="flex items-center justify-between mb-6">
-                        <h2 class="text-xl font-semibold text-foreground">Ostatnia aktywność</h2>
-                        <button class="text-sm text-secondary hover:text-foreground transition-colors">Zobacz
-                            wszystkie
-                        </button>
-                    </div>
-
-                    <div class="space-y-4">
-                        <div class="flex items-start gap-3">
-                            <div class="flex h-8 w-8 items-center justify-center rounded-full bg-green-100 text-green-600 mt-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                     stroke-linejoin="round">
-                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                                    <polyline points="22 4 12 14.01 9 11.01"/>
+            <!-- CTA Section -->
+            <section style="margin-top: 48px; text-align: center;">
+                <div class="card" style="background: var(--gradient-hero); color: white; border: none;">
+                    <div class="card-body" style="padding: 48px;">
+                        <h2 style="font-size: 32px; margin-bottom: 16px;">Zacznij zarządzać finansami klasy już dziś</h2>
+                        <p style="font-size: 18px; opacity: 0.9; margin-bottom: 32px; max-width: 600px; margin-left: auto; margin-right: auto;">
+                            Dołącz do setek skarbników, którzy już wybrali Classy Cash do zarządzania finansami swoich klas.
+                        </p>
+                        {% if app.user %}
+                            <a href="{{ path('cc_dashboard') }}" class="btn btn-outline" style="background: white; color: var(--primary); border: none;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M5 12h14"/>
+                                    <path d="M12 5l7 7-7 7"/>
                                 </svg>
-                            </div>
-                            <div class="flex-1">
-                                <p class="text-sm font-medium text-foreground">Anna Kowalska wpłaciła</p>
-                                <p class="text-xs text-muted-foreground">150 zł - Wycieczka do Krakowa</p>
-                                <p class="text-xs text-muted-foreground mt-1">2 godziny temu</p>
-                            </div>
-                        </div>
-
-                        <div class="flex items-start gap-3">
-                            <div class="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 text-blue-600 mt-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                     stroke-linejoin="round">
-                                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                                Przejdź do panelu
+                            </a>
+                        {% else %}
+                            <a href="{{ path('app_login') }}" class="btn btn-outline" style="background: white; color: var(--primary); border: none;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                                    <polyline points="10 17 15 12 10 7"/>
+                                    <line x1="15" y1="12" x2="3" y2="12"/>
                                 </svg>
-                            </div>
-                            <div class="flex-1">
-                                <p class="text-sm font-medium text-foreground">Nowa zbiórka utworzona</p>
-                                <p class="text-xs text-muted-foreground">Kieszonkowe - wrzesień</p>
-                                <p class="text-xs text-muted-foreground mt-1">5 godzin temu</p>
-                            </div>
-                        </div>
-
-                        <div class="flex items-start gap-3">
-                            <div class="flex h-8 w-8 items-center justify-center rounded-full bg-green-100 text-green-600 mt-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                     stroke-linejoin="round">
-                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                                    <polyline points="22 4 12 14.01 9 11.01"/>
-                                </svg>
-                            </div>
-                            <div class="flex-1">
-                                <p class="text-sm font-medium text-foreground">Jan Nowak wpłacił</p>
-                                <p class="text-xs text-muted-foreground">50 zł - Kieszonkowe</p>
-                                <p class="text-xs text-muted-foreground mt-1">Wczoraj</p>
-                            </div>
-                        </div>
+                                Rozpocznij teraz
+                            </a>
+                        {% endif %}
                     </div>
                 </div>
-            </div>
+            </section>
         </div>
-
-        <!-- CTA Section -->
-        <section style="margin-top: 48px; text-align: center;">
-            <div class="card" style="background: var(--gradient-hero); color: white; border: none;">
-                <div class="card-body" style="padding: 48px;">
-                    <h2 style="font-size: 32px; margin-bottom: 16px;">Zacznij zarządzać finansami klasy już dziś</h2>
-                    <p style="font-size: 18px; opacity: 0.9; margin-bottom: 32px; max-width: 600px; margin-left: auto; margin-right: auto;">
-                        Dołącz do setek skarbników, którzy już wybrali Classy Cash do zarządzania finansami swoich klas.
-                    </p>
-                    {% if app.user %}
-                        <a href="{{ path('cc_dashboard') }}" class="btn btn-outline"
-                           style="background: white; color: var(--primary); border: none;">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                 stroke-width="2">
-                                <path d="M5 12h14"/>
-                                <path d="M12 5l7 7-7 7"/>
-                            </svg>
-                            Przejdź do panelu
-                        </a>
-                    {% else %}
-                        <a href="{{ path('app_login') }}" class="btn btn-outline"
-                           style="background: white; color: var(--primary); border: none;">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                 stroke-width="2">
-                                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
-                                <polyline points="10 17 15 12 10 7"/>
-                                <line x1="15" y1="12" x2="3" y2="12"/>
-                            </svg>
-                            Rozpocznij teraz
-                        </a>
-                    {% endif %}
-                </div>
-            </div>
-        </section>
-    </div>
     </main>
 {% endblock %}
