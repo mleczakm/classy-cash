@@ -23,6 +23,13 @@ security:
             login_link:
                 check_route: login_check
                 signature_properties: [ 'id' ]
+            form_login:
+                login_path: app_login
+                check_path: app_login
+                enable_csrf: true
+                default_target_path: homepage
+                always_use_default_target_path: true
+                failure_path: app_login
             logout:
                 path: app_logout
 

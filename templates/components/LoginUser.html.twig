@@ -6,31 +6,81 @@
                 'data-live-action-param': 'save'
             }
         }) }}
-        <div class="form-group">
-            {{ form_label(form.email, 'form.register.email', {'label_attr': {'class': ''}}) }}
-            <div class="input-icon">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>
-                {{ form_widget(form.email, {'attr': {
-                    'class': 'input',
-                    'placeholder': 'form.register.email.placeholder'|trans
-                }}) }}
-            </div>
-            <div class="text-danger text-sm mt-1">
+        
+        <div class="space-y-5">
+            <label class="block text-[10px] font-bold uppercase tracking-widest text-[#1a2a52] mb-2">Adres Email</label>
+            {{ form_widget(form.email, {
+                'attr': {
+                    'class': 'input-elegant bg-slate-50 focus:bg-white',
+                    'placeholder': 'twoj@email.com'
+                }
+            }) }}
+            <div class="text-red-500 text-sm mt-1">
                 {{ form_errors(form.email) }}
             </div>
         </div>
 
-        {{ form_widget(form.submit, {'label': 'form.login.submit'|trans ~ ' →', 'attr': {'class': 'btn btn-primary btn-block', 'style': 'margin-top:18px'}}) }}
+        {% if this.usePassword %}
+            <div class="mt-5">
+                <div class="flex justify-between items-center mb-2">
+                    <label class="text-[10px] font-bold uppercase tracking-widest text-[#1a2a52]">Hasło</label>
+                    <a href="{{ path('app_reset_password_request') }}" class="text-[10px] font-bold text-gray-400 cursor-not-allowed" title="Resetowanie hasła zablokowane, zaloguj się za pomocą samego maila zamiast tego" disabled>Zapomniałeś hasła?</a>
+                </div>
+                {{ form_widget(form.password, {
+                    'attr': {
+                        'class': 'input-elegant bg-slate-50 focus:bg-white',
+                        'placeholder': '••••••••'
+                    }
+                }) }}
+                <div class="text-red-500 text-sm mt-1">
+                    {{ form_errors(form.password) }}
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="pt-4 space-y-4">
+            {{ form_widget(form.submit, {
+                'attr': {
+                    'class': 'w-full btn-primary shadow-lg shadow-blue-900/20 cursor-pointer'
+                }
+            }) }}
+
+            <div class="text-center">
+                <button type="button" 
+                        data-action="live#action" 
+                        data-live-action-param="togglePassword" 
+                        class="text-sm font-bold text-[#6b7796] hover:text-[#1a2a52] transition-colors cursor-pointer">
+                    {% if this.usePassword %}
+                        Zaloguj się linkiem email
+                    {% else %}
+                        Zaloguj się hasłem
+                    {% endif %}
+                </button>
+            </div>
+        </div>
+        
         {{ form_end(form) }}
     {% else %}
-        <div class="card text-center p-8">
-            <div class="rounded-full bg-success/10 p-4 inline-block mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div class="text-center p-8">
+            <div class="rounded-full bg-green-100 p-4 inline-block mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                 </svg>
             </div>
-            <h2 class="text-2xl font-bold mb-4">{{ 'form.login.success.title'|trans }}</h2>
-            <p class="text-muted-foreground mb-6">{{ 'form.login.success.message'|trans }}</p>
+            <h2 class="text-2xl font-bold mb-4 text-[#1a2a52]">
+                {% if this.usePassword %}
+                    Logowanie pomyślne
+                {% else %}
+                    Link wysłany
+                {% endif %}
+            </h2>
+            <p class="text-[#6b7796] mb-6">
+                {% if this.usePassword %}
+                    Zostałeś pomyślnie zalogowany.
+                {% else %}
+                    Sprawdź swoją skrzynkę odbiorczą i kliknij w link logowania.
+                {% endif %}
+            </p>
         </div>
     {% endif %}
 </div>

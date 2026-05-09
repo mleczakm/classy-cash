@@ -104,9 +104,13 @@ final class TreasurerController extends AbstractController
         $hasMissingPayments = false;
 
         if ($class) {
-            $myStudents = $this->students->findBy(['classRoom' => $class]);
+            $myStudents = $this->students->findBy([
+                'classRoom' => $class,
+            ]);
             foreach ($myStudents as $student) {
-                $studentPayments = $this->studentPayments->findBy(['student' => $student]);
+                $studentPayments = $this->studentPayments->findBy([
+                    'student' => $student,
+                ]);
                 foreach ($studentPayments as $sp) {
                     $sid = $sp->getStudent()
                         ->getId();
