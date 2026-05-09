@@ -18,7 +18,6 @@ use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\ComponentWithFormTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 #[AsLiveComponent]
 class LoginUser extends AbstractController
@@ -26,16 +25,20 @@ class LoginUser extends AbstractController
     use DefaultActionTrait;
     use ComponentWithFormTrait;
 
-    private bool $isSubmitted = false;
+    #[LiveProp]
+    public bool $isSubmitted = false;
 
-    private bool $isSuccessful = false;
+    #[LiveProp]
+    public bool $isSuccessful = false;
 
     #[LiveProp]
     public bool $usePassword = false;
 
+    #[LiveProp]
+    public string $submittedEmail = '';
+
     public function __construct(
-        private MessageBusInterface $messageBus,
-        private AuthenticationUtils $authenticationUtils,
+        private readonly MessageBusInterface $messageBus,
     ) {}
 
     /**
@@ -43,7 +46,9 @@ class LoginUser extends AbstractController
      */
     protected function instantiateForm(): FormInterface
     {
-        $formBuilder = $this->createFormBuilder()
+        $formBuilder = $this->createFormBuilder(null, [
+            'csrf_protection' => false,
+        ])
             ->add('email', EmailType::class, [
                 'constraints' => [new Email(), new NotBlank()],
             ]);
@@ -55,6 +60,7 @@ class LoginUser extends AbstractController
             ]);
         }
 
+        /** @var FormInterface<array{email: string, password?: string}> $form */
         $form = $formBuilder
             ->add('submit', SubmitType::class, [
                 'label' => $this->usePassword ? 'Zaloguj się' : 'Wyślij link logowania',
@@ -84,6 +90,7 @@ class LoginUser extends AbstractController
             }
 
             $this->isSubmitted = true;
+            $this->submittedEmail = $data['email'];
         } else {
             $this->isSubmitted = true;
             $this->isSuccessful = false;
@@ -97,15 +104,28 @@ class LoginUser extends AbstractController
         $this->resetForm();
         $this->isSubmitted = false;
         $this->isSuccessful = false;
+        $this->submittedEmail = '';
     }
 
-    public function isSubmitted(): bool
+    #[LiveAction]
+    public function resendEmail(): void
     {
-        return $this->isSubmitted;
+        // Resend email immediately if we have the submitted email
+        if ($this->submittedEmail) {
+            $this->messageBus->dispatch(new SendLoginNotification($this->submittedEmail));
+            // Keep component in success state to show confirmation again
+            $this->isSubmitted = true;
+            $this->isSuccessful = true;
+        }
     }
 
-    public function isSuccessful(): bool
+    #[LiveAction]
+    public function changeEmail(): void
     {
-        return $this->isSuccessful;
+        // Reset component state to allow changing email
+        $this->isSubmitted = false;
+        $this->isSuccessful = false;
+        $this->submittedEmail = '';
+        $this->resetForm();
     }
 }

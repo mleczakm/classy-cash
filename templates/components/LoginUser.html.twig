@@ -61,26 +61,42 @@
         
         {{ form_end(form) }}
     {% else %}
-        <div class="text-center p-8">
-            <div class="rounded-full bg-green-100 p-4 inline-block mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
+        <div class="w-full max-w-md card-elegant shadow-2xl text-center py-16 px-10 animate-in">
+            <div class="w-24 h-24 bg-[#e6f5ee] rounded-full flex items-center justify-center mx-auto mb-10 relative">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#2aa57f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="relative z-10"><path d="M22 2L11 13"></path><path d="M22 2L15 22L11 13L2 9L22 2Z"></path></svg>
+                <div class="absolute inset-0 bg-[#2aa57f]/20 rounded-full animate-ping opacity-25"></div>
             </div>
-            <h2 class="text-2xl font-bold mb-4 text-[#1a2a52]">
-                {% if this.usePassword %}
-                    Logowanie pomyślne
-                {% else %}
-                    Link wysłany
-                {% endif %}
-            </h2>
-            <p class="text-[#6b7796] mb-6">
-                {% if this.usePassword %}
-                    Zostałeś pomyślnie zalogowany.
-                {% else %}
-                    Sprawdź swoją skrzynkę odbiorczą i kliknij w link logowania.
-                {% endif %}
-            </p>
+
+            <h2 class="text-4xl font-serif-brand font-bold text-[#1a2a52] mb-4">Sprawdź skrzynkę</h2>
+            <p class="text-[#6b7796] mb-2 font-medium">Właśnie wysłaliśmy magiczny link na adres:</p>
+            <div class="bg-slate-50 border border-slate-100 px-4 py-3 rounded-xl inline-block mb-10">
+                <span id="target-email" class="font-bold text-[#1a2a52] font-mono">{{ this.submittedEmail }}</span>
+            </div>
+
+            <div class="space-y-4">
+                <a href="https://mail.google.com" target="_blank" class="w-full btn-primary h-14 flex items-center justify-center gap-3">
+                    <svg width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M24 4.5v15c0 .85-.65 1.5-1.5 1.5H21V7.387l-9 6.463-9-6.463V21H1.5C.65 21 0 20.35 0 19.5v-15c0-.425.162-.8.431-1.068C.7 3.16 1.075 3 1.5 3H2l10 7.25L22 3h.5c.425 0 .8.162 1.069.432.27.268.431.643.431 1.068z"></path></svg>
+                    Otwórz Gmail
+                </a>
+                <p class="text-xs text-[#6b7796] px-6">Kliknij w przycisk w otrzymanej wiadomości, aby zalogować się bezpiecznie bez użycia hasła.</p>
+            </div>
+
+            <div class="mt-12 pt-8 border-t border-slate-100 flex flex-col gap-4">
+                <button 
+                    data-action="live#action" 
+                    data-live-action-param="resendEmail" 
+                    class="text-sm font-bold text-[#1a2a52] hover:text-[#e8b441] transition-colors cursor-pointer"
+                >
+                    Nie dotarł e-mail? Wyślij ponownie
+                </button>
+                <button 
+                    data-action="live#action" 
+                    data-live-action-param="changeEmail" 
+                    class="text-[10px] font-bold uppercase tracking-widest text-[#6b7796] hover:text-[#1a2a52] cursor-pointer"
+                >
+                    Zmień adres e-mail
+                </button>
+            </div>
         </div>
     {% endif %}
 </div>

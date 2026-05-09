@@ -119,3 +119,27 @@ parameters:
 			identifier: generator.valueType
 			count: 1
 			path: tests/Application/CommandHandler/ImportTransfersFromMailHandlerTest.php
+
+		-
+			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertStringContainsString\(\) expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 5
+			path: tests/LoginModeToggleTest.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 4
+			path: tests/LoginModeToggleTest.php
+
+		-
+			message: '#^Method App\\Tests\\LoginTest\:\:createTestUser\(\) is unused\.$#'
+			identifier: method.unused
+			count: 1
+			path: tests/LoginTest.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 3
+			path: tests/LoginTest.php

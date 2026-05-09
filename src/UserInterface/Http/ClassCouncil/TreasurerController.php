@@ -112,7 +112,7 @@ final class TreasurerController extends AbstractController
                     'student' => $student,
                 ]);
                 foreach ($studentPayments as $sp) {
-                    $sid = $sp->getStudent()
+                    $sid = (string) $sp->getStudent()
                         ->getId();
                     $paymentsByStudent[$sid] ??= [];
                     $paymentsByStudent[$sid][] = $sp;

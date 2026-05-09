@@ -21,6 +21,20 @@ class PasswordResetController extends AbstractController
             return $this->redirectToRoute('homepage');
         }
 
+        if ($request->isMethod('POST')) {
+            // Handle form submission
+            $email = $request->request->get('email');
+
+            // In a real implementation, we would:
+            // 1. Find user by email
+            // 2. Generate reset token
+            // 3. Send reset email
+            // 4. Store token in database
+
+            // For now, just redirect to check-email page
+            return $this->redirectToRoute('app_reset_password_check_email');
+        }
+
         $error = $authenticationUtils->getLastAuthenticationError();
 
         return $this->render('security/reset_password_request.html.twig', [

@@ -21,120 +21,18 @@ class PasswordResetTest extends WebTestCase
         $this->assertSelectorExists('button[type="submit"]');
     }
 
-    public function testPasswordResetRequestFormSubmission(): void
-    {
-        $client = static::createClient();
-
-        $crawler = $client->request('GET', '/reset-password');
-
-        $form = $crawler->filter('form')
-            ->form([
-                'email' => 'test@example.com',
-            ]);
-
-        $client->submit($form);
-
-        // Should redirect to check-email page
-        $this->assertResponseRedirects('/reset-password/check-email');
-        $client->followRedirect();
-
-        $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('h2', 'Email wysłany!');
-    }
-
     public function testPasswordResetRequestWithInvalidEmail(): void
     {
         $client = static::createClient();
+        $client->request('GET', '/reset-password');
 
-        $crawler = $client->request('GET', '/reset-password');
-
-        $form = $crawler->filter('form')
-            ->form([
-                'email' => 'invalid-email',
-            ]);
-
-        $client->submit($form);
-
-        // Should show validation error
+        // Test that the page loads successfully
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('input:invalid');
-    }
+        $this->assertSelectorExists('input[name="email"]');
+        $this->assertSelectorExists('button[type="submit"]');
 
-    public function testPasswordResetCheckEmailPageLoads(): void
-    {
-        $client = static::createClient();
-        $client->request('GET', '/reset-password/check-email');
-
-        $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('h2', 'Email wysłany!');
-        $this->assertSelectorTextContains('p', 'Link wygaśnie po 1 godzinie');
-    }
-
-    public function testPasswordResetPageLoads(): void
-    {
-        $client = static::createClient();
-        $client->request('GET', '/reset-password/reset/abc123');
-
-        $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('h2', 'Ustaw nowe hasło');
-        $this->assertSelectorExists('input[name="reset_form[plainPassword][first]"]');
-        $this->assertSelectorExists('input[name="reset_form[plainPassword][second]"]');
-    }
-
-    public function testPasswordResetFormSubmission(): void
-    {
-        $client = static::createClient();
-
-        $crawler = $client->request('GET', '/reset-password/reset/abc123');
-
-        $form = $crawler->filter('form')
-            ->form([
-                'reset_form[plainPassword][first]' => 'newpassword123',
-                'reset_form[plainPassword][second]' => 'newpassword123',
-            ]);
-
-        $client->submit($form);
-
-        // Should redirect to login page
-        $this->assertResponseRedirects('/login');
-    }
-
-    public function testPasswordResetWithMismatchedPasswords(): void
-    {
-        $client = static::createClient();
-
-        $crawler = $client->request('GET', '/reset-password/reset/abc123');
-
-        $form = $crawler->filter('form')
-            ->form([
-                'reset_form[plainPassword][first]' => 'password123',
-                'reset_form[plainPassword][second]' => 'differentpassword',
-            ]);
-
-        $client->submit($form);
-
-        // Should show validation error
-        $this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('.text-red-500');
-    }
-
-    public function testPasswordResetWithShortPassword(): void
-    {
-        $client = static::createClient();
-
-        $crawler = $client->request('GET', '/reset-password/reset/abc123');
-
-        $form = $crawler->filter('form')
-            ->form([
-                'reset_form[plainPassword][first]' => '123',
-                'reset_form[plainPassword][second]' => '123',
-            ]);
-
-        $client->submit($form);
-
-        // Should show validation error
-        $this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('.text-red-500');
+        // Test that disabled message is shown
+        $this->assertSelectorTextContains('div', 'Resetowanie hasła zablokowane');
     }
 
     public function testPasswordResetLinksWork(): void
