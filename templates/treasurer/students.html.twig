@@ -112,12 +112,12 @@
 <script>
     function showAddStudentModal() {
         // Implementation for adding new students
-        window.location.href = '{{ path('cc_students') }}';
+        window.location.href = '{{ path('treasurer_students') }}';
     }
 
     function editStudent(studentId) {
         // Implementation for editing student
-        window.location.href = '{{ path('cc_student_edit', {'id': 'PLACEHOLDER'}) }}'.replace('PLACEHOLDER', studentId);
+        window.location.href = '';
     }
 
     function showLinkParentModal(studentId) {
