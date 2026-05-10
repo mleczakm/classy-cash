@@ -41,7 +41,7 @@ final class TreasurerController extends AbstractController
         private readonly EntityManagerInterface $em,
     ) {}
 
-    #[Route('/cc',  methods: ['GET'])]
+    #[Route('/cc', methods: ['GET'])]
     public function index(): Response
     {
         if (! $this->getUser()) {

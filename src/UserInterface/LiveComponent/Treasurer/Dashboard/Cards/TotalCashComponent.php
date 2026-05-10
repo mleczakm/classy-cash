@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace App\UserInterface\LiveComponent\Treasurer\Dashboard\Cards;
 
-use App\Entity\ClassCouncil\ClassExpense;
-use App\Entity\ClassCouncil\ClassRoom;
 use App\Entity\ClassCouncil\StudentPayment;
 use App\Repository\ClassCouncil\ClassExpenseRepository;
 use App\Repository\ClassCouncil\StudentPaymentRepository;
 use App\Repository\ClassCouncil\ClassRoomRepository;
 use Brick\Money\Money;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
@@ -58,7 +55,7 @@ class TotalCashComponent extends AbstractController
     private function calculateTotalCash(): void
     {
         $class = $this->classRooms->findOneBy([]);
-        if (!$class) {
+        if (! $class) {
             $this->totalCash = Money::of(0, 'PLN');
             return;
         }
@@ -91,7 +88,7 @@ class TotalCashComponent extends AbstractController
 
     public function isPositive(): bool
     {
-        return !$this->totalCash->isNegative() && !$this->totalCash->isZero();
+        return ! $this->totalCash->isNegative() && ! $this->totalCash->isZero();
     }
 
     public function isNegative(): bool

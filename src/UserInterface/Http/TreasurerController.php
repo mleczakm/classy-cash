@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\UserInterface\Http;
 
+use App\Entity\User;
 use App\Entity\ClassCouncil\ClassRoom;
 use App\Entity\ClassCouncil\Student;
 use App\Entity\ClassCouncil\StudentPayment;
 use App\Entity\Contribution;
 use App\Entity\Payment;
-use App\Entity\Transfer;
 use App\Repository\ClassCouncil\ClassRoomRepository;
 use App\Repository\ClassCouncil\StudentPaymentRepository;
 use App\Repository\ClassCouncil\StudentRepository;
@@ -46,7 +46,7 @@ final class TreasurerController extends AbstractController
     public function dashboard(): Response
     {
         $class = $this->classRooms->findOneBy([]);
-        if (!$class) {
+        if (! $class) {
             return $this->redirectToRoute('onboard_setup');
         }
 
@@ -62,13 +62,15 @@ final class TreasurerController extends AbstractController
     public function payments(): Response
     {
         $class = $this->classRooms->findOneBy([]);
-        if (!$class) {
+        if (! $class) {
             return $this->redirectToRoute('onboard_setup');
         }
 
         $this->assertTreasurer($class);
 
-        $transfers = $this->transfers->findBy([], ['transferredAt' => 'DESC']);
+        $transfers = $this->transfers->findBy([], [
+            'transferredAt' => 'DESC',
+        ]);
 
         return $this->render('treasurer/payments.html.twig', [
             'classRoom' => $class,
@@ -80,7 +82,7 @@ final class TreasurerController extends AbstractController
     public function contributions(Request $request): Response
     {
         $class = $this->classRooms->findOneBy([]);
-        if (!$class) {
+        if (! $class) {
             return $this->redirectToRoute('onboard_setup');
         }
 
@@ -90,7 +92,7 @@ final class TreasurerController extends AbstractController
             $title = trim((string) $request->request->get('title', ''));
             $amountStr = trim((string) $request->request->get('amount_pln', ''));
             $dueAtStr = (string) $request->request->get('due_at', '');
-            $studentIds = $request->request->all('students', []);
+            $studentIds = $request->request->all('students');
 
             if ($title === '' || $amountStr === '') {
                 $this->addFlash('error', 'Tytuł i kwota składki są wymagane');
@@ -99,7 +101,7 @@ final class TreasurerController extends AbstractController
                 $dueAt = $dueAtStr !== '' ? new \DateTimeImmutable($dueAtStr) : null;
 
                 $contribution = new Contribution($class, $title, $amount, $dueAt);
-                
+
                 // Assign selected students
                 foreach ($studentIds as $studentId) {
                     try {
@@ -130,7 +132,12 @@ final class TreasurerController extends AbstractController
         }
 
         $activeContributions = $this->contributions->findActiveByClass($class);
-        $students = $this->students->findBy(['classRoom' => $class], ['lastName' => 'ASC', 'firstName' => 'ASC']);
+        $students = $this->students->findBy([
+            'classRoom' => $class,
+        ], [
+            'lastName' => 'ASC',
+            'firstName' => 'ASC',
+        ]);
 
         return $this->render('treasurer/contributions.html.twig', [
             'classRoom' => $class,
@@ -143,7 +150,7 @@ final class TreasurerController extends AbstractController
     public function students(Request $request): Response
     {
         $class = $this->classRooms->findOneBy([]);
-        if (!$class) {
+        if (! $class) {
             return $this->redirectToRoute('onboard_setup');
         }
 
@@ -170,7 +177,12 @@ final class TreasurerController extends AbstractController
             }
         }
 
-        $students = $this->students->findBy(['classRoom' => $class], ['lastName' => 'ASC', 'firstName' => 'ASC']);
+        $students = $this->students->findBy([
+            'classRoom' => $class,
+        ], [
+            'lastName' => 'ASC',
+            'firstName' => 'ASC',
+        ]);
 
         return $this->render('treasurer/students.html.twig', [
             'classRoom' => $class,
@@ -182,7 +194,7 @@ final class TreasurerController extends AbstractController
     public function manualTransactions(Request $request): Response
     {
         $class = $this->classRooms->findOneBy([]);
-        if (!$class) {
+        if (! $class) {
             return $this->redirectToRoute('onboard_setup');
         }
 
@@ -191,7 +203,7 @@ final class TreasurerController extends AbstractController
         if ($request->isMethod('POST')) {
             $type = $request->request->get('transaction_type');
             $amountStr = trim((string) $request->request->get('amount_pln', ''));
-            
+
             if ($amountStr === '') {
                 $this->addFlash('error', 'Kwota jest wymagana');
             } else {
@@ -200,7 +212,7 @@ final class TreasurerController extends AbstractController
                 if ($type === 'income') {
                     $description = $request->request->get('income_description', '');
                     $studentPaymentId = $request->request->get('student_payment_id');
-                    
+
                     if ($studentPaymentId) {
                         try {
                             $studentPayment = $this->studentPayments->find(Ulid::fromString($studentPaymentId));
@@ -211,8 +223,11 @@ final class TreasurerController extends AbstractController
                                 $studentPayment->setPayment($payment);
                                 $studentPayment->markPaid();
                                 $this->em->flush();
-                                
-                                $this->addFlash('success', 'Wpłata została zaksięgowana');
+
+                                $this->addFlash(
+                                    'success',
+                                    'Wpłata została zaksięgowana'
+                                );
                             }
                         } catch (\Throwable) {
                             $this->addFlash('error', 'Nieprawidłowa płatność ucznia');
@@ -233,7 +248,12 @@ final class TreasurerController extends AbstractController
             }
         }
 
-        $students = $this->students->findBy(['classRoom' => $class], ['lastName' => 'ASC', 'firstName' => 'ASC']);
+        $students = $this->students->findBy([
+            'classRoom' => $class,
+        ], [
+            'lastName' => 'ASC',
+            'firstName' => 'ASC',
+        ]);
         $studentPayments = $this->studentPayments->findByClass($class);
 
         return $this->render('treasurer/manual_transactions.html.twig', [
@@ -258,7 +278,7 @@ final class TreasurerController extends AbstractController
 
         // Reassign contributions to kept student
         foreach ($deleteStudent->getContributions() as $contribution) {
-            if (!$contribution->getStudents()->contains($keepStudent)) {
+            if (! $contribution->getStudents()->contains($keepStudent)) {
                 $contribution->addStudent($keepStudent);
             }
             $contribution->removeStudent($deleteStudent);
@@ -272,7 +292,7 @@ final class TreasurerController extends AbstractController
     private function assertTreasurer(ClassRoom $class): void
     {
         $user = $this->getUser();
-        if (!$user instanceof \App\Entity\User) {
+        if (! $user instanceof User) {
             throw $this->createAccessDeniedException();
         }
 

@@ -19,22 +19,9 @@ class Contribution
     #[ORM\Column(type: 'ulid')]
     private Ulid $id;
 
-    #[ORM\ManyToOne(targetEntity: ClassRoom::class)]
-    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    private ClassRoom $classRoom;
-
     #[ORM\ManyToMany(targetEntity: Student::class)]
     #[ORM\JoinTable(name: 'contribution_students')]
     private Collection $students;
-
-    #[ORM\Column(type: 'string', length: 255)]
-    private string $title;
-
-    #[ORM\Column(type: 'json_document')]
-    private Money $amount;
-
-    #[ORM\Column(type: 'datetime_immutable')]
-    private ?\DateTimeImmutable $dueAt = null;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeImmutable $createdAt;
@@ -46,16 +33,17 @@ class Contribution
     private Money $totalPaid;
 
     public function __construct(
-        ClassRoom $classRoom,
-        string $title,
-        Money $amount,
-        ?\DateTimeImmutable $dueAt = null
+        #[ORM\ManyToOne(targetEntity: ClassRoom::class)]
+        #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+        private ClassRoom $classRoom,
+        #[ORM\Column(type: 'string', length: 255)]
+        private string $title,
+        #[ORM\Column(type: 'json_document')]
+        private Money $amount,
+        #[ORM\Column(type: 'datetime_immutable')]
+        private ?\DateTimeImmutable $dueAt = null
     ) {
         $this->id = new Ulid();
-        $this->classRoom = $classRoom;
-        $this->title = $title;
-        $this->amount = $amount;
-        $this->dueAt = $dueAt;
         $this->createdAt = new \DateTimeImmutable();
         $this->students = new ArrayCollection();
         $this->totalPaid = Money::of(0, 'PLN');
@@ -113,7 +101,7 @@ class Contribution
 
     public function addStudent(Student $student): void
     {
-        if (!$this->students->contains($student)) {
+        if (! $this->students->contains($student)) {
             $this->students->add($student);
         }
     }

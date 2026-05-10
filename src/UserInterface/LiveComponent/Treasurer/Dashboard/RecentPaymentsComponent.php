@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\UserInterface\LiveComponent\Treasurer\Dashboard;
 
-use App\Entity\ClassCouncil\ClassRoom;
+use Brick\Money\Money;
 use App\Entity\ClassCouncil\StudentPayment;
 use App\Repository\ClassCouncil\ClassRoomRepository;
 use App\Repository\ClassCouncil\StudentPaymentRepository;
@@ -51,7 +51,7 @@ class RecentPaymentsComponent extends AbstractController
     private function loadRecentPayments(): void
     {
         $class = $this->classRooms->findOneBy([]);
-        if (!$class) {
+        if (! $class) {
             $this->recentPayments = [];
             return;
         }
@@ -62,7 +62,7 @@ class RecentPaymentsComponent extends AbstractController
     public function getPaymentMethod(StudentPayment $payment): string
     {
         $payment = $payment->getPayment();
-        if (!$payment) {
+        if (! $payment) {
             return 'Ręcznie';
         }
 
@@ -73,8 +73,8 @@ class RecentPaymentsComponent extends AbstractController
     public function getPaymentMethodClass(StudentPayment $payment): string
     {
         $method = $this->getPaymentMethod($payment);
-        
-        return match($method) {
+
+        return match ($method) {
             'Auto (BLIK)' => 'bg-emerald-50 text-emerald-600',
             'Auto (Przelew)' => 'bg-emerald-50 text-emerald-600',
             'Ręcznie' => 'bg-blue-50 text-blue-600',
@@ -82,7 +82,7 @@ class RecentPaymentsComponent extends AbstractController
         };
     }
 
-    public function formatAmount(\Brick\Money\Money $amount): string
+    public function formatAmount(Money $amount): string
     {
         $formatted = number_format($amount->getAmount(), 2, ',', ' ');
         return $formatted . ' PLN';

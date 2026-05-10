@@ -172,13 +172,17 @@ class StudentPaymentRepository extends ServiceEntityRepository
 
     public function save(StudentPayment $studentPayment): void
     {
-        $this->getEntityManager()->persist($studentPayment);
-        $this->getEntityManager()->flush();
+        $this->getEntityManager()
+            ->persist($studentPayment);
+        $this->getEntityManager()
+            ->flush();
     }
 
     public function remove(StudentPayment $studentPayment): void
     {
-        $this->getEntityManager()->remove($studentPayment);
-        $this->getEntityManager()->flush();
+        $this->getEntityManager()
+            ->remove($studentPayment);
+        $this->getEntityManager()
+            ->flush();
     }
 }

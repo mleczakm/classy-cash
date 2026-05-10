@@ -83,13 +83,17 @@ class TransferRepository extends ServiceEntityRepository
 
     public function save(Transfer $transfer): void
     {
-        $this->getEntityManager()->persist($transfer);
-        $this->getEntityManager()->flush();
+        $this->getEntityManager()
+            ->persist($transfer);
+        $this->getEntityManager()
+            ->flush();
     }
 
     public function remove(Transfer $transfer): void
     {
-        $this->getEntityManager()->remove($transfer);
-        $this->getEntityManager()->flush();
+        $this->getEntityManager()
+            ->remove($transfer);
+        $this->getEntityManager()
+            ->flush();
     }
 }

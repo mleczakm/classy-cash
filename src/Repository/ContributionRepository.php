@@ -57,13 +57,17 @@ class ContributionRepository extends ServiceEntityRepository
 
     public function save(Contribution $contribution): void
     {
-        $this->getEntityManager()->persist($contribution);
-        $this->getEntityManager()->flush();
+        $this->getEntityManager()
+            ->persist($contribution);
+        $this->getEntityManager()
+            ->flush();
     }
 
     public function remove(Contribution $contribution): void
     {
-        $this->getEntityManager()->remove($contribution);
-        $this->getEntityManager()->flush();
+        $this->getEntityManager()
+            ->remove($contribution);
+        $this->getEntityManager()
+            ->flush();
     }
 }

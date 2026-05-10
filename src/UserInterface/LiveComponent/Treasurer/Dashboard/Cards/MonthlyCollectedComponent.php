@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\UserInterface\LiveComponent\Treasurer\Dashboard\Cards;
 
-use App\Entity\ClassCouncil\ClassRoom;
-use App\Entity\ClassCouncil\StudentPayment;
 use App\Repository\ClassCouncil\ClassRoomRepository;
 use App\Repository\ClassCouncil\StudentPaymentRepository;
 use Brick\Money\Money;
@@ -54,17 +52,17 @@ class MonthlyCollectedComponent extends AbstractController
     private function calculateMonthlyCollected(): void
     {
         $class = $this->classRooms->findOneBy([]);
-        if (!$class) {
+        if (! $class) {
             $this->monthlyCollected = Money::of(0, 'PLN');
             return;
         }
 
         $monthlyCollected = Money::of(0, 'PLN');
-        
+
         // Get payments from current month
         $currentMonth = new \DateTimeImmutable('first day of this month midnight');
         $payments = $this->studentPayments->findPaidSince($class, $currentMonth);
-        
+
         foreach ($payments as $payment) {
             $monthlyCollected = $monthlyCollected->plus($payment->getAmount());
         }
@@ -83,9 +81,9 @@ class MonthlyCollectedComponent extends AbstractController
         $now = new \DateTimeImmutable();
         $months = [
             'styczeń', 'luty', 'marzec', 'kwiecień', 'maj', 'czerwiec',
-            'lipiec', 'sierpień', 'wrzesień', 'październik', 'listopad', 'grudzień'
+            'lipiec', 'sierpień', 'wrzesień', 'październik', 'listopad', 'grudzień',
         ];
-        
+
         return $months[(int) $now->format('n') - 1];
     }
 }
