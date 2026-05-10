@@ -80,4 +80,16 @@ class TransferRepository extends ServiceEntityRepository
                 ->enable('softdeleteable');
         }
     }
+
+    public function save(Transfer $transfer): void
+    {
+        $this->getEntityManager()->persist($transfer);
+        $this->getEntityManager()->flush();
+    }
+
+    public function remove(Transfer $transfer): void
+    {
+        $this->getEntityManager()->remove($transfer);
+        $this->getEntityManager()->flush();
+    }
 }

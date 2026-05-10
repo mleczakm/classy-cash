@@ -41,7 +41,7 @@ final class TreasurerController extends AbstractController
         private readonly EntityManagerInterface $em,
     ) {}
 
-    #[Route('/', name: 'homepage', methods: ['GET'])]
+    #[Route('/cc',  methods: ['GET'])]
     public function index(): Response
     {
         if (! $this->getUser()) {
@@ -162,7 +162,7 @@ final class TreasurerController extends AbstractController
     {
         $class = $this->classRooms->findOneBy([]);
         if (! $class) {
-            return $this->redirectToRoute('cc_create_class');
+            return $this->redirectToRoute('onboard_setup');
         }
 
         if ($request->isMethod('POST')) {
@@ -374,7 +374,7 @@ final class TreasurerController extends AbstractController
     {
         $class = $this->classRooms->findOneBy([]);
         if (! $class) {
-            return $this->redirectToRoute('cc_create_class');
+            return $this->redirectToRoute('onboard_setup');
         }
 
         if ($request->isMethod('POST')) {
@@ -431,7 +431,7 @@ final class TreasurerController extends AbstractController
     {
         $class = $this->classRooms->findOneBy([]);
         if (! $class) {
-            return $this->redirectToRoute('cc_create_class');
+            return $this->redirectToRoute('onboard_setup');
         }
         $this->assertTreasurer($class);
 
@@ -504,7 +504,7 @@ final class TreasurerController extends AbstractController
     {
         $class = $this->classRooms->findOneBy([]);
         if (! $class) {
-            return $this->redirectToRoute('cc_create_class');
+            return $this->redirectToRoute('onboard_setup');
         }
         $this->assertTreasurer($class);
 
@@ -541,7 +541,7 @@ final class TreasurerController extends AbstractController
     {
         $class = $this->classRooms->findOneBy([]);
         if (! $class) {
-            return $this->redirectToRoute('cc_create_class');
+            return $this->redirectToRoute('onboard_setup');
         }
         $this->assertTreasurer($class);
 
@@ -587,7 +587,7 @@ final class TreasurerController extends AbstractController
     {
         $class = $this->classRooms->findOneBy([]);
         if (! $class) {
-            return $this->redirectToRoute('cc_create_class');
+            return $this->redirectToRoute('onboard_setup');
         }
         $this->assertTreasurer($class);
 
@@ -609,7 +609,7 @@ final class TreasurerController extends AbstractController
     {
         $class = $this->classRooms->findOneBy([]);
         if (! $class) {
-            return $this->redirectToRoute('cc_create_class');
+            return $this->redirectToRoute('onboard_setup');
         }
         $this->assertTreasurer($class);
 

@@ -126,4 +126,59 @@ class StudentPaymentRepository extends ServiceEntityRepository
             'paid' => $paid,
         ];
     }
+
+    public function findByClass(ClassRoom $classRoom): array
+    {
+        return $this->createQueryBuilder('sp')
+            ->innerJoin('sp.student', 's')
+            ->innerJoin('s.classRoom', 'c')
+            ->where('c.id = :classRoom')
+            ->setParameter('classRoom', $classRoom->getId(), 'ulid')
+            ->orderBy('sp.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findPaidSince(ClassRoom $classRoom, \DateTimeImmutable $date): array
+    {
+        return $this->createQueryBuilder('sp')
+            ->innerJoin('sp.student', 's')
+            ->innerJoin('s.classRoom', 'c')
+            ->where('c.id = :classRoom')
+            ->andWhere('sp.status = :status')
+            ->andWhere('sp.paidAt >= :date')
+            ->setParameter('classRoom', $classRoom->getId(), 'ulid')
+            ->setParameter('status', StudentPayment::STATUS_PAID)
+            ->setParameter('date', $date)
+            ->orderBy('sp.paidAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findRecentPaid(ClassRoom $classRoom, int $limit = 10): array
+    {
+        return $this->createQueryBuilder('sp')
+            ->innerJoin('sp.student', 's')
+            ->innerJoin('s.classRoom', 'c')
+            ->where('c.id = :classRoom')
+            ->andWhere('sp.status = :status')
+            ->setParameter('classRoom', $classRoom->getId(), 'ulid')
+            ->setParameter('status', StudentPayment::STATUS_PAID)
+            ->orderBy('sp.paidAt', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function save(StudentPayment $studentPayment): void
+    {
+        $this->getEntityManager()->persist($studentPayment);
+        $this->getEntityManager()->flush();
+    }
+
+    public function remove(StudentPayment $studentPayment): void
+    {
+        $this->getEntityManager()->remove($studentPayment);
+        $this->getEntityManager()->flush();
+    }
 }
