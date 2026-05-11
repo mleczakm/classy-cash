@@ -13,6 +13,7 @@ use App\UserInterface\Http\Component\LoginUser;
 class LoginModeToggleTest extends WebTestCase
 {
     use InteractsWithLiveComponents;
+
     public function testLoginModeToggleFunctionality(): void
     {
         $testComponent = $this->createLiveComponent(LoginUser::class);
@@ -25,7 +26,12 @@ class LoginModeToggleTest extends WebTestCase
 
         $crawler = $testComponent->render();
         $this->assertCount(0, $crawler->crawler()->filter('input[name="login_user[password]"]'));
-        $this->assertStringContainsString('Zaloguj się hasłem', $crawler->crawler()->filter('button[data-live-action-param="togglePassword"]')->text());
+        $this->assertStringContainsString(
+            'Zaloguj się hasłem',
+            $crawler->crawler()
+                ->filter('button[data-live-action-param="togglePassword"]')
+                ->text()
+        );
 
         // Toggle to password mode
         $testComponent->call('togglePassword');
@@ -36,7 +42,12 @@ class LoginModeToggleTest extends WebTestCase
 
         $crawler = $testComponent->render();
         $this->assertCount(1, $crawler->crawler()->filter('input[name*="password"]'));
-        $this->assertStringContainsString('Zaloguj się linkiem email', $crawler->crawler()->filter('button[data-live-action-param="togglePassword"]')->text());
+        $this->assertStringContainsString(
+            'Zaloguj się linkiem email',
+            $crawler->crawler()
+                ->filter('button[data-live-action-param="togglePassword"]')
+                ->text()
+        );
         $this->assertStringContainsString('Zaloguj się', $crawler->crawler()->filter('button[type="submit"]')->text());
 
         // Toggle back to email link mode
@@ -47,8 +58,18 @@ class LoginModeToggleTest extends WebTestCase
 
         $crawler = $testComponent->render();
         $this->assertCount(0, $crawler->crawler()->filter('input[name*="password"]'));
-        $this->assertStringContainsString('Zaloguj się hasłem', $crawler->crawler()->filter('button[data-live-action-param="togglePassword"]')->text());
-        $this->assertStringContainsString('Wyślij link logowania', $crawler->crawler()->filter('button[type="submit"]')->text());
+        $this->assertStringContainsString(
+            'Zaloguj się hasłem',
+            $crawler->crawler()
+                ->filter('button[data-live-action-param="togglePassword"]')
+                ->text()
+        );
+        $this->assertStringContainsString(
+            'Wyślij link logowania',
+            $crawler->crawler()
+                ->filter('button[type="submit"]')
+                ->text()
+        );
     }
 
     public function testLoginModeToggleResetsFormState(): void
@@ -84,7 +105,8 @@ class LoginModeToggleTest extends WebTestCase
         $testComponent = $this->createLiveComponent(LoginUser::class);
 
         $renderedComponent = $testComponent->render();
-        $toggleButton = $renderedComponent->crawler()->filter('button[data-live-action-param="togglePassword"]');
+        $toggleButton = $renderedComponent->crawler()
+            ->filter('button[data-live-action-param="togglePassword"]');
 
         // Check that the button has the correct styling classes
         $this->assertStringContainsString('cursor-pointer', $toggleButton->attr('class'));
@@ -104,10 +126,16 @@ class LoginModeToggleTest extends WebTestCase
         $testComponent->call('togglePassword');
         $crawler = $testComponent->render();
         $this->assertCount(1, $crawler->crawler()->filter('a[href="/reset-password"]'));
-        $this->assertStringContainsString('Zapomniałeś hasła?', $crawler->crawler()->filter('a[href="/reset-password"]')->text());
+        $this->assertStringContainsString(
+            'Zapomniałeś hasła?',
+            $crawler->crawler()
+                ->filter('a[href="/reset-password"]')
+                ->text()
+        );
 
         // Check reset link styling
-        $resetLink = $crawler->crawler()->filter('a[href="/reset-password"]');
+        $resetLink = $crawler->crawler()
+            ->filter('a[href="/reset-password"]');
         $this->assertStringContainsString('cursor-not-allowed', $resetLink->attr('class'));
         $this->assertStringContainsString('text-[10px]', $resetLink->attr('class'));
     }
@@ -118,14 +146,16 @@ class LoginModeToggleTest extends WebTestCase
 
         // In email mode
         $crawler = $testComponent->render();
-        $submitButton = $crawler->crawler()->filter('button[type="submit"]');
+        $submitButton = $crawler->crawler()
+            ->filter('button[type="submit"]');
         $this->assertStringContainsString('cursor-pointer', $submitButton->attr('class'));
         $this->assertStringContainsString('Wyślij link logowania', $submitButton->text());
 
         // Toggle to password mode
         $testComponent->call('togglePassword');
         $crawler = $testComponent->render();
-        $submitButton = $crawler->crawler()->filter('button[type="submit"]');
+        $submitButton = $crawler->crawler()
+            ->filter('button[type="submit"]');
         $this->assertStringContainsString('cursor-pointer', $submitButton->attr('class'));
         $this->assertStringContainsString('Zaloguj się', $submitButton->text());
     }
@@ -137,32 +167,43 @@ class LoginModeToggleTest extends WebTestCase
         $crawler = $testComponent->render();
 
         // Check that the form has the correct structure
-        $form = $crawler->crawler()->filter('form');
+        $form = $crawler->crawler()
+            ->filter('form');
         $this->assertGreaterThan(0, $form->count());
-        
+
         // Debug: check what attributes the form actually has
         $formHtml = $form->outerHtml();
         $this->assertStringContainsString('space-y-5', $formHtml, 'Form should contain space-y-5 class');
 
         // Check that email field has correct structure
-        $emailContainer = $crawler->crawler()->filter('div:contains("Adres Email")')
+        $emailContainer = $crawler->crawler()
+            ->filter('div:contains("Adres Email")')
             ->closest('div');
         $this->assertGreaterThan(0, $emailContainer->count());
-        
+
         // Debug: check what attributes the email container actually has
         $emailContainerHtml = $emailContainer->outerHtml();
-        $this->assertStringContainsString('space-y-5', $emailContainerHtml, 'Email container should contain space-y-5 class');
+        $this->assertStringContainsString(
+            'space-y-5',
+            $emailContainerHtml,
+            'Email container should contain space-y-5 class'
+        );
 
         // Toggle to password mode and check password field structure
         $testComponent->call('togglePassword');
         $crawler = $testComponent->render();
 
-        $passwordContainer = $crawler->crawler()->filter('div:contains("Hasło")')
+        $passwordContainer = $crawler->crawler()
+            ->filter('div:contains("Hasło")')
             ->closest('div');
         $this->assertGreaterThan(0, $passwordContainer->count());
-        
+
         // Debug: check what attributes of password container actually has
         $passwordContainerHtml = $passwordContainer->outerHtml();
-        $this->assertStringContainsString('mt-5', $passwordContainerHtml, 'Password container should contain mt-5 class');
+        $this->assertStringContainsString(
+            'mt-5',
+            $passwordContainerHtml,
+            'Password container should contain mt-5 class'
+        );
     }
 }

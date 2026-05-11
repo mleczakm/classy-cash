@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\UserInterface\LiveComponent\Treasurer\Dashboard\Cards;
 
+use App\Entity\ClassCouncil\ClassRoom;
 use App\Entity\ClassCouncil\StudentPayment;
 use App\Repository\ClassCouncil\ClassRoomRepository;
 use App\Repository\ClassCouncil\StudentPaymentRepository;
@@ -31,6 +32,8 @@ class OutstandingPaymentsComponent extends AbstractController
     public function __construct(
         private readonly ClassRoomRepository $classRooms,
         private readonly StudentPaymentRepository $studentPayments,
+        #[LiveProp]
+        public ?ClassRoom $classRoom = null,
     ) {
         $this->outstandingAmount = Money::of(0, 'PLN');
         $this->outstandingCount = 0;
@@ -60,7 +63,7 @@ class OutstandingPaymentsComponent extends AbstractController
 
     private function calculateOutstandingPayments(): void
     {
-        $class = $this->classRooms->findOneBy([]);
+        $class = $this->classRoom;
         if (! $class) {
             $this->outstandingAmount = Money::of(0, 'PLN');
             $this->outstandingCount = 0;
@@ -80,12 +83,6 @@ class OutstandingPaymentsComponent extends AbstractController
 
         $this->outstandingAmount = $outstandingAmount;
         $this->outstandingCount = $outstandingCount;
-    }
-
-    public function getFormattedAmount(): string
-    {
-        $amount = $this->outstandingAmount->getAmount();
-        return number_format($amount, 2, ',', ' ');
     }
 
     public function hasOutstanding(): bool

@@ -19,6 +19,9 @@ class Contribution
     #[ORM\Column(type: 'ulid')]
     private Ulid $id;
 
+    /**
+     * @var Collection<int, Student>
+     */
     #[ORM\ManyToMany(targetEntity: Student::class)]
     #[ORM\JoinTable(name: 'contribution_students')]
     private Collection $students;
@@ -40,7 +43,7 @@ class Contribution
         private string $title,
         #[ORM\Column(type: 'json_document')]
         private Money $amount,
-        #[ORM\Column(type: 'datetime_immutable')]
+        #[ORM\Column(type: 'datetime_immutable', nullable: true)]
         private ?\DateTimeImmutable $dueAt = null
     ) {
         $this->id = new Ulid();
@@ -94,6 +97,9 @@ class Contribution
         return $this->createdAt;
     }
 
+    /**
+     * @return Collection<int, Student>
+     */
     public function getStudents(): Collection
     {
         return $this->students;
@@ -142,7 +148,9 @@ class Contribution
             return 0.0;
         }
 
-        return (float) ($this->totalPaid->getAmount() / $expectedAmount->getAmount()) * 100;
+        return $this->totalPaid->getAmount()
+            ->dividedBy($expectedAmount->getAmount())
+            ->toFloat() * 100;
     }
 
     public function getRemainingAmount(): Money

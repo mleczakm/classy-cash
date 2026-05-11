@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\UserInterface\LiveComponent\Treasurer\Dashboard\Cards;
 
+use App\Entity\ClassCouncil\ClassRoom;
 use App\Repository\ClassCouncil\ClassRoomRepository;
 use App\Repository\ClassCouncil\StudentPaymentRepository;
 use Brick\Money\Money;
@@ -28,6 +29,8 @@ class MonthlyCollectedComponent extends AbstractController
     public function __construct(
         private readonly ClassRoomRepository $classRooms,
         private readonly StudentPaymentRepository $studentPayments,
+        #[LiveProp]
+        public ?ClassRoom $classRoom = null,
     ) {
         $this->monthlyCollected = Money::of(0, 'PLN');
     }
@@ -39,6 +42,7 @@ class MonthlyCollectedComponent extends AbstractController
 
     public function getMonthlyCollected(): Money
     {
+        $this->calculateMonthlyCollected();
         return $this->monthlyCollected;
     }
 
@@ -51,8 +55,7 @@ class MonthlyCollectedComponent extends AbstractController
 
     private function calculateMonthlyCollected(): void
     {
-        $class = $this->classRooms->findOneBy([]);
-        if (! $class) {
+        if (! $this->classRoom) {
             $this->monthlyCollected = Money::of(0, 'PLN');
             return;
         }
@@ -61,29 +64,12 @@ class MonthlyCollectedComponent extends AbstractController
 
         // Get payments from current month
         $currentMonth = new \DateTimeImmutable('first day of this month midnight');
-        $payments = $this->studentPayments->findPaidSince($class, $currentMonth);
+        $payments = $this->studentPayments->findPaidSince($this->classRoom, $currentMonth);
 
         foreach ($payments as $payment) {
             $monthlyCollected = $monthlyCollected->plus($payment->getAmount());
         }
 
         $this->monthlyCollected = $monthlyCollected;
-    }
-
-    public function getFormattedAmount(): string
-    {
-        $amount = $this->monthlyCollected->getAmount();
-        return number_format($amount, 2, ',', ' ');
-    }
-
-    public function getCurrentMonth(): string
-    {
-        $now = new \DateTimeImmutable();
-        $months = [
-            'styczeń', 'luty', 'marzec', 'kwiecień', 'maj', 'czerwiec',
-            'lipiec', 'sierpień', 'wrzesień', 'październik', 'listopad', 'grudzień',
-        ];
-
-        return $months[(int) $now->format('n') - 1];
     }
 }

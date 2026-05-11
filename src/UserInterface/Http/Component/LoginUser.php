@@ -131,6 +131,9 @@ class LoginUser extends AbstractController
         $this->resetForm();
     }
 
+    /**
+     * @return array{url: string, name: string}
+     */
     public function getWebmailInfo(): array
     {
         if (! $this->submittedEmail) {

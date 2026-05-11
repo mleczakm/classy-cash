@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\UserInterface\LiveComponent\Treasurer\Dashboard\Cards;
 
+use App\Entity\ClassCouncil\ClassRoom;
 use App\Entity\ClassCouncil\StudentPayment;
 use App\Repository\ClassCouncil\ClassExpenseRepository;
 use App\Repository\ClassCouncil\StudentPaymentRepository;
@@ -31,17 +32,16 @@ class TotalCashComponent extends AbstractController
         private readonly ClassRoomRepository $classRooms,
         private readonly StudentPaymentRepository $studentPayments,
         private readonly ClassExpenseRepository $expenses,
+        #[LiveProp]
+        public ?ClassRoom $classRoom = null,
     ) {
         $this->totalCash = Money::of(0, 'PLN');
     }
 
-    public function mount(): void
-    {
-        $this->calculateTotalCash();
-    }
-
     public function getTotalCash(): Money
     {
+        $this->calculateTotalCash();
+
         return $this->totalCash;
     }
 
@@ -54,7 +54,7 @@ class TotalCashComponent extends AbstractController
 
     private function calculateTotalCash(): void
     {
-        $class = $this->classRooms->findOneBy([]);
+        $class = $this->classRoom;
         if (! $class) {
             $this->totalCash = Money::of(0, 'PLN');
             return;
@@ -80,19 +80,13 @@ class TotalCashComponent extends AbstractController
         $this->totalCash = $sumPaid->minus($sumExpenses);
     }
 
-    public function getFormattedAmount(): string
-    {
-        $amount = $this->totalCash->getAmount();
-        return number_format($amount, 2, ',', ' ');
-    }
-
     public function isPositive(): bool
     {
-        return ! $this->totalCash->isNegative() && ! $this->totalCash->isZero();
+        return $this->totalCash->isPositive();
     }
 
     public function isNegative(): bool
     {
-        return $this->totalCash->isNegative();
+        return $this->totalCash->isNegativeOrZero();
     }
 }
