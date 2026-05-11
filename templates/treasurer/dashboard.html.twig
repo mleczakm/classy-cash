@@ -2,7 +2,7 @@
 
 {% block title %}Panel Główny{% endblock %}
 
-{% block content %}
+{% block page_content %}
 <div class="t-view">
     <header class="mb-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
         <div>
@@ -41,6 +41,7 @@
 {% endblock %}
 
 {% block javascripts %}
+    {{ parent() }}
 <script>
     // Auto-refresh dashboard data every 30 seconds
     setInterval(() => {

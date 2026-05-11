@@ -57,7 +57,7 @@
             <p class="text-[#6b7796]">Skonfiguruj finanse Twojej klasy w 3 prostych krokach.</p>
         </header>
 
-        <form method="post" class="space-y-6">
+        {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
             <!-- Krok 1 -->
             <div class="card-elegant relative overflow-hidden">
                 <div class="absolute left-0 top-0 bottom-0 w-1 bg-[#1a2a52]"></div>
@@ -67,12 +67,14 @@
                 </h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-[10px] font-bold uppercase mb-2">Nazwa klasy (np. 4B)</label>
-                        <input type="text" name="class_name" class="input-elegant" placeholder="4B" required>
+                        {{ form_label(form.className, null, {'label_attr': {'class': 'block text-[10px] font-bold uppercase mb-2'}}) }}
+                        {{ form_widget(form.className, {'attr': {'class': 'input-elegant', 'placeholder': '4B'}}) }}
+                        {{ form_errors(form.className) }}
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold uppercase mb-2">Szkoła</label>
-                        <input type="text" name="school_name" class="input-elegant" placeholder="Szkoła Podstawowa nr 5" required>
+                        {{ form_label(form.schoolName, null, {'label_attr': {'class': 'block text-[10px] font-bold uppercase mb-2'}}) }}
+                        {{ form_widget(form.schoolName, {'attr': {'class': 'input-elegant', 'placeholder': 'Szkoła Podstawowa nr 5'}}) }}
+                        {{ form_errors(form.schoolName) }}
                     </div>
                 </div>
             </div>
@@ -86,12 +88,14 @@
                 </h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-[10px] font-bold uppercase mb-2">Numer telefonu (BLIK)</label>
-                        <input type="text" name="blik_phone" class="input-elegant" placeholder="+48 000 000 000" required>
+                        {{ form_label(form.blikPhone, null, {'label_attr': {'class': 'block text-[10px] font-bold uppercase mb-2'}}) }}
+                        {{ form_widget(form.blikPhone, {'attr': {'class': 'input-elegant', 'placeholder': '123456789'}}) }}
+                        {{ form_errors(form.blikPhone) }}
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold uppercase mb-2">Numer konta bankowego</label>
-                        <input type="text" name="bank_account" class="input-elegant" placeholder="PL 00 0000..." required>
+                        {{ form_label(form.bankAccount, null, {'label_attr': {'class': 'block text-[10px] font-bold uppercase mb-2'}}) }}
+                        {{ form_widget(form.bankAccount, {'attr': {'class': 'input-elegant', 'placeholder': 'PL 00 0000...'}}) }}
+                        {{ form_errors(form.bankAccount) }}
                     </div>
                 </div>
             </div>
@@ -106,21 +110,23 @@
                 <p class="text-xs text-[#6b7796] mb-6 max-w-xl">System automatycznie zaksięguje przelewy na podstawie powiadomień e-mail. Aktualnie wspieramy połączenie Alior Bank z kontem Gmail.</p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-[10px] font-bold uppercase mb-2">Adres Email (Gmail)</label>
-                        <input type="email" name="email" class="input-elegant bg-white border-amber-200 focus:border-[#e8b441]" placeholder="twoja.klasa@gmail.com" required>
+                        {{ form_label(form.email, null, {'label_attr': {'class': 'block text-[10px] font-bold uppercase mb-2'}}) }}
+                        {{ form_widget(form.email, {'attr': {'class': 'input-elegant bg-white border-amber-200 focus:border-[#e8b441]', 'placeholder': 'twoja.klasa@gmail.com'}}) }}
+                        {{ form_errors(form.email) }}
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold uppercase mb-2">Hasło aplikacji</label>
-                        <input type="password" name="app_password" class="input-elegant bg-white border-amber-200 focus:border-[#e8b441]" placeholder="16-znakowe hasło" required>
+                        {{ form_label(form.appPassword, null, {'label_attr': {'class': 'block text-[10px] font-bold uppercase mb-2'}}) }}
+                        {{ form_widget(form.appPassword, {'attr': {'class': 'input-elegant bg-white border-amber-200 focus:border-[#e8b441]', 'placeholder': '16-znakowe hasło'}}) }}
+                        {{ form_errors(form.appPassword) }}
                     </div>
                 </div>
             </div>
 
             <div class="flex justify-between items-center pt-8">
                 <a href="{{ path('app_login') }}" class="text-sm font-bold text-[#6b7796] hover:text-[#1a2a52]">Wróć do logowania</a>
-                <button type="submit" class="btn-accent px-12 py-4 text-lg shadow-xl shadow-amber-200/50">Uruchom System</button>
+                {{ form_widget(form.submit, {'attr': {'class': 'btn-accent px-12 py-4 text-lg shadow-xl shadow-amber-200/50'}}) }}
             </div>
-        </form>
+        {{ form_end(form) }}
     </div>
 </div>
 {% endblock %}

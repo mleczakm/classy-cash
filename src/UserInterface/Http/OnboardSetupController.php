@@ -9,10 +9,14 @@ use App\Repository\ClassCouncil\ClassRoomRepository;
 use App\Settings\Settings;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[Route('/setup')]
 #[IsGranted('ROLE_USER')]
@@ -32,29 +36,22 @@ final class OnboardSetupController extends AbstractController
             return $this->redirectToRoute('treasurer_dashboard');
         }
 
-        if ($request->isMethod('POST')) {
-            $className = trim((string) $request->request->get('class_name', ''));
-            $schoolName = trim((string) $request->request->get('school_name', ''));
-            $blikPhone = trim((string) $request->request->get('blik_phone', ''));
-            $bankAccount = trim((string) $request->request->get('bank_account', ''));
-            $email = trim((string) $request->request->get('email', ''));
-            $appPassword = trim((string) $request->request->get('app_password', ''));
+        $form = $this->createSetupForm();
+        $form->handleRequest($request);
 
-            if ($className === '' || $schoolName === '' || $blikPhone === '' || $bankAccount === '' || $email === '' || $appPassword === '') {
-                $this->addFlash('error', 'Wszystkie pola są wymagane');
-                return $this->redirectToRoute('onboard_setup');
-            }
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
 
             // Create class room
-            $classRoom = new ClassRoom($className);
+            $classRoom = new ClassRoom($data['className']);
             $this->em->persist($classRoom);
 
             // Save settings
-            $this->settings->set('app_name', $schoolName);
-            $this->settings->set('blik_phone', $blikPhone);
-            $this->settings->set('transfer_account', $bankAccount);
-            $this->settings->set('setup_email', $email);
-            $this->settings->set('setup_password', $appPassword);
+            $this->settings->set('app_name', $data['schoolName']);
+            $this->settings->set('blik_phone', $data['blikPhone']);
+            $this->settings->set('transfer_account', $data['bankAccount']);
+            $this->settings->set('setup_email', $data['email']);
+            $this->settings->set('setup_password', $data['appPassword']);
 
             $this->em->flush();
 
@@ -63,7 +60,92 @@ final class OnboardSetupController extends AbstractController
         }
 
         return $this->render('onboard_setup/index.html.twig', [
+            'form' => $form,
             'step' => $request->query->get('step', 1),
         ]);
+    }
+
+    private function createSetupForm(): FormInterface
+    {
+        return $this->createFormBuilder()
+            ->add('className', TextType::class, [
+                'label' => 'Nazwa klasy',
+                'constraints' => [
+                    new Assert\NotBlank([
+                        'message' => 'Nazwa klasy jest wymagana',
+                    ]),
+                    new Assert\Length([
+                        'min' => 2,
+                        'max' => 50,
+                        'minMessage' => 'Nazwa klasy musi mieć co najmniej {{ limit }} znaków',
+                        'maxMessage' => 'Nazwa klasy nie może mieć więcej niż {{ limit }} znaków',
+                    ]),
+                ],
+            ])
+            ->add('schoolName', TextType::class, [
+                'label' => 'Nazwa szkoły',
+                'constraints' => [
+                    new Assert\NotBlank([
+                        'message' => 'Nazwa szkoły jest wymagana',
+                    ]),
+                    new Assert\Length([
+                        'min' => 2,
+                        'max' => 100,
+                        'minMessage' => 'Nazwa szkoły musi mieć co najmniej {{ limit }} znaków',
+                        'maxMessage' => 'Nazwa szkoły nie może mieć więcej niż {{ limit }} znaków',
+                    ]),
+                ],
+            ])
+            ->add('blikPhone', TextType::class, [
+                'label' => 'Telefon BLIK',
+                'constraints' => [
+                    new Assert\NotBlank([
+                        'message' => 'Telefon BLIK jest wymagany',
+                    ]),
+                    new Assert\Regex([
+                        'pattern' => '/^[0-9]{9}$/',
+                        'message' => 'Telefon BLIK musi składać się z 9 cyfr',
+                    ]),
+                ],
+            ])
+            ->add('bankAccount', TextType::class, [
+                'label' => 'Numer konta bankowego',
+                'constraints' => [
+                    new Assert\NotBlank([
+                        'message' => 'Numer konta bankowego jest wymagany',
+                    ]),
+                    new Assert\Regex([
+                        'pattern' => '/^[0-9]{26}$/',
+                        'message' => 'Numer konta bankowego musi składać się z 26 cyfr',
+                    ]),
+                ],
+            ])
+            ->add('email', TextType::class, [
+                'label' => 'Email',
+                'constraints' => [
+                    new Assert\NotBlank([
+                        'message' => 'Email jest wymagany',
+                    ]),
+                    new Assert\Email([
+                        'message' => 'Podaj prawidłowy adres email',
+                    ]),
+                ],
+            ])
+            ->add('appPassword', TextType::class, [
+                'label' => 'Hasło aplikacji',
+                'constraints' => [
+                    new Assert\NotBlank([
+                        'message' => 'Hasło aplikacji jest wymagane',
+                    ]),
+                    new Assert\Length([
+                        'min' => 8,
+                        'minMessage' => 'Hasło aplikacji musi mieć co najmniej {{ limit }} znaków',
+                    ]),
+                ],
+            ])
+            ->add('submit', SubmitType::class, [
+                'label' => 'Zakończ konfigurację',
+            ])
+            ->getForm();
     }
 }

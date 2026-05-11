@@ -2,7 +2,7 @@
 
 {% block title %}Uczniowie i Rodzice{% endblock %}
 
-{% block content %}
+{% block page_content %}
 <div class="t-view">
     <header class="mb-10">
         <h1 class="text-3xl font-serif-brand font-bold text-[#1a2a52]">Uczniowie i Rodzice</h1>
@@ -12,7 +12,8 @@
     <div class="card-elegant !p-0 overflow-hidden bg-white shadow-md border border-slate-200">
         <div class="p-6 border-b flex justify-between items-center bg-slate-50">
             <h3 class="font-bold text-[#1a2a52]">Lista Uczniów {{ classRoom.name }}</h3>
-            <button class="btn-primary py-2 text-xs" onclick="showAddStudentModal()">Dodaj ucznia</button>
+            <!-- Add Student Component (includes button and modal) -->
+    {{ component('treasurer:students:add_student') }}
         </div>
         <div class="divide-y divide-slate-100">
             {% for student in students %}
