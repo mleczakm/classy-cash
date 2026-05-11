@@ -31,6 +31,10 @@ services:
       - '../src/Infrastructure/Doctrine/Middleware/SchemaSearchPathMiddleware.php'
       - '../src/Infrastructure/Doctrine/Middleware/SchemaAutoCreationMiddleware.php'
 
+  App\Application\Service\WebmailUrlService:
+    arguments:
+      $appEnv: '%env(APP_ENV)%'
+
   # add more service definitions when explicit configuration is needed
   # please note that last definitions always *replace* previous ones
 

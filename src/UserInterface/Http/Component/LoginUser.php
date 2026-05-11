@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\UserInterface\Http\Component;
 
 use App\Application\Command\SendLoginNotification;
+use App\Application\Service\WebmailUrlService;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -39,6 +40,7 @@ class LoginUser extends AbstractController
 
     public function __construct(
         private readonly MessageBusInterface $messageBus,
+        private readonly WebmailUrlService $webmailUrlService,
     ) {}
 
     /**
@@ -127,5 +129,17 @@ class LoginUser extends AbstractController
         $this->isSuccessful = false;
         $this->submittedEmail = '';
         $this->resetForm();
+    }
+
+    public function getWebmailInfo(): array
+    {
+        if (! $this->submittedEmail) {
+            return [
+                'url' => 'https://mail.google.com',
+                'name' => 'Gmail',
+            ];
+        }
+
+        return $this->webmailUrlService->getWebmailInfo($this->submittedEmail);
     }
 }

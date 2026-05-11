@@ -74,9 +74,10 @@
             </div>
 
             <div class="space-y-4">
-                <a href="https://mail.google.com" target="_blank" class="w-full btn-primary h-14 flex items-center justify-center gap-3">
+                {% set webmail = this.getWebmailInfo() %}
+                <a href="{{ webmail.url }}" target="_blank" class="w-full btn-primary h-14 flex items-center justify-center gap-3">
                     <svg width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M24 4.5v15c0 .85-.65 1.5-1.5 1.5H21V7.387l-9 6.463-9-6.463V21H1.5C.65 21 0 20.35 0 19.5v-15c0-.425.162-.8.431-1.068C.7 3.16 1.075 3 1.5 3H2l10 7.25L22 3h.5c.425 0 .8.162 1.069.432.27.268.431.643.431 1.068z"></path></svg>
-                    Otwórz Gmail
+                    Otwórz {{ webmail.name }}
                 </a>
                 <p class="text-xs text-[#6b7796] px-6">Kliknij w przycisk w otrzymanej wiadomości, aby zalogować się bezpiecznie bez użycia hasła.</p>
             </div>
