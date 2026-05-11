@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Tests\UserInterface\LiveComponent\Treasurer\Dashboard;
 
+use PHPUnit\Framework\Attributes\Group;
 use App\UserInterface\LiveComponent\Treasurer\Dashboard\Cards\MonthlyCollectedComponent;
 use App\Tests\Functional\FunctionalTestCase;
 use Brick\Money\Money;
 use Symfony\UX\LiveComponent\Test\InteractsWithLiveComponents;
 
-#[\PHPUnit\Framework\Attributes\Group('functional')]
+#[Group('functional')]
 class MonthlyCollectedComponentTest extends FunctionalTestCase
 {
     use InteractsWithLiveComponents;

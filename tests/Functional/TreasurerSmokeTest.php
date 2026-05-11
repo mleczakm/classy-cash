@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional;
 
-#[\PHPUnit\Framework\Attributes\Group('smoke')]
+use PHPUnit\Framework\Attributes\Group;
+
+#[Group('smoke')]
 class TreasurerSmokeTest extends FunctionalTestCase
 {
     public function testDashboardPageLoads(): void

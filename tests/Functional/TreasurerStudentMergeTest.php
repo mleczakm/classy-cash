@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional;
 
+use PHPUnit\Framework\Attributes\Group;
 use Brick\Money\Money;
 
-#[\PHPUnit\Framework\Attributes\Group('functional')]
+#[Group('functional')]
 class TreasurerStudentMergeTest extends FunctionalTestCase
 {
     public function testMergeStudentsReassignsPaymentsCorrectly(): void

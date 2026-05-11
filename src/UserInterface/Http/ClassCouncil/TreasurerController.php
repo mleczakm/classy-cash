@@ -156,95 +156,95 @@ final class TreasurerController extends AbstractController
         return $this->render('class_council/create_class.html.twig');
     }
 
-//    #[IsGranted('ROLE_USER')]
-//    #[Route('/students', name: 'cc_students', methods: ['GET', 'POST'])]
-//    public function students(Request $request): Response
-//    {
-//        $class = $this->classRooms->findOneBy([]);
-//        if (! $class) {
-//            return $this->redirectToRoute('onboard_setup');
-//        }
-//
-//        if ($request->isMethod('POST')) {
-//            $first = trim((string) $request->request->get('first_name', ''));
-//            $last = trim((string) $request->request->get('last_name', ''));
-//            if ($first === '' || $last === '') {
-//                $this->addFlash('error', 'Imię i nazwisko są wymagane');
-//            } else {
-//                $student = new Student($class, $first, $last);
-//
-//                $student->addParent($this->getUser());
-//                $this->em->persist($student);
-//                $this->em->flush();
-//
-//                // Initialize required payments for this student based on tenant templates
-//                $this->initializeStudentPayments($student);
-//
-//                $this->addFlash('success', 'Dodano ucznia');
-//
-//                return $this->redirectToRoute('homepage');
-//            }
-//        }
-//
-//        $list = $this->students->findBy([
-//            'classRoom' => $class,
-//        ], [
-//            'lastName' => 'ASC',
-//            'firstName' => 'ASC',
-//        ]);
-//
-//        // If treasurer, load payments and balances per student
-//        $isTreasurer = $this->isCurrentUserTreasurer($class);
-//        $paymentsByStudent = [];
-//        $balances = [];
-//        if ($isTreasurer && $list !== []) {
-//            $allPayments = $this->studentPayments->findForStudents($list);
-//            $zero = Money::of(0, 'PLN');
-//            foreach ($list as $s) {
-//                $sid = (string) $s->getId();
-//                $paymentsByStudent[$sid] = [];
-//                $balances[$sid] = [
-//                    'required' => $zero,
-//                    'paid' => $zero,
-//                    'balance' => $zero,
-//                ];
-//            }
-//            foreach ($allPayments as $sp) {
-//                $sid = (string) $sp->getStudent()
-//                    ->getId();
-//                $paymentsByStudent[$sid][] = $sp;
-//                if (isset($balances[$sid])) {
-//                    $balances[$sid]['required'] = $balances[$sid]['required']->plus($sp->getAmount());
-//                    if ($sp->getStatus() === StudentPayment::STATUS_PAID) {
-//                        $balances[$sid]['paid'] = $balances[$sid]['paid']->plus($sp->getAmount());
-//                    }
-//                }
-//            }
-//            foreach ($balances as $sid => $b) {
-//                $balances[$sid]['balance'] = $b['required']->minus($b['paid']);
-//            }
-//        }
-//
-//        // Determine which students current user can edit
-//        $editableIds = [];
-//        $user = $this->getUser();
-//        if ($user instanceof User) {
-//            foreach ($list as $s) {
-//                if ($isTreasurer || $s->getParents()->contains($user)) {
-//                    $editableIds[] = (string) $s->getId();
-//                }
-//            }
-//        }
-//
-//        return $this->render('class_council/students.html.twig', [
-//            'classRoom' => $class,
-//            'students' => $list,
-//            'isTreasurer' => $isTreasurer,
-//            'paymentsByStudent' => $paymentsByStudent,
-//            'balances' => $balances,
-//            'editableIds' => $editableIds,
-//        ]);
-//    }
+    //    #[IsGranted('ROLE_USER')]
+    //    #[Route('/students', name: 'cc_students', methods: ['GET', 'POST'])]
+    //    public function students(Request $request): Response
+    //    {
+    //        $class = $this->classRooms->findOneBy([]);
+    //        if (! $class) {
+    //            return $this->redirectToRoute('onboard_setup');
+    //        }
+    //
+    //        if ($request->isMethod('POST')) {
+    //            $first = trim((string) $request->request->get('first_name', ''));
+    //            $last = trim((string) $request->request->get('last_name', ''));
+    //            if ($first === '' || $last === '') {
+    //                $this->addFlash('error', 'Imię i nazwisko są wymagane');
+    //            } else {
+    //                $student = new Student($class, $first, $last);
+    //
+    //                $student->addParent($this->getUser());
+    //                $this->em->persist($student);
+    //                $this->em->flush();
+    //
+    //                // Initialize required payments for this student based on tenant templates
+    //                $this->initializeStudentPayments($student);
+    //
+    //                $this->addFlash('success', 'Dodano ucznia');
+    //
+    //                return $this->redirectToRoute('homepage');
+    //            }
+    //        }
+    //
+    //        $list = $this->students->findBy([
+    //            'classRoom' => $class,
+    //        ], [
+    //            'lastName' => 'ASC',
+    //            'firstName' => 'ASC',
+    //        ]);
+    //
+    //        // If treasurer, load payments and balances per student
+    //        $isTreasurer = $this->isCurrentUserTreasurer($class);
+    //        $paymentsByStudent = [];
+    //        $balances = [];
+    //        if ($isTreasurer && $list !== []) {
+    //            $allPayments = $this->studentPayments->findForStudents($list);
+    //            $zero = Money::of(0, 'PLN');
+    //            foreach ($list as $s) {
+    //                $sid = (string) $s->getId();
+    //                $paymentsByStudent[$sid] = [];
+    //                $balances[$sid] = [
+    //                    'required' => $zero,
+    //                    'paid' => $zero,
+    //                    'balance' => $zero,
+    //                ];
+    //            }
+    //            foreach ($allPayments as $sp) {
+    //                $sid = (string) $sp->getStudent()
+    //                    ->getId();
+    //                $paymentsByStudent[$sid][] = $sp;
+    //                if (isset($balances[$sid])) {
+    //                    $balances[$sid]['required'] = $balances[$sid]['required']->plus($sp->getAmount());
+    //                    if ($sp->getStatus() === StudentPayment::STATUS_PAID) {
+    //                        $balances[$sid]['paid'] = $balances[$sid]['paid']->plus($sp->getAmount());
+    //                    }
+    //                }
+    //            }
+    //            foreach ($balances as $sid => $b) {
+    //                $balances[$sid]['balance'] = $b['required']->minus($b['paid']);
+    //            }
+    //        }
+    //
+    //        // Determine which students current user can edit
+    //        $editableIds = [];
+    //        $user = $this->getUser();
+    //        if ($user instanceof User) {
+    //            foreach ($list as $s) {
+    //                if ($isTreasurer || $s->getParents()->contains($user)) {
+    //                    $editableIds[] = (string) $s->getId();
+    //                }
+    //            }
+    //        }
+    //
+    //        return $this->render('class_council/students.html.twig', [
+    //            'classRoom' => $class,
+    //            'students' => $list,
+    //            'isTreasurer' => $isTreasurer,
+    //            'paymentsByStudent' => $paymentsByStudent,
+    //            'balances' => $balances,
+    //            'editableIds' => $editableIds,
+    //        ]);
+    //    }
 
     #[Route('/students/{id}/edit', name: 'cc_student_edit', requirements: [
         'id' => '[0-9A-HJKMNPQRSTUVWXYZ]{26}',

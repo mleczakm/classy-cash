@@ -224,10 +224,7 @@ final class TreasurerController extends AbstractController
                                 $studentPayment->markPaid();
                                 $this->em->flush();
 
-                                $this->addFlash(
-                                    'success',
-                                    'Wpłata została zaksięgowana'
-                                );
+                                $this->addFlash('success', 'Wpłata została zaksięgowana');
                             }
                         } catch (\Throwable) {
                             $this->addFlash('error', 'Nieprawidłowa płatność ucznia');
