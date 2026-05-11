@@ -10,6 +10,9 @@ class WebmailUrlService
         private readonly string $appEnv
     ) {}
 
+    /**
+     * @return array{url: string, name: string}
+     */
     public function getWebmailInfo(string $email): array
     {
         if ($this->appEnv === 'dev') {
@@ -19,7 +22,7 @@ class WebmailUrlService
             ];
         }
 
-        $domain = substr(strrchr($email, '@'), 1);
+        $domain = explode('@', $email)[1] ?? '';
 
         // Check MX records
         $mxhosts = [];
