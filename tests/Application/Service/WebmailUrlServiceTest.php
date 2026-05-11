@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Application\Service;
 
+use PHPUnit\Framework\Attributes\Group;
 use App\Application\Service\WebmailUrlService;
 use PHPUnit\Framework\TestCase;
 
-#[\PHPUnit\Framework\Attributes\Group('unit')]
+#[Group('unit')]
 class WebmailUrlServiceTest extends TestCase
 {
     private WebmailUrlService $devService;
@@ -84,7 +85,6 @@ class WebmailUrlServiceTest extends TestCase
     {
         $result = $this->prodService->getWebmailInfo('test@example.com');
 
-        $this->assertIsArray($result);
         $this->assertArrayHasKey('url', $result);
         $this->assertArrayHasKey('name', $result);
     }
