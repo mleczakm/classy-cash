@@ -20,12 +20,14 @@ use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\ComponentWithFormTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
+use Symfony\UX\LiveComponent\ComponentToolsTrait;
 
 #[AsLiveComponent('treasurer:students:add_student')]
 class AddStudentComponent extends AbstractController
 {
     use DefaultActionTrait;
     use ComponentWithFormTrait;
+    use ComponentToolsTrait;
 
     #[LiveProp(writable: true)]
     public bool $modalOpened = false;
