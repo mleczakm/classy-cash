@@ -1,11 +1,11 @@
 <div {{ attributes }} class="card-elegant !p-0 overflow-hidden bg-white border border-slate-200 shadow-sm relative">
-    <div class="p-8 border-b border-slate-50 bg-white sticky top-0 z-10">
+    <div class="p-8 border-slate-50 bg-white sticky top-0 z-10">
         <h3 class="font-bold text-[#1a2a52] text-lg uppercase tracking-tight">Ostatnio zaksięgowane operacje</h3>
         <p class="text-[11px] text-slate-400 font-medium mt-1">Nieskończona historia przepływów (Autoloading)</p>
     </div>
     <div class="overflow-x-auto bg-white">
         <table class="w-full text-left whitespace-nowrap">
-            <thead class="bg-slate-50/50 border-b border-slate-100 text-[10px] uppercase font-bold text-slate-400 tracking-[0.1em]">
+            <thead class="bg-slate-50/50 border-slate-100 text-[10px] uppercase font-bold text-slate-400 tracking-[0.1em]">
                 <tr>
                     <th class="px-8 py-4">Opis operacji / Cel</th>
                     <th class="px-8 py-4 text-center">Data</th>
@@ -53,7 +53,7 @@
     </div>
     
     <!-- TRIGGER DLA INFINITE SCROLL -->
-    <div id="infinite-scroll-trigger" class="p-12 flex flex-col items-center justify-center gap-4 bg-slate-50/20 border-t border-slate-50">
+    <div id="infinite-scroll-trigger" class="p-12 flex flex-col items-center justify-center gap-4 bg-slate-50/20 border-slate-50">
         <div id="loading-indicator" class="flex flex-col items-center gap-3 transition-opacity opacity-0" style="opacity: 0;">
             <svg class="spinner w-6 h-6 text-[#e8b441]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
                 <circle cx="12" cy="12" r="10" stroke="currentColor" opacity="0.2"></circle>
@@ -64,3 +64,114 @@
         <div id="end-of-history" class="hidden text-xs text-slate-300 font-medium italic">Koniec historii finansowej</div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const operationsBody = document.getElementById('operations-body');
+    const trigger = document.getElementById('infinite-scroll-trigger');
+    const loadingIndicator = document.getElementById('loading-indicator');
+    const endOfHistory = document.getElementById('end-of-history');
+    
+    let currentPage = 1;
+    let isLoading = false;
+    let hasMoreData = true;
+    
+    // Intersection Observer for infinite scroll
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && !isLoading && hasMoreData) {
+                loadMoreTransactions();
+            }
+        });
+    }, {
+        root: null,
+        rootMargin: '100px',
+        threshold: 0.1
+    });
+    
+    if (trigger) {
+        observer.observe(trigger);
+    }
+    
+    async function loadMoreTransactions() {
+        if (isLoading || !hasMoreData) return;
+        
+        isLoading = true;
+        showLoading();
+        
+        try {
+            // Simulate API call - replace with actual LiveComponent call
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            // Get more transactions from LiveComponent
+            const response = await fetch(window.location.href, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: new URLSearchParams({
+                    'live_component': 'treasurer:dashboard:recent_payments',
+                    'live_action': 'loadMore',
+                    'page': currentPage + 1
+                })
+            });
+            
+            if (response.ok) {
+                const html = await response.text();
+                
+                // Parse HTML to extract new rows
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const newRows = doc.querySelectorAll('#operations-body tr');
+                
+                if (newRows.length > 0) {
+                    newRows.forEach((row, index) => {
+                        row.style.animationDelay = `${index * 20}ms`;
+                        operationsBody.appendChild(row);
+                    });
+                    
+                    currentPage++;
+                } else {
+                    hasMoreData = false;
+                    showEndOfHistory();
+                }
+            } else {
+                hasMoreData = false;
+                showEndOfHistory();
+            }
+        } catch (error) {
+            console.error('Error loading more transactions:', error);
+            hasMoreData = false;
+            showEndOfHistory();
+        } finally {
+            isLoading = false;
+            hideLoading();
+        }
+    }
+    
+    function showLoading() {
+        if (loadingIndicator) {
+            loadingIndicator.style.opacity = '1';
+        }
+    }
+    
+    function hideLoading() {
+        if (loadingIndicator) {
+            loadingIndicator.style.opacity = '0';
+        }
+    }
+    
+    function showEndOfHistory() {
+        if (loadingIndicator) {
+            loadingIndicator.style.display = 'none';
+        }
+        if (endOfHistory) {
+            endOfHistory.classList.remove('hidden');
+        }
+        if (trigger) {
+            observer.unobserve(trigger);
+        }
+    }
+});
+</script>

@@ -29,6 +29,12 @@ class RecentPaymentsComponent extends AbstractController
     public array $recentTransactions = [];
 
     #[LiveProp]
+    public int $page = 1;
+
+    #[LiveProp]
+    public bool $hasMoreData = true;
+
+    #[LiveProp]
     public ?ClassRoom $classRoom = null;
 
     public function __construct(
@@ -84,18 +90,31 @@ class RecentPaymentsComponent extends AbstractController
         $this->emit('recentTransactionsRefreshed');
     }
 
+    #[LiveAction]
+    public function loadMore(): void
+    {
+        $this->page++;
+        $this->loadRecentTransactions();
+        $this->emit('moreTransactionsLoaded');
+    }
+
     private function loadRecentTransactions(): void
     {
         if (! $this->classRoom) {
             $this->recentTransactions = [];
+            $this->hasMoreData = false;
             return;
         }
 
         $transactions = [];
         $this->logger->debug('ClassRoom: ' . $this->classRoom->getName());
 
+        // Calculate pagination limits
+        $limit = 10;
+        $offset = ($this->page - 1) * $limit;
+
         // Get recent paid student payments
-        $studentPayments = $this->studentPayments->findRecentPaid($this->classRoom, 5);
+        $studentPayments = $this->studentPayments->findRecentPaid($this->classRoom, 50); // Get more for pagination
         foreach ($studentPayments as $payment) {
             $transactions[] = [
                 'type' => 'income',
@@ -112,7 +131,7 @@ class RecentPaymentsComponent extends AbstractController
         $expenses = $this->expenses->findByClass($this->classRoom);
         $this->logger->debug('Found ' . count($expenses) . ' expenses');
 
-        $expenses = array_slice($expenses, 0, 5); // Limit to 5 most recent
+        $expenses = array_slice($expenses, 0, 50); // Get more for pagination
         foreach ($expenses as $expense) {
             $this->logger->debug('Adding expense: ' . $expense->getLabel());
             $transactions[] = [
@@ -127,7 +146,7 @@ class RecentPaymentsComponent extends AbstractController
         }
 
         // Get recent general payments (not linked to student payments)
-        $generalPayments = $this->payments->findRecentByUser($this->getUser(), 5);
+        $generalPayments = $this->payments->findRecentByUser($this->getUser(), 50); // Get more for pagination
         foreach ($generalPayments as $payment) {
             $transactions[] = [
                 'type' => 'income',
@@ -143,8 +162,22 @@ class RecentPaymentsComponent extends AbstractController
         // Sort all transactions by date (most recent first)
         usort($transactions, fn($a, $b) => $b['date'] <=> $a['date']);
 
-        $this->recentTransactions = array_slice($transactions, 0, 10); // Limit to 10 total
+        // Apply pagination
+        $paginatedTransactions = array_slice($transactions, $offset, $limit);
+        
+        // Check if there's more data
+        $totalTransactions = count($transactions);
+        $this->hasMoreData = ($offset + $limit) < $totalTransactions;
+
+        // For first page, replace all transactions. For subsequent pages, append
+        if ($this->page === 1) {
+            $this->recentTransactions = $paginatedTransactions;
+        } else {
+            $this->recentTransactions = array_merge($this->recentTransactions, $paginatedTransactions);
+        }
+
         $this->logger->debug('Final transactions count: ' . count($this->recentTransactions));
+        $this->logger->debug('Has more data: ' . ($this->hasMoreData ? 'true' : 'false'));
     }
 
     public function getPaymentMethod(StudentPayment $payment): string
