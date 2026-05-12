@@ -22,18 +22,17 @@ class OutstandingPaymentsComponent extends AbstractController
     use ComponentToolsTrait;
     use DefaultActionTrait;
 
-    #[LiveProp]
-    public ?string $refreshKey = null;
-
     private Money $outstandingAmount;
 
     private int $outstandingCount;
 
+    #[LiveProp]
+    public ?ClassRoom $classRoom = null;
+
     public function __construct(
         private readonly ClassRoomRepository $classRooms,
         private readonly StudentPaymentRepository $studentPayments,
-        #[LiveProp]
-        public ?ClassRoom $classRoom = null,
+
     ) {
         $this->outstandingAmount = Money::of(0, 'PLN');
         $this->outstandingCount = 0;

@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Entity\ClassCouncil\ClassRoom;
 use App\Entity\ClassCouncil\Student;
 use App\Entity\ClassCouncil\StudentPayment;
+use App\Entity\ClassCouncil\ClassExpense;
 use App\Entity\Contribution;
 use App\Entity\Payment;
 use App\Repository\ClassCouncil\ClassRoomRepository;
@@ -210,43 +211,57 @@ final class TreasurerController extends AbstractController
 
             if ($amountStr === '') {
                 $this->addFlash('error', 'Kwota jest wymagana');
-            } else {
-                $amount = Money::of($amountStr, 'PLN');
-
-                if ($type === 'income') {
-                    $description = $request->request->get('income_description', '');
-                    $studentPaymentId = $request->request->get('student_payment_id');
-
-                    if ($studentPaymentId) {
-                        try {
-                            $studentPayment = $this->studentPayments->find(Ulid::fromString($studentPaymentId));
-                            if ($studentPayment) {
-                                // Create payment and link to student payment
-                                $payment = new Payment($this->getUser(), $amount);
-                                $this->em->persist($payment);
-                                $studentPayment->setPayment($payment);
-                                $studentPayment->markPaid();
-                                $this->em->flush();
-
-                                $this->addFlash('success', 'Wpłata została zaksięgowana');
-                            }
-                        } catch (\Throwable) {
-                            $this->addFlash('error', 'Nieprawidłowa płatność ucznia');
-                        }
-                    } else {
-                        // General income
-                        $this->addFlash('success', 'Przychód został zaksięgowany');
-                    }
-                } elseif ($type === 'expense') {
-                    $description = $request->request->get('expense_description', '');
-                    if ($description === '') {
-                        $this->addFlash('error', 'Opis wydatku jest wymagany');
-                    } else {
-                        // Create expense record (would need ClassExpense entity)
-                        $this->addFlash('success', 'Wydatek został zaksięgowany');
-                    }
-                }
+                return $this->redirectToRoute('treasurer_manual_transactions');
             }
+            $amount = Money::of($amountStr, 'PLN');
+
+            if ($type === 'income') {
+                $description = $request->request->get('income_description', '');
+                $studentPaymentId = $request->request->get('student_payment_id');
+
+                if ($studentPaymentId) {
+                    try {
+                        $studentPayment = $this->studentPayments->find(Ulid::fromString($studentPaymentId));
+                        if ($studentPayment) {
+                            // Create payment and link to student payment
+                            $payment = new Payment($this->getUser(), $amount);
+                            $this->em->persist($payment);
+                            $studentPayment->setPayment($payment);
+                            $studentPayment->markPaid();
+                            $this->em->flush();
+
+                            $this->addFlash('success', 'Wpłata została zaksięgowana');
+                            return $this->redirectToRoute('treasurer_manual_transactions');
+                        }
+                    } catch (\Throwable) {
+                        $this->addFlash('error', 'Nieprawidłowa płatność ucznia');
+                        return $this->redirectToRoute('treasurer_manual_transactions');
+                    }
+                } else {
+                    // General income - create a standalone payment record
+                    $payment = new Payment($this->getUser(), $amount);
+                    $this->em->persist($payment);
+                    $this->em->flush();
+
+                    $this->addFlash('success', 'Przychód został zaksięgowany');
+                    return $this->redirectToRoute('treasurer_manual_transactions');
+                }
+            } elseif ($type === 'expense') {
+                $description = $request->request->get('expense_description', '');
+                if ($description === '') {
+                    $this->addFlash('error', 'Opis wydatku jest wymagany');
+                    return $this->redirectToRoute('treasurer_manual_transactions');
+                }
+                // Create expense record
+                $expense = new ClassExpense($class, $description, $amount);
+                $this->em->persist($expense);
+                $this->em->flush();
+
+                $this->addFlash('success', 'Wydatek został zaksięgowany');
+                return $this->redirectToRoute('treasurer_manual_transactions');
+
+            }
+
         }
 
         $students = $this->students->findBy([

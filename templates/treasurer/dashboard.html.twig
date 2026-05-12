@@ -19,22 +19,30 @@
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
         <!-- Total Cash Card -->
-        {{ component('treasurer:dashboard:total_cash') }}
+        {{ component('treasurer:dashboard:total_cash', {
+            'classRoom': classRoom
+        }) }}
 
         <!-- Monthly Collected Card -->
-        {{ component('treasurer:dashboard:monthly_collected') }}
+        {{ component('treasurer:dashboard:monthly_collected', {
+            'classRoom': classRoom
+        }) }}
 
         <!-- Outstanding Payments Card -->
-        {{ component('treasurer:dashboard:outstanding_payments') }}
+        {{ component('treasurer:dashboard:outstanding_payments', {
+            'classRoom': classRoom
+        }) }}
     </div>
 
-    <!-- Recent Payments -->
+    <!-- Recent Transactions -->
     <div class="card-elegant !p-0 overflow-hidden">
         <div class="p-6 border-b border-slate-100 bg-white">
-            <h3 class="font-bold text-[#1a2a52]">Ostatnio zaksięgowane wpłaty</h3>
+            <h3 class="font-bold text-[#1a2a52]">Ostatnio zaksięgowane operacje</h3>
         </div>
         <div class="overflow-x-auto bg-white">
-            {{ component('treasurer:dashboard:recent_payments') }}
+            {{ component('treasurer:dashboard:recent_payments', {
+            'classRoom': classRoom
+        }) }}
         </div>
     </div>
 </div>

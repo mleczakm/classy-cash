@@ -21,28 +21,22 @@ class MonthlyCollectedComponent extends AbstractController
     use ComponentToolsTrait;
     use DefaultActionTrait;
 
-    #[LiveProp]
-    public ?string $refreshKey = null;
-
     private Money $monthlyCollected;
+
+    #[LiveProp]
+    public ?ClassRoom $classRoom = null;
 
     public function __construct(
         private readonly ClassRoomRepository $classRooms,
         private readonly StudentPaymentRepository $studentPayments,
-        #[LiveProp]
-        public ?ClassRoom $classRoom = null,
     ) {
         $this->monthlyCollected = Money::of(0, 'PLN');
-    }
-
-    public function mount(): void
-    {
-        $this->calculateMonthlyCollected();
     }
 
     public function getMonthlyCollected(): Money
     {
         $this->calculateMonthlyCollected();
+
         return $this->monthlyCollected;
     }
 

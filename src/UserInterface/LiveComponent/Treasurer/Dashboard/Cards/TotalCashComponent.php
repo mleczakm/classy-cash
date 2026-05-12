@@ -22,18 +22,15 @@ class TotalCashComponent extends AbstractController
 {
     use ComponentToolsTrait;
     use DefaultActionTrait;
+    private Money $totalCash;
 
     #[LiveProp]
-    public ?string $refreshKey = null;
-
-    private Money $totalCash;
+    public ClassRoom $classRoom;
 
     public function __construct(
         private readonly ClassRoomRepository $classRooms,
         private readonly StudentPaymentRepository $studentPayments,
         private readonly ClassExpenseRepository $expenses,
-        #[LiveProp]
-        public ?ClassRoom $classRoom = null,
     ) {
         $this->totalCash = Money::of(0, 'PLN');
     }
@@ -54,6 +51,9 @@ class TotalCashComponent extends AbstractController
 
     private function calculateTotalCash(): void
     {
+        error_log(
+            'DEBUG: TotalCashComponent classRoom is ' . ($this->classRoom ? $this->classRoom->getName() : 'NULL')
+        );
         $class = $this->classRoom;
         if (! $class) {
             $this->totalCash = Money::of(0, 'PLN');

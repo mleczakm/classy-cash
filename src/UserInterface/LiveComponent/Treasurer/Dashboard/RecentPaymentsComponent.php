@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace App\UserInterface\LiveComponent\Treasurer\Dashboard;
 
+use App\Entity\ClassCouncil\ClassRoom;
 use Brick\Money\Money;
 use App\Entity\ClassCouncil\StudentPayment;
 use App\Repository\ClassCouncil\ClassRoomRepository;
 use App\Repository\ClassCouncil\StudentPaymentRepository;
+use App\Repository\ClassCouncil\ClassExpenseRepository;
+use App\Repository\PaymentRepository;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
@@ -21,42 +25,126 @@ class RecentPaymentsComponent extends AbstractController
     use ComponentToolsTrait;
     use DefaultActionTrait;
 
-    #[LiveProp]
-    public ?string $refreshKey = null;
+    #[LiveProp(useSerializerForHydration: true)]
+    public array $recentTransactions = [];
 
-    private array $recentPayments = [];
+    #[LiveProp]
+    public ?ClassRoom $classRoom = null;
 
     public function __construct(
         private readonly ClassRoomRepository $classRooms,
         private readonly StudentPaymentRepository $studentPayments,
+        private readonly ClassExpenseRepository $expenses,
+        private readonly PaymentRepository $payments,
+        private readonly LoggerInterface $logger,
+
     ) {}
 
     public function mount(): void
     {
-        $this->loadRecentPayments();
+        $this->loadRecentTransactions();
     }
 
-    public function getRecentPayments(): array
+    public function getRecentTransactions(): array
     {
-        return $this->recentPayments;
+        $this->loadRecentTransactions();
+        return $this->recentTransactions;
+    }
+
+    public function getCurrentBalance(): Money
+    {
+        if (! $this->classRoom) {
+            return Money::of(0, 'PLN');
+        }
+
+        $sumPaid = Money::of(0, 'PLN');
+        $sumExpenses = Money::of(0, 'PLN');
+
+        // Calculate total paid student payments
+        $payments = $this->studentPayments->findByClass($this->classRoom);
+        foreach ($payments as $payment) {
+            if ($payment->getStatus() === StudentPayment::STATUS_PAID) {
+                $sumPaid = $sumPaid->plus($payment->getAmount());
+            }
+        }
+
+        // Calculate total expenses
+        $expenses = $this->expenses->findByClass($this->classRoom);
+        foreach ($expenses as $expense) {
+            $sumExpenses = $sumExpenses->plus($expense->getAmount());
+        }
+
+        return $sumPaid->minus($sumExpenses);
     }
 
     #[LiveAction]
     public function refreshData(): void
     {
-        $this->loadRecentPayments();
-        $this->emit('recentPaymentsRefreshed');
+        $this->loadRecentTransactions();
+        $this->emit('recentTransactionsRefreshed');
     }
 
-    private function loadRecentPayments(): void
+    private function loadRecentTransactions(): void
     {
-        $class = $this->classRooms->findOneBy([]);
-        if (! $class) {
-            $this->recentPayments = [];
+        if (! $this->classRoom) {
+            $this->recentTransactions = [];
             return;
         }
 
-        $this->recentPayments = $this->studentPayments->findRecentPaid($class, 10);
+        $transactions = [];
+        $this->logger->debug('ClassRoom: ' . $this->classRoom->getName());
+
+        // Get recent paid student payments
+        $studentPayments = $this->studentPayments->findRecentPaid($this->classRoom, 5);
+        foreach ($studentPayments as $payment) {
+            $transactions[] = [
+                'type' => 'income',
+                'description' => $payment->getLabel(),
+                'amount' => $payment->getAmount(),
+                'date' => $payment->getPaidAt() ?? $payment->getCreatedAt(),
+                'student' => $payment->getStudent(),
+                'method' => $this->getPaymentMethod($payment),
+                'methodClass' => $this->getPaymentMethodClass($payment),
+            ];
+        }
+
+        // Get recent expenses
+        $expenses = $this->expenses->findByClass($this->classRoom);
+        $this->logger->debug('Found ' . count($expenses) . ' expenses');
+
+        $expenses = array_slice($expenses, 0, 5); // Limit to 5 most recent
+        foreach ($expenses as $expense) {
+            $this->logger->debug('Adding expense: ' . $expense->getLabel());
+            $transactions[] = [
+                'type' => 'expense',
+                'description' => $expense->getLabel(),
+                'amount' => $expense->getAmount(),
+                'date' => $expense->getSpentAt(),
+                'student' => null,
+                'method' => 'Wydatek',
+                'methodClass' => 'bg-red-50 text-red-600',
+            ];
+        }
+
+        // Get recent general payments (not linked to student payments)
+        $generalPayments = $this->payments->findRecentByUser($this->getUser(), 5);
+        foreach ($generalPayments as $payment) {
+            $transactions[] = [
+                'type' => 'income',
+                'description' => 'Wpłata ogólna',
+                'amount' => $payment->getAmount(),
+                'date' => $payment->getCreatedAt(),
+                'student' => null,
+                'method' => 'Ręcznie',
+                'methodClass' => 'bg-blue-50 text-blue-600',
+            ];
+        }
+
+        // Sort all transactions by date (most recent first)
+        usort($transactions, fn($a, $b) => $b['date'] <=> $a['date']);
+
+        $this->recentTransactions = array_slice($transactions, 0, 10); // Limit to 10 total
+        $this->logger->debug('Final transactions count: ' . count($this->recentTransactions));
     }
 
     public function getPaymentMethod(StudentPayment $payment): string
@@ -80,11 +168,5 @@ class RecentPaymentsComponent extends AbstractController
             'Ręcznie' => 'bg-blue-50 text-blue-600',
             default => 'bg-gray-50 text-gray-600'
         };
-    }
-
-    public function formatAmount(Money $amount): string
-    {
-        $formatted = number_format($amount->getAmount(), 2, ',', ' ');
-        return $formatted . ' PLN';
     }
 }
