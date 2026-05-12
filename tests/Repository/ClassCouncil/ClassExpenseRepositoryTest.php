@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Tests\Repository\ClassCouncil;
 
+use PHPUnit\Framework\Attributes\Group;
 use App\Entity\ClassCouncil\ClassExpense;
 use App\Entity\ClassCouncil\ClassRoom;
 use Brick\Money\Money;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-#[\PHPUnit\Framework\Attributes\Group('functional')]
+#[Group('functional')]
 final class ClassExpenseRepositoryTest extends KernelTestCase
 {
     private EntityManagerInterface $em;
