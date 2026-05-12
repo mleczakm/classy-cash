@@ -1,0 +1,126 @@
+<div {{ attributes }} class="main-view min-h-screen flex-col items-center justify-center p-6 bg-[#f7f6f0] flex">
+    <style>
+        .step-dot { width: 10px; height: 10px; border-radius: 50%; background: #e2e6ee; transition: all 0.3s; }
+        .step-dot.active { background: #1a2a52; width: 24px; border-radius: 10px; }
+        .btn-primary { background-color: #1a2a52; color: white; border-radius: 14px; padding: 12px 24px; font-weight: 600; transition: all 0.2s; text-align: center; }
+        .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(26, 42, 82, 0.15); }
+        .btn-accent { background-color: #e8b441; color: #1a2a52; border-radius: 14px; padding: 12px 24px; font-weight: 700; transition: all 0.2s; text-align: center; }
+        .btn-accent:hover { filter: brightness(0.95); transform: translateY(-1px); box-shadow: 0 4px 15px rgba(232, 180, 65, 0.3); }
+        .input-elegant { background: white; border: 1px solid #e2e6ee; border-radius: 10px; padding: 12px 16px; width: 100%; font-size: 0.95rem; outline: none; transition: border-color 0.2s; }
+        .input-elegant:focus { border-color: #1a2a52; box-shadow: 0 0 0 3px rgba(26, 42, 82, 0.05); }
+        .card-elegant { background: #ffffff; border-radius: 14px; border: 1px solid #e2e6ee; box-shadow: 0 4px 20px -6px rgba(26, 42, 82, 0.08); padding: 2rem; }
+        .font-serif-brand { font-family: 'Playfair Display', serif; }
+    </style>
+
+    <div class="w-full max-w-2xl">
+        <!-- Header Onboardingu -->
+        <div class="flex justify-between items-center mb-10">
+            <div class="flex items-center gap-3">
+                <svg width="40" height="40" viewBox="0 0 100 100">
+                    <rect width="100" height="100" rx="24" fill="#1a2a52" />
+                    <path d="M50 15L80 35V65L50 85L20 65V35L50 15Z" stroke="#e8b441" stroke-width="4" fill="none" />
+                    <circle cx="50" cy="50" r="15" stroke="#e8b441" stroke-width="4" fill="none" />
+                    <path d="M50 35V65M42 42H58M42 58H58" stroke="#e8b441" stroke-width="4" stroke-linecap="round" fill="none" />
+                </svg>
+                <span class="font-serif-brand font-bold text-[#1a2a52] text-xl">Nowa Instalacja</span>
+            </div>
+            <div class="flex gap-2" id="stepper-dots">
+                <div class="step-dot {{ step == 1 ? 'active' : '' }}"></div>
+                <div class="step-dot {{ step == 2 ? 'active' : '' }}"></div>
+                <div class="step-dot {{ step == 3 ? 'active' : '' }}"></div>
+            </div>
+        </div>
+
+        <!-- KROK 1: TOŻSAMOŚĆ -->
+        {% if step == 1 %}
+        <div id="onboarding-step-1" class="onboarding-step card-elegant shadow-2xl">
+            <h2 class="text-3xl font-serif-brand font-bold text-[#1a2a52] mb-2">Witaj, Skarbniku!</h2>
+            <p class="text-[#6b7796] mb-8">Zostałeś wykryty jako pierwszy użytkownik tej instancji. Zajmij klasę i ustal swoje dane dostępowe.</p>
+
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-[10px] font-bold uppercase mb-2 block">Imię</label>
+                        <input type="text" data-model="firstName" class="input-elegant bg-slate-50" placeholder="np. Anna">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold uppercase mb-2 block">Nazwisko</label>
+                        <input type="text" data-model="lastName" class="input-elegant bg-slate-50" placeholder="np. Kowalska">
+                    </div>
+                </div>
+                <div>
+                    <label class="text-[10px] font-bold uppercase mb-2 block">E-mail (Właściciel)</label>
+                    <input type="email" data-model="email" class="input-elegant bg-white" placeholder="twoj@email.com">
+                </div>
+                <div>
+                    <label class="text-[10px] font-bold uppercase mb-2 block">Hasło do panelu</label>
+                    <input type="password" data-model="password" class="input-elegant" placeholder="Ustal bezpieczne hasło">
+                </div>
+            </div>
+            <div class="mt-10 flex justify-end">
+                <button data-action="live#action" data-live-action-param="setStep" data-live-step-param="2" class="btn-primary px-10">Dalej: Dane Klasy</button>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- KROK 2: DANE KLASY I PŁATNOŚCI -->
+        {% if step == 2 %}
+        <div id="onboarding-step-2" class="onboarding-step card-elegant shadow-2xl">
+            <h2 class="text-3xl font-serif-brand font-bold text-[#1a2a52] mb-2">Twoja Klasa</h2>
+            <p class="text-[#6b7796] mb-8">Skonfiguruj nazwę klasy oraz miejsce, gdzie rodzice będą przesyłać składki.</p>
+
+            <div class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-[10px] font-bold uppercase mb-2 block">Nazwa (np. Klasa 4B)</label>
+                        <input type="text" data-model="className" class="input-elegant bg-slate-50" placeholder="4B">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold uppercase mb-2 block">Szkoła</label>
+                        <input type="text" data-model="schoolName" class="input-elegant bg-slate-50" placeholder="SP nr 12 w Krakowie">
+                    </div>
+                </div>
+                <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                    <h4 class="text-xs font-bold text-[#1a2a52] mb-4 uppercase tracking-widest">Odbiorca Przelewów</h4>
+                    <div class="space-y-4">
+                        <input type="text" data-model="blikPhone" class="input-elegant" placeholder="Numer telefonu do BLIK">
+                        <input type="text" data-model="accountNumber" class="input-elegant" placeholder="Numer konta bankowego (PL...)">
+                    </div>
+                </div>
+            </div>
+            <div class="mt-10 flex justify-between">
+                <button data-action="live#action" data-live-action-param="setStep" data-live-step-param="1" class="text-sm font-bold text-slate-400">Cofnij</button>
+                <button data-action="live#action" data-live-action-param="setStep" data-live-step-param="3" class="btn-primary px-10">Dalej: Automatyzacja</button>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- KROK 3: AUTOMATYZACJA -->
+        {% if step == 3 %}
+        <div id="onboarding-step-3" class="onboarding-step card-elegant shadow-2xl border-2 border-amber-100">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="w-12 h-12 bg-amber-50 rounded-2xl flex items-center justify-center">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e8b441" stroke-width="2.5"><path d="M22 2L11 13"/><path d="M22 2L15 22L11 13L2 9L22 2Z"/></svg>
+                </div>
+                <h2 class="text-3xl font-serif-brand font-bold text-[#1a2a52]">Automatyzacja</h2>
+            </div>
+            <p class="text-[#6b7796] mb-8 leading-relaxed">
+                Classy Cash może automatycznie księgować wpłaty z Alior Banku na podstawie maili. Wprowadź dane Gmaila, aby uruchomić ten moduł.
+            </p>
+
+            <div class="space-y-4">
+                <input type="email" data-model="automationEmail" class="input-elegant" placeholder="TwojaSkrzynka@gmail.com">
+                <input type="password" data-model="automationPassword" class="input-elegant" placeholder="Hasło aplikacji (16 znaków)">
+                <div class="bg-[#fcfaf2] p-4 rounded-xl text-[11px] text-amber-800 leading-normal">
+                    <strong>Wskazówka:</strong> Hasło aplikacji wygenerujesz w ustawieniach bezpieczeństwa konta Google. Nie używaj swojego głównego hasła.
+                </div>
+            </div>
+
+            <div class="mt-10 flex justify-between items-center">
+                <button data-action="live#action" data-live-action-param="setStep" data-live-step-param="2" class="text-sm font-bold text-slate-400">Cofnij</button>
+                <button data-action="live#action" data-live-action-param="submit" class="btn-accent px-12 shadow-xl shadow-amber-200/50">Uruchom Classy Cash</button>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>

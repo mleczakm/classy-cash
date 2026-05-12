@@ -9,15 +9,20 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-final class FirstAdminSetupController extends AbstractController
+final class OnboardingController extends AbstractController
 {
     public function __construct(
         private readonly UserRepository $userRepository,
     ) {}
 
-    #[Route('/setup/admin', name: 'first_admin_setup')]
-    public function setup(): Response
+    #[Route('/onboarding', name: 'onboarding')]
+    public function index(): Response
     {
-        return $this->redirectToRoute('onboarding');
+        // Redirect if users already exist
+        if ($this->userRepository->countUsers() > 0) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        return $this->render('onboarding/index.html.twig');
     }
 }

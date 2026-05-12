@@ -31,38 +31,7 @@ final class OnboardSetupController extends AbstractController
     #[Route('/', name: 'onboard_setup', methods: ['GET', 'POST'])]
     public function __invoke(Request $request): Response
     {
-        // Check if setup is already completed
-        if ($this->classRooms->count() > 0) {
-            return $this->redirectToRoute('treasurer_dashboard');
-        }
-
-        $form = $this->createSetupForm();
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-
-            // Create class room
-            $classRoom = new ClassRoom($data['className']);
-            $this->em->persist($classRoom);
-
-            // Save settings
-            $this->settings->set('app_name', $data['schoolName']);
-            $this->settings->set('blik_phone', $data['blikPhone']);
-            $this->settings->set('transfer_account', $data['bankAccount']);
-            $this->settings->set('setup_email', $data['email']);
-            $this->settings->set('setup_password', $data['appPassword']);
-
-            $this->em->flush();
-
-            $this->addFlash('success', 'System został pomyślnie skonfigurowany');
-            return $this->redirectToRoute('treasurer_dashboard');
-        }
-
-        return $this->render('onboard_setup/index.html.twig', [
-            'form' => $form,
-            'step' => $request->query->get('step', 1),
-        ]);
+        return $this->redirectToRoute('onboarding');
     }
 
     private function createSetupForm(): FormInterface

@@ -950,5 +950,114 @@
     // Uruchomienie aplikacji - domyślnie login
     goTo('login');
 </script>
+
+
+<!-- ========================================== -->
+<!-- 2. ONBOARDING PIERWSZEGO SKARBNIKA        -->
+<!-- ========================================== -->
+<div id="view-onboarding" class="main-view hidden min-h-screen flex-col items-center justify-center p-6 bg-[#f7f6f0]">
+
+    <div class="w-full max-w-2xl">
+        <!-- Header Onboardingu -->
+        <div class="flex justify-between items-center mb-10">
+            <div class="flex items-center gap-3">
+                <svg width="40" height="40" viewBox="0 0 100 100"><use href="#brand-logo"/></svg>
+                <span class="font-serif-brand font-bold text-[#1a2a52] text-xl">Nowa Instalacja</span>
+            </div>
+            <div class="flex gap-2" id="stepper-dots">
+                <div class="step-dot active" data-step="1"></div>
+                <div class="step-dot" data-step="2"></div>
+                <div class="step-dot" data-step="3"></div>
+            </div>
+        </div>
+
+        <!-- KROK 1: TOŻSAMOŚĆ -->
+        <div id="onboarding-step-1" class="onboarding-step active card-elegant shadow-2xl">
+            <h2 class="text-3xl font-serif-brand font-bold text-[#1a2a52] mb-2">Witaj, Skarbniku!</h2>
+            <p class="text-[#6b7796] mb-8">Zostałeś wykryty jako pierwszy użytkownik tej instancji. Zajmij klasę i ustal swoje dane dostępowe.</p>
+
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-[10px] font-bold uppercase mb-2 block">Imię</label>
+                        <input type="text" class="input-elegant bg-slate-50" placeholder="np. Anna">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold uppercase mb-2 block">Nazwisko</label>
+                        <input type="text" class="input-elegant bg-slate-50" placeholder="np. Kowalska">
+                    </div>
+                </div>
+                <div>
+                    <label class="text-[10px] font-bold uppercase mb-2 block">E-mail (Właściciel)</label>
+                    <input id="onboarding-email" type="email" class="input-elegant bg-slate-100 opacity-70 cursor-not-allowed" readonly>
+                </div>
+                <div>
+                    <label class="text-[10px] font-bold uppercase mb-2 block">Hasło do panelu</label>
+                    <input type="password" class="input-elegant" placeholder="Ustal bezpieczne hasło">
+                </div>
+            </div>
+            <div class="mt-10 flex justify-end">
+                <button onclick="nextOnboardingStep(2)" class="btn-primary px-10">Dalej: Dane Klasy</button>
+            </div>
+        </div>
+
+        <!-- KROK 2: DANE KLASY I PŁATNOŚCI -->
+        <div id="onboarding-step-2" class="onboarding-step hidden card-elegant shadow-2xl">
+            <h2 class="text-3xl font-serif-brand font-bold text-[#1a2a52] mb-2">Twoja Klasa</h2>
+            <p class="text-[#6b7796] mb-8">Skonfiguruj nazwę klasy oraz miejsce, gdzie rodzice będą przesyłać składki.</p>
+
+            <div class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-[10px] font-bold uppercase mb-2 block">Nazwa (np. Klasa 4B)</label>
+                        <input type="text" class="input-elegant bg-slate-50" placeholder="4B">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold uppercase mb-2 block">Szkoła</label>
+                        <input type="text" class="input-elegant bg-slate-50" placeholder="SP nr 12 w Krakowie">
+                    </div>
+                </div>
+                <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                    <h4 class="text-xs font-bold text-[#1a2a52] mb-4 uppercase tracking-widest">Odbiorca Przelewów</h4>
+                    <div class="space-y-4">
+                        <input type="text" class="input-elegant" placeholder="Numer telefonu do BLIK">
+                        <input type="text" class="input-elegant" placeholder="Numer konta bankowego (PL...)">
+                    </div>
+                </div>
+            </div>
+            <div class="mt-10 flex justify-between">
+                <button onclick="nextOnboardingStep(1)" class="text-sm font-bold text-slate-400">Cofnij</button>
+                <button onclick="nextOnboardingStep(3)" class="btn-primary px-10">Dalej: Automatyzacja</button>
+            </div>
+        </div>
+
+        <!-- KROK 3: AUTOMATYZACJA -->
+        <div id="onboarding-step-3" class="onboarding-step hidden card-elegant shadow-2xl border-2 border-amber-100">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="w-12 h-12 bg-amber-50 rounded-2xl flex items-center justify-center">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e8b441" stroke-width="2.5"><path d="M22 2L11 13"/><path d="M22 2L15 22L11 13L2 9L22 2Z"/></svg>
+                </div>
+                <h2 class="text-3xl font-serif-brand font-bold text-[#1a2a52]">Automatyzacja</h2>
+            </div>
+            <p class="text-[#6b7796] mb-8 leading-relaxed">
+                Classy Cash może automatycznie księgować wpłaty z Alior Banku na podstawie maili. Wprowadź dane Gmaila, aby uruchomić ten moduł.
+            </p>
+
+            <div class="space-y-4">
+                <input type="email" class="input-elegant" placeholder="TwojaSkrzynka@gmail.com">
+                <input type="password" class="input-elegant" placeholder="Hasło aplikacji (16 znaków)">
+                <div class="bg-[#fcfaf2] p-4 rounded-xl text-[11px] text-amber-800 leading-normal">
+                    <strong>Wskazówka:</strong> Hasło aplikacji wygenerujesz w ustawieniach bezpieczeństwa konta Google. Nie używaj swojego głównego hasła.
+                </div>
+            </div>
+
+            <div class="mt-10 flex justify-between items-center">
+                <button onclick="nextOnboardingStep(2)" class="text-sm font-bold text-slate-400">Cofnij</button>
+                <button onclick="goTo('t-dash')" class="btn-accent px-12 shadow-xl shadow-amber-200/50">Uruchom Classy Cash</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

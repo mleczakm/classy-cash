@@ -45,9 +45,13 @@ final class TreasurerController extends AbstractController
     #[Route('/', name: 'homepage')]
     public function dashboard(): Response
     {
+        if ($this->users->countUsers() === 0) {
+            return $this->redirectToRoute('onboarding');
+        }
+
         $class = $this->classRooms->findOneBy([]);
         if (! $class) {
-            return $this->redirectToRoute('onboard_setup');
+            return $this->redirectToRoute('onboarding');
         }
 
         $this->assertTreasurer($class);
@@ -63,7 +67,7 @@ final class TreasurerController extends AbstractController
     {
         $class = $this->classRooms->findOneBy([]);
         if (! $class) {
-            return $this->redirectToRoute('onboard_setup');
+            return $this->redirectToRoute('onboarding');
         }
 
         $this->assertTreasurer($class);
@@ -83,7 +87,7 @@ final class TreasurerController extends AbstractController
     {
         $class = $this->classRooms->findOneBy([]);
         if (! $class) {
-            return $this->redirectToRoute('onboard_setup');
+            return $this->redirectToRoute('onboarding');
         }
 
         $this->assertTreasurer($class);
@@ -151,7 +155,7 @@ final class TreasurerController extends AbstractController
     {
         $class = $this->classRooms->findOneBy([]);
         if (! $class) {
-            return $this->redirectToRoute('onboard_setup');
+            return $this->redirectToRoute('onboarding');
         }
 
         $this->assertTreasurer($class);
@@ -195,7 +199,7 @@ final class TreasurerController extends AbstractController
     {
         $class = $this->classRooms->findOneBy([]);
         if (! $class) {
-            return $this->redirectToRoute('onboard_setup');
+            return $this->redirectToRoute('onboarding');
         }
 
         $this->assertTreasurer($class);

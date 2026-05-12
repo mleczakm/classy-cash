@@ -45,9 +45,9 @@ final class TreasurerController extends AbstractController
     public function index(): Response
     {
         if (! $this->getUser()) {
-            // Check if any users exist - if not, redirect to admin setup
+            // Check if any users exist - if not, redirect to onboarding
             if ($this->users->countUsers() === 0) {
-                return $this->redirectToRoute('first_admin_setup');
+                return $this->redirectToRoute('onboarding');
             }
             return $this->redirectToRoute('app_login');
         }
