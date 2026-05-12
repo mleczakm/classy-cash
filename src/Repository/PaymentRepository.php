@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Entity\User;
 use App\Entity\Payment;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -71,5 +72,19 @@ class PaymentRepository extends ServiceEntityRepository
             ->setParameter('status', Payment::STATUS_PENDING)
             ->getQuery()
             ->getSingleScalarResult();
+    }
+
+    /**
+     * @return Payment[]
+     */
+    public function findRecentByUser(User $user, int $limit = 10): array
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->setParameter('user', $user)
+            ->orderBy('p.createdAt', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
     }
 }
