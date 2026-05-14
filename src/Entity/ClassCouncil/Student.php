@@ -22,7 +22,7 @@ class Student
      * Parents linked to this student.
      * @var Collection<int, User>
      */
-    #[ORM\ManyToMany(targetEntity: User::class)]
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'students')]
     #[ORM\JoinTable(name: 'student_parent')]
     private Collection $parents;
 

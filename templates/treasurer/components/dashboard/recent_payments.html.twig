@@ -10,11 +10,11 @@
                     <div class="text-[10px] text-[#6b7796]">Składka: {{ payment.label }}</div>
                 </td>
                 <td class="px-6 py-4 font-bold text-[#2aa57f]">
-                    +{{ formatAmount(payment.amount) }}
+                    +{{ payment.amount|money }}
                 </td>
                 <td class="px-6 py-4">
-                    <span class="status-badge {{ getPaymentMethodClass(payment) }}">
-                        {{ getPaymentMethod(payment) }}
+                    <span class="status-badge {{ payment.method|lower }}">
+                        {{ payment.method|upper }}
                     </span>
                 </td>
             </tr>

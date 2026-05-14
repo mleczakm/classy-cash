@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\UserInterface\LiveComponent\Treasurer\Students;
 
+use App\Entity\User;
 use App\Entity\ClassCouncil\ClassRoom;
 use App\Entity\ClassCouncil\Student;
-use App\Repository\ClassCouncil\StudentRepository;
 use App\Repository\ClassCouncil\ClassRoomRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -32,6 +32,18 @@ class AddStudentComponent extends AbstractController
     #[LiveProp(writable: true)]
     public bool $modalOpened = false;
 
+    #[LiveProp(writable: true)]
+    public ?string $firstName = null;
+
+    #[LiveProp(writable: true)]
+    public ?string $lastName = null;
+
+    /**
+     * @var array<int, int>
+     */
+    #[LiveProp(writable: true)]
+    public array $selectedParents = [];
+
     private ?Student $student = null;
 
     private bool $isSubmitted = false;
@@ -39,7 +51,6 @@ class AddStudentComponent extends AbstractController
     private bool $isSuccessful = false;
 
     public function __construct(
-        private readonly StudentRepository $students,
         private readonly ClassRoomRepository $classRooms,
         private readonly UserRepository $users,
         private readonly EntityManagerInterface $em,
@@ -51,6 +62,9 @@ class AddStudentComponent extends AbstractController
     protected function instantiateForm(): FormInterface
     {
         $classRoom = $this->getCurrentClassRoom();
+        if (! $classRoom) {
+            throw new \RuntimeException('No classroom found');
+        }
 
         $this->student = new Student($classRoom, 'placeholder', 'placeholder');
 
@@ -114,6 +128,14 @@ class AddStudentComponent extends AbstractController
             $student = $this->getForm()
                 ->getData();
 
+            // Link parents
+            foreach ($this->selectedParents as $parentId) {
+                $parent = $this->users->find($parentId);
+                if ($parent) {
+                    $student->addParent($parent);
+                }
+            }
+
             // Save student
             $this->em->persist($student);
             $this->em->flush();
@@ -124,10 +146,52 @@ class AddStudentComponent extends AbstractController
             $this->isSuccessful = true;
             $this->isSubmitted = true;
             $this->modalOpened = false;
+
+            $this->resetForm();
+            $this->firstName = null;
+            $this->lastName = null;
+            $this->selectedParents = [];
         } else {
             $this->isSubmitted = true;
             $this->isSuccessful = false;
         }
+    }
+
+    /**
+     * @return array<int, User>
+     */
+    #[LiveAction]
+    public function searchParents(string $query): array
+    {
+        if (strlen($query) < 3) {
+            return [];
+        }
+
+        return $this->users->findAllMatching($query);
+    }
+
+    #[LiveAction]
+    public function addParent(int $userId): void
+    {
+        if (! in_array($userId, $this->selectedParents, true)) {
+            $this->selectedParents[] = $userId;
+        }
+    }
+
+    #[LiveAction]
+    public function removeParent(int $userId): void
+    {
+        $this->selectedParents = array_filter($this->selectedParents, fn($id) => $id !== $userId);
+    }
+
+    #[LiveAction]
+    public function resetForm(): void
+    {
+        $this->firstName = null;
+        $this->lastName = null;
+        $this->selectedParents = [];
+        $this->isSubmitted = false;
+        $this->isSuccessful = false;
     }
 
     public function isSubmitted(): bool
@@ -146,6 +210,9 @@ class AddStudentComponent extends AbstractController
         return $class ? $class->getName() : '';
     }
 
+    /**
+     * @return array<int, User>
+     */
     public function getPotentialParents(): array
     {
         $allParents = $this->users->findByRole('ROLE_USER');

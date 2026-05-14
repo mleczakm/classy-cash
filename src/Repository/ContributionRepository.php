@@ -24,12 +24,15 @@ class ContributionRepository extends ServiceEntityRepository
      */
     public function findByClass(ClassRoom $classRoom): array
     {
-        return $this->createQueryBuilder('c')
+        /** @var array<int, Contribution> $result */
+        $result = $this->createQueryBuilder('c')
             ->where('c.classRoom = :classRoom')
             ->setParameter('classRoom', $classRoom->getId(), 'ulid')
             ->orderBy('c.createdAt', 'DESC')
             ->getQuery()
             ->getResult();
+
+        return $result;
     }
 
     /**
@@ -37,7 +40,8 @@ class ContributionRepository extends ServiceEntityRepository
      */
     public function findActiveByClass(ClassRoom $classRoom): array
     {
-        return $this->createQueryBuilder('c')
+        /** @var array<int, Contribution> $result */
+        $result = $this->createQueryBuilder('c')
             ->where('c.classRoom = :classRoom')
             ->andWhere('c.dueAt IS NULL OR c.dueAt > :now')
             ->setParameter('classRoom', $classRoom->getId(), 'ulid')
@@ -46,6 +50,8 @@ class ContributionRepository extends ServiceEntityRepository
             ->addOrderBy('c.createdAt', 'DESC')
             ->getQuery()
             ->getResult();
+
+        return $result;
     }
 
     /**
@@ -53,7 +59,8 @@ class ContributionRepository extends ServiceEntityRepository
      */
     public function findOverdueByClass(ClassRoom $classRoom): array
     {
-        return $this->createQueryBuilder('c')
+        /** @var array<int, Contribution> $result */
+        $result = $this->createQueryBuilder('c')
             ->where('c.classRoom = :classRoom')
             ->andWhere('c.dueAt IS NOT NULL')
             ->andWhere('c.dueAt < :now')
@@ -62,6 +69,8 @@ class ContributionRepository extends ServiceEntityRepository
             ->orderBy('c.dueAt', 'ASC')
             ->getQuery()
             ->getResult();
+
+        return $result;
     }
 
     public function save(Contribution $contribution): void

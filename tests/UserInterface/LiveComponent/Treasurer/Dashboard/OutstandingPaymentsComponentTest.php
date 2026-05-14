@@ -24,13 +24,15 @@ class OutstandingPaymentsComponentTest extends FunctionalTestCase
         $this->createStudentPayment($student, 'Unpaid Payment 1', Money::of(50, 'PLN'));
         $this->createStudentPayment($student, 'Unpaid Payment 2', Money::of(100, 'PLN'));
 
-        $component = $this->createLiveComponent(OutstandingPaymentsComponent::class, [
+        $testComponent = $this->createLiveComponent(OutstandingPaymentsComponent::class, [
             'classRoom' => $classRoom,
         ]);
+        /** @var OutstandingPaymentsComponent $component */
+        $component = $testComponent->component();
 
-        $this->assertEquals(Money::of(150, 'PLN'), $component->component()->getOutstandingAmount());
-        $this->assertEquals(2, $component->component()->getOutstandingCount());
-        $this->assertTrue($component->component()->hasOutstanding());
+        $this->assertEquals(Money::of(150, 'PLN'), $component->getOutstandingAmount());
+        $this->assertEquals(2, $component->getOutstandingCount());
+        $this->assertTrue($component->hasOutstanding());
     }
 
     public function testComponentRefreshesData(): void
@@ -39,39 +41,36 @@ class OutstandingPaymentsComponentTest extends FunctionalTestCase
 
         // Create test data before component creation
         $student = $this->createTestStudent($classRoom);
-        $newPayment = $this->createStudentPayment($student, 'New Unpaid Payment', Money::of(25, 'PLN'));
+        $this->createStudentPayment($student, 'New Unpaid Payment', Money::of(25, 'PLN'));
 
-        $component = $this->createLiveComponent(OutstandingPaymentsComponent::class, [
+        $testComponent = $this->createLiveComponent(OutstandingPaymentsComponent::class, [
             'classRoom' => $classRoom,
         ]);
+        /** @var OutstandingPaymentsComponent $component */
+        $component = $testComponent->component();
 
         // Initial amount
-        $initialAmount = $component->component()
-            ->getOutstandingAmount();
+        $initialAmount = $component->getOutstandingAmount();
 
         // Refresh component to include new payment
-        $component->call('refreshData');
+        $testComponent->call('refreshData');
 
         // Amount should have changed
-        $refreshedAmount = $component->component()
-            ->getOutstandingAmount();
+        $refreshedAmount = $component->getOutstandingAmount();
         $this->assertNotEquals($initialAmount, $refreshedAmount);
         $this->assertEquals(Money::of(175, 'PLN'), $refreshedAmount);
-        $this->assertEquals(3, $component->component()->getOutstandingCount());
+        $this->assertEquals(3, $component->getOutstandingCount());
     }
 
     public function testComponentEmitsEventOnRefresh(): void
     {
         $classRoom = $this->createClassRoom('4B');
 
-        $component = $this->createLiveComponent(OutstandingPaymentsComponent::class, [
+        $testComponent = $this->createLiveComponent(OutstandingPaymentsComponent::class, [
             'classRoom' => $classRoom,
         ]);
 
-        $component->call('refreshData');
-
-        // The refreshData action should complete without errors
-        $this->assertTrue(true);
+        $testComponent->call('refreshData');
     }
 
     public function testComponentHandlesNoOutstanding(): void
@@ -79,24 +78,28 @@ class OutstandingPaymentsComponentTest extends FunctionalTestCase
         $classRoom = $this->createClassRoom('4B');
 
         // No unpaid payments
-        $component = $this->createLiveComponent(OutstandingPaymentsComponent::class, [
+        $testComponent = $this->createLiveComponent(OutstandingPaymentsComponent::class, [
             'classRoom' => $classRoom,
         ]);
+        /** @var OutstandingPaymentsComponent $component */
+        $component = $testComponent->component();
 
-        $this->assertEquals(Money::of(0, 'PLN'), $component->component()->getOutstandingAmount());
-        $this->assertEquals(0, $component->component()->getOutstandingCount());
-        $this->assertFalse($component->component()->hasOutstanding());
+        $this->assertEquals(Money::of(0, 'PLN'), $component->getOutstandingAmount());
+        $this->assertEquals(0, $component->getOutstandingCount());
+        $this->assertFalse($component->hasOutstanding());
     }
 
     public function testComponentHandlesNoClassRoom(): void
     {
         // No class room exists
-        $component = $this->createLiveComponent(OutstandingPaymentsComponent::class, [
+        $testComponent = $this->createLiveComponent(OutstandingPaymentsComponent::class, [
             'classRoom' => null,
         ]);
+        /** @var OutstandingPaymentsComponent $component */
+        $component = $testComponent->component();
 
-        $this->assertEquals(Money::of(0, 'PLN'), $component->component()->getOutstandingAmount());
-        $this->assertEquals(0, $component->component()->getOutstandingCount());
-        $this->assertFalse($component->component()->hasOutstanding());
+        $this->assertEquals(Money::of(0, 'PLN'), $component->getOutstandingAmount());
+        $this->assertEquals(0, $component->getOutstandingCount());
+        $this->assertFalse($component->hasOutstanding());
     }
 }

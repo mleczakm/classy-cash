@@ -8,7 +8,6 @@ use App\Entity\ClassCouncil\ClassRoom;
 use App\Entity\ClassCouncil\StudentPayment;
 use App\Repository\ClassCouncil\ClassExpenseRepository;
 use App\Repository\ClassCouncil\StudentPaymentRepository;
-use App\Repository\ClassCouncil\ClassRoomRepository;
 use Brick\Money\Money;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
@@ -26,10 +25,9 @@ class TotalCashComponent extends AbstractController
     private Money $totalCash;
 
     #[LiveProp]
-    public ClassRoom $classRoom;
+    public ?ClassRoom $classRoom = null;
 
     public function __construct(
-        private readonly ClassRoomRepository $classRooms,
         private readonly StudentPaymentRepository $studentPayments,
         private readonly ClassExpenseRepository $expenses,
     ) {

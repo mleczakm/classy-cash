@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\UserInterface\LiveComponent\Treasurer\Dashboard;
 
+use App\Entity\User;
 use App\Entity\ClassCouncil\ClassRoom;
+use App\Entity\ClassCouncil\Student;
 use Brick\Money\Money;
 use App\Entity\ClassCouncil\StudentPayment;
 use App\Repository\ClassCouncil\ClassRoomRepository;
@@ -86,7 +88,7 @@ class RecentPaymentsComponent extends AbstractController
     }
 
     /**
-     * @return list<array{type: string, description: string, amount: Money, date: \DateTimeInterface, student: ?Student, method: string, methodClass: string}>
+     * @return list<array{type: string, description: string, amount: Money, date: \DateTimeInterface, student: Student|null, method: string, methodClass: string}>
      */
     public function getItems(): array
     {
@@ -96,6 +98,7 @@ class RecentPaymentsComponent extends AbstractController
         $limit = 10;
         $offset = ($this->page - 1) * $limit;
 
+        /** @var list<array{type: string, description: string, amount: Money, date: \DateTimeInterface, student: Student|null, method: string, methodClass: string}> $items */
         $items = array_slice($transactions, $offset, $limit);
         $this->logger->info(
             sprintf('RecentPaymentsComponent::getItems() page=%d, offset=%d, count=%d', $this->page, $offset, count(
@@ -116,6 +119,9 @@ class RecentPaymentsComponent extends AbstractController
         return $this->classRooms->findOneBy([]);
     }
 
+    /**
+     * @return list<array{type: string, description: string, amount: Money, date: \DateTimeInterface, student: Student|null, method: string, methodClass: string}>
+     */
     private function getAllTransactions(): array
     {
         $class = $this->getClassRoom();
@@ -161,7 +167,7 @@ class RecentPaymentsComponent extends AbstractController
         // Get recent general payments (not linked to student payments)
         // We use the user from security context
         $user = $this->getUser();
-        if ($user) {
+        if ($user instanceof User) {
             $generalPayments = $this->payments->findRecentByUser($user, 100);
             $this->logger->info('RecentPaymentsComponent - found ' . count($generalPayments) . ' general payments');
             foreach ($generalPayments as $payment) {
@@ -186,6 +192,7 @@ class RecentPaymentsComponent extends AbstractController
 
         $this->logger->info('RecentPaymentsComponent - total transactions sorted: ' . count($transactions));
 
+        /** @var list<array{type: string, description: string, amount: Money, date: \DateTimeInterface, student: Student|null, method: string, methodClass: string}> $transactions */
         return $transactions;
     }
 

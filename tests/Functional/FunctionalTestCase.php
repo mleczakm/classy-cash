@@ -29,8 +29,9 @@ abstract class FunctionalTestCase extends WebTestCase
         parent::setUp();
 
         $this->client = static::createClient();
-        $this->em = static::getContainer()
+        $em = static::getContainer()
             ->get(EntityManagerInterface::class);
+        $this->em = $em;
     }
 
     protected function tearDown(): void
@@ -53,11 +54,14 @@ abstract class FunctionalTestCase extends WebTestCase
             ->withEmail($email)
             ->assemble();
 
+        /** @var UserPasswordHasherInterface $hasher */
         $hasher = $this->getService(UserPasswordHasherInterface::class);
         $user->setPassword($hasher->hashPassword($user, $password));
 
-        $this->em->persist($user);
-        $this->em->flush();
+        $this->getEntityManager()
+            ->persist($user);
+        $this->getEntityManager()
+            ->flush();
 
         return $user;
     }
@@ -66,8 +70,10 @@ abstract class FunctionalTestCase extends WebTestCase
     {
         $classRoom = new ClassRoom($name);
 
-        $this->em->persist($classRoom);
-        $this->em->flush();
+        $this->getEntityManager()
+            ->persist($classRoom);
+        $this->getEntityManager()
+            ->flush();
 
         return $classRoom;
     }
@@ -76,8 +82,10 @@ abstract class FunctionalTestCase extends WebTestCase
     {
         $student = new Student($classRoom, $firstName, $lastName);
 
-        $this->em->persist($student);
-        $this->em->flush();
+        $this->getEntityManager()
+            ->persist($student);
+        $this->getEntityManager()
+            ->flush();
 
         return $student;
     }
@@ -91,8 +99,10 @@ abstract class FunctionalTestCase extends WebTestCase
     {
         $payment = new StudentPayment($student, $label, $amount);
 
-        $this->em->persist($payment);
-        $this->em->flush();
+        $this->getEntityManager()
+            ->persist($payment);
+        $this->getEntityManager()
+            ->flush();
 
         return $payment;
     }
@@ -101,9 +111,19 @@ abstract class FunctionalTestCase extends WebTestCase
     {
         $expense = new ClassExpense($classRoom, $label, $amount);
 
-        $this->em->persist($expense);
-        $this->em->flush();
+        $this->getEntityManager()
+            ->persist($expense);
+        $this->getEntityManager()
+            ->flush();
 
         return $expense;
+    }
+
+    protected function getEntityManager(): EntityManagerInterface
+    {
+        if (! $this->em instanceof EntityManagerInterface) {
+            throw new \RuntimeException('EntityManager not initialized');
+        }
+        return $this->em;
     }
 }

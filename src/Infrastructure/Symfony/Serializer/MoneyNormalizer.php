@@ -43,13 +43,11 @@ class MoneyNormalizer implements DenormalizerInterface, NormalizerInterface
         ];
     }
 
-    /** @return ?array{amount: string, currency: string} */
-
-    public function normalize(
-        mixed $data,
-        ?string $format = null,
-        array $context = []
-    ): array|null {
+    /**
+     * @return ?array{amount: string, currency: string}
+     */
+    public function normalize(mixed $data, ?string $format = null, array $context = []): ?array
+    {
         if (! $data instanceof Money) {
             return null;
         }

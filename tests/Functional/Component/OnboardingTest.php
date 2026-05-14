@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Component;
 
+use App\UserInterface\Http\Component\Onboarding;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use App\Entity\ClassCouncil\ClassMembership;
@@ -23,7 +24,7 @@ final class OnboardingTest extends KernelTestCase
         $component = $this->createLiveComponent('Onboarding');
 
         // Initial step should be 'identity'
-        /** @var \App\UserInterface\Http\Component\Onboarding $onboardingComponent */
+        /** @var Onboarding $onboardingComponent */
         $onboardingComponent = $component->component();
         $this->assertEquals('identity', $onboardingComponent->getCurrentStepName());
 

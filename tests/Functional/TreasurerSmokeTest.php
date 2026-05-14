@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional;
 
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use PHPUnit\Framework\Attributes\Group;
 
 #[Group('smoke')]
@@ -83,7 +84,7 @@ class TreasurerSmokeTest extends FunctionalTestCase
         $this->client->request('GET', '/treasurer/dashboard');
 
         $response = $this->client->getResponse();
-
+        /** @var RedirectResponse $response */
         // Should redirect to login for non-authenticated users
         $this->assertTrue($response->isRedirect());
         $this->assertStringContainsString('/login', $response->getTargetUrl());
@@ -94,7 +95,7 @@ class TreasurerSmokeTest extends FunctionalTestCase
         $this->client->request('GET', '/treasurer/payments');
 
         $response = $this->client->getResponse();
-
+        /** @var RedirectResponse $response */
         $this->assertTrue($response->isRedirect());
         $this->assertStringContainsString('/login', $response->getTargetUrl());
     }
@@ -104,7 +105,7 @@ class TreasurerSmokeTest extends FunctionalTestCase
         $this->client->request('GET', '/treasurer/contributions');
 
         $response = $this->client->getResponse();
-
+        /** @var RedirectResponse $response */
         $this->assertTrue($response->isRedirect());
         $this->assertStringContainsString('/login', $response->getTargetUrl());
     }
@@ -114,7 +115,7 @@ class TreasurerSmokeTest extends FunctionalTestCase
         $this->client->request('GET', '/treasurer/students');
 
         $response = $this->client->getResponse();
-
+        /** @var RedirectResponse $response */
         $this->assertTrue($response->isRedirect());
         $this->assertStringContainsString('/login', $response->getTargetUrl());
     }
@@ -124,7 +125,7 @@ class TreasurerSmokeTest extends FunctionalTestCase
         $this->client->request('GET', '/treasurer/manual-transactions');
 
         $response = $this->client->getResponse();
-
+        /** @var RedirectResponse $response */
         $this->assertTrue($response->isRedirect());
         $this->assertStringContainsString('/login', $response->getTargetUrl());
     }

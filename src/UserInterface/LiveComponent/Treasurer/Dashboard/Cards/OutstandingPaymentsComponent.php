@@ -6,7 +6,6 @@ namespace App\UserInterface\LiveComponent\Treasurer\Dashboard\Cards;
 
 use App\Entity\ClassCouncil\ClassRoom;
 use App\Entity\ClassCouncil\StudentPayment;
-use App\Repository\ClassCouncil\ClassRoomRepository;
 use App\Repository\ClassCouncil\StudentPaymentRepository;
 use Brick\Money\Money;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -30,7 +29,6 @@ class OutstandingPaymentsComponent extends AbstractController
     public ?ClassRoom $classRoom = null;
 
     public function __construct(
-        private readonly ClassRoomRepository $classRooms,
         private readonly StudentPaymentRepository $studentPayments,
     ) {
         $this->outstandingAmount = Money::of(0, 'PLN');

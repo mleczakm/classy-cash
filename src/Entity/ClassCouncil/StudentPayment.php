@@ -68,6 +68,12 @@ class StudentPayment
         return $this->student;
     }
 
+    public function setStudent(Student $student): void
+    {
+        $this->student = $student;
+        $this->classRoom = $student->getClassRoom();
+    }
+
     public function getClassRoom(): ClassRoom
     {
         return $this->classRoom;

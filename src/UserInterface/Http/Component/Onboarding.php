@@ -81,8 +81,9 @@ final class Onboarding extends AbstractController
         }
 
         if ($form instanceof FormFlowInterface && ! $form->isFinished()) {
-            /** @var OnboardingDto */
-            $this->initialFormData = $form->getData();
+            /** @var OnboardingDto $data */
+            $data = $form->getData();
+            $this->initialFormData = $data;
             $this->isValidated = false;
             $this->resetForm(false);
             return null;

@@ -132,7 +132,8 @@ class StudentPaymentRepository extends ServiceEntityRepository
      */
     public function findByClass(ClassRoom $classRoom): array
     {
-        return $this->createQueryBuilder('sp')
+        /** @var array<int, StudentPayment> $result */
+        $result = $this->createQueryBuilder('sp')
             ->innerJoin('sp.student', 's')
             ->innerJoin('s.classRoom', 'c')
             ->where('c.id = :classRoom')
@@ -140,6 +141,8 @@ class StudentPaymentRepository extends ServiceEntityRepository
             ->orderBy('sp.createdAt', 'DESC')
             ->getQuery()
             ->getResult();
+
+        return $result;
     }
 
     /**
@@ -147,7 +150,8 @@ class StudentPaymentRepository extends ServiceEntityRepository
      */
     public function findPaidSince(ClassRoom $classRoom, \DateTimeImmutable $date): array
     {
-        return $this->createQueryBuilder('sp')
+        /** @var array<int, StudentPayment> $result */
+        $result = $this->createQueryBuilder('sp')
             ->innerJoin('sp.student', 's')
             ->innerJoin('s.classRoom', 'c')
             ->where('c.id = :classRoom')
@@ -159,6 +163,8 @@ class StudentPaymentRepository extends ServiceEntityRepository
             ->orderBy('sp.paidAt', 'DESC')
             ->getQuery()
             ->getResult();
+
+        return $result;
     }
 
     /**
@@ -166,7 +172,8 @@ class StudentPaymentRepository extends ServiceEntityRepository
      */
     public function findRecentPaid(ClassRoom $classRoom, int $limit = 10): array
     {
-        return $this->createQueryBuilder('sp')
+        /** @var array<int, StudentPayment> $result */
+        $result = $this->createQueryBuilder('sp')
             ->innerJoin('sp.student', 's')
             ->innerJoin('s.classRoom', 'c')
             ->where('c.id = :classRoom')
@@ -177,6 +184,8 @@ class StudentPaymentRepository extends ServiceEntityRepository
             ->setMaxResults($limit)
             ->getQuery()
             ->getResult();
+
+        return $result;
     }
 
     public function save(StudentPayment $studentPayment): void

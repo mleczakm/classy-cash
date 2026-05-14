@@ -109,8 +109,11 @@ final class TreasurerController extends AbstractController
 
                 // Assign selected students
                 foreach ($studentIds as $studentId) {
+                    if (! is_string($studentId) && ! is_int($studentId)) {
+                        continue;
+                    }
                     try {
-                        $student = $this->students->find(Ulid::fromString($studentId));
+                        $student = $this->students->find(Ulid::fromString((string) $studentId));
                         if ($student) {
                             $contribution->addStudent($student);
                         }
@@ -168,8 +171,13 @@ final class TreasurerController extends AbstractController
 
             if ($keepStudentId && $deleteStudentId) {
                 try {
-                    $keepStudent = $this->students->find(Ulid::fromString($keepStudentId));
-                    $deleteStudent = $this->students->find(Ulid::fromString($deleteStudentId));
+                    $keepUlid = is_string($keepStudentId) || is_int($keepStudentId) ? (string) $keepStudentId : '';
+                    $deleteUlid = is_string($deleteStudentId) || is_int(
+                        $deleteStudentId
+                    ) ? (string) $deleteStudentId : '';
+
+                    $keepStudent = $this->students->find(Ulid::fromString($keepUlid));
+                    $deleteStudent = $this->students->find(Ulid::fromString($deleteUlid));
 
                     if ($keepStudent && $deleteStudent) {
                         $this->mergeStudents($keepStudent, $deleteStudent);
@@ -216,15 +224,20 @@ final class TreasurerController extends AbstractController
             $amount = Money::of($amountStr, 'PLN');
 
             if ($type === 'income') {
-                $description = $request->request->get('income_description', '');
+                $description = (string) $request->request->get('income_description', '');
                 $studentPaymentId = $request->request->get('student_payment_id');
 
                 if ($studentPaymentId) {
                     try {
-                        $studentPayment = $this->studentPayments->find(Ulid::fromString($studentPaymentId));
+                        $spId = is_string($studentPaymentId) || is_int(
+                            $studentPaymentId
+                        ) ? (string) $studentPaymentId : '';
+                        $studentPayment = $this->studentPayments->find(Ulid::fromString($spId));
                         if ($studentPayment) {
+                            /** @var User $user */
+                            $user = $this->getUser();
                             // Create payment and link to student payment
-                            $payment = new Payment($this->getUser(), $amount);
+                            $payment = new Payment($user, $amount);
                             $this->em->persist($payment);
                             $studentPayment->setPayment($payment);
                             $studentPayment->markPaid();
@@ -238,8 +251,10 @@ final class TreasurerController extends AbstractController
                         return $this->redirectToRoute('treasurer_manual_transactions');
                     }
                 } else {
+                    /** @var User $user */
+                    $user = $this->getUser();
                     // General income - create a standalone payment record
-                    $payment = new Payment($this->getUser(), $amount);
+                    $payment = new Payment($user, $amount);
                     $this->em->persist($payment);
                     $this->em->flush();
 
@@ -247,7 +262,7 @@ final class TreasurerController extends AbstractController
                     return $this->redirectToRoute('treasurer_manual_transactions');
                 }
             } elseif ($type === 'expense') {
-                $description = $request->request->get('expense_description', '');
+                $description = (string) $request->request->get('expense_description', '');
                 if ($description === '') {
                     $this->addFlash('error', 'Opis wydatku jest wymagany');
                     return $this->redirectToRoute('treasurer_manual_transactions');

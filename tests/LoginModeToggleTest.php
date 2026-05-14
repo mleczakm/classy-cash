@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests;
 
+use Symfony\Component\DomCrawler\Crawler;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\UX\LiveComponent\Test\InteractsWithLiveComponents;
@@ -17,6 +18,7 @@ class LoginModeToggleTest extends WebTestCase
     public function testLoginModeToggleFunctionality(): void
     {
         $testComponent = $this->createLiveComponent(LoginUser::class);
+        /** @var LoginUser $component */
         $component = $testComponent->component();
 
         // Initial state - should be in email link mode
@@ -35,6 +37,7 @@ class LoginModeToggleTest extends WebTestCase
 
         // Toggle to password mode
         $testComponent->call('togglePassword');
+        /** @var LoginUser $component */
         $component = $testComponent->component();
         $this->assertTrue($component->usePassword);
         $this->assertFalse($component->isSubmitted);
@@ -53,6 +56,7 @@ class LoginModeToggleTest extends WebTestCase
         // Toggle back to email link mode
 
         $testComponent->call('togglePassword');
+        /** @var LoginUser $component */
         $component = $testComponent->component();
         $this->assertFalse($component->usePassword);
 
@@ -79,6 +83,7 @@ class LoginModeToggleTest extends WebTestCase
         $testComponent = $this->createLiveComponent(LoginUser::class);
 
         // Simulate a successful submission by setting the component state directly
+        /** @var LoginUser $loginComponent */
         $loginComponent = $testComponent->component();
         $loginComponent->isSubmitted = true;
         $loginComponent->isSuccessful = true;
@@ -92,6 +97,7 @@ class LoginModeToggleTest extends WebTestCase
         // Toggle to password mode
         $testComponent = $testComponent->call('togglePassword');
 
+        /** @var LoginUser $loginComponent */
         $loginComponent = $testComponent->component();
         // Should reset to normal form state
         $this->assertFalse($loginComponent->isSubmitted);
@@ -109,9 +115,9 @@ class LoginModeToggleTest extends WebTestCase
             ->filter('button[data-live-action-param="togglePassword"]');
 
         // Check that the button has the correct styling classes
-        $this->assertStringContainsString('cursor-pointer', $toggleButton->attr('class'));
-        $this->assertStringContainsString('text-sm', $toggleButton->attr('class'));
-        $this->assertStringContainsString('font-bold', $toggleButton->attr('class'));
+        $this->assertStringContainsString('cursor-pointer', (string) $toggleButton->attr('class'));
+        $this->assertStringContainsString('text-sm', (string) $toggleButton->attr('class'));
+        $this->assertStringContainsString('font-bold', (string) $toggleButton->attr('class'));
     }
 
     public function testPasswordResetLinkOnlyVisibleInPasswordMode(): void
@@ -136,8 +142,8 @@ class LoginModeToggleTest extends WebTestCase
         // Check reset link styling
         $resetLink = $crawler->crawler()
             ->filter('a[href="/reset-password"]');
-        $this->assertStringContainsString('cursor-not-allowed', $resetLink->attr('class'));
-        $this->assertStringContainsString('text-[10px]', $resetLink->attr('class'));
+        $this->assertStringContainsString('cursor-not-allowed', (string) $resetLink->attr('class'));
+        $this->assertStringContainsString('text-[10px]', (string) $resetLink->attr('class'));
     }
 
     public function testSubmitButtonTextChangesWithMode(): void
@@ -148,7 +154,7 @@ class LoginModeToggleTest extends WebTestCase
         $crawler = $testComponent->render();
         $submitButton = $crawler->crawler()
             ->filter('button[type="submit"]');
-        $this->assertStringContainsString('cursor-pointer', $submitButton->attr('class'));
+        $this->assertStringContainsString('cursor-pointer', (string) $submitButton->attr('class'));
         $this->assertStringContainsString('Wyślij link logowania', $submitButton->text());
 
         // Toggle to password mode
@@ -156,7 +162,7 @@ class LoginModeToggleTest extends WebTestCase
         $crawler = $testComponent->render();
         $submitButton = $crawler->crawler()
             ->filter('button[type="submit"]');
-        $this->assertStringContainsString('cursor-pointer', $submitButton->attr('class'));
+        $this->assertStringContainsString('cursor-pointer', (string) $submitButton->attr('class'));
         $this->assertStringContainsString('Zaloguj się', $submitButton->text());
     }
 
@@ -179,6 +185,7 @@ class LoginModeToggleTest extends WebTestCase
         $emailContainer = $crawler->crawler()
             ->filter('div:contains("Adres Email")')
             ->closest('div');
+        assert($emailContainer instanceof Crawler);
         $this->assertGreaterThan(0, $emailContainer->count());
 
         // Debug: check what attributes the email container actually has
@@ -196,6 +203,7 @@ class LoginModeToggleTest extends WebTestCase
         $passwordContainer = $crawler->crawler()
             ->filter('div:contains("Hasło")')
             ->closest('div');
+        assert($passwordContainer instanceof Crawler);
         $this->assertGreaterThan(0, $passwordContainer->count());
 
         // Debug: check what attributes of password container actually has

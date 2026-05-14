@@ -25,13 +25,16 @@ class MonthlyCollectedComponentTest extends FunctionalTestCase
         $p1->markPaid();
         $p2 = $this->createStudentPayment($student, 'Test Payment 2', Money::of(620, 'PLN'));
         $p2->markPaid();
-        $this->em->flush();
+        $this->getEntityManager()
+            ->flush();
 
-        $component = $this->createLiveComponent(MonthlyCollectedComponent::class, [
+        $testComponent = $this->createLiveComponent(MonthlyCollectedComponent::class, [
             'classRoom' => $classRoom,
         ]);
+        /** @var MonthlyCollectedComponent $component */
+        $component = $testComponent->component();
 
-        $this->assertEquals(Money::of(1120, 'PLN'), $component->component()->getMonthlyCollected());
+        $this->assertEquals(Money::of(1120, 'PLN'), $component->getMonthlyCollected());
     }
 
     public function testComponentRefreshesData(): void
@@ -42,27 +45,24 @@ class MonthlyCollectedComponentTest extends FunctionalTestCase
         $student = $this->createTestStudent($classRoom);
         $p = $this->createStudentPayment($student, 'New Payment', Money::of(100, 'PLN'));
 
-        $component = $this->createLiveComponent(MonthlyCollectedComponent::class, [
+        $testComponent = $this->createLiveComponent(MonthlyCollectedComponent::class, [
             'classRoom' => $classRoom,
         ]);
+        /** @var MonthlyCollectedComponent $component */
+        $component = $testComponent->component();
 
         // Initial amount
-        $initialAmount = $component->component()
-            ->getMonthlyCollected();
-
-        $component = $this->createLiveComponent(MonthlyCollectedComponent::class, [
-            'classRoom' => $classRoom,
-        ]);
+        $initialAmount = $component->getMonthlyCollected();
 
         // Mark payment as paid and refresh
         $p->markPaid();
-        $this->em->flush();
+        $this->getEntityManager()
+            ->flush();
 
-        $component->call('refreshData');
+        $testComponent->call('refreshData');
 
         // Amount should have changed
-        $refreshedAmount = $component->component()
-            ->getMonthlyCollected();
+        $refreshedAmount = $component->getMonthlyCollected();
         $this->assertNotEquals($initialAmount, $refreshedAmount);
         $this->assertEquals(Money::of(100, 'PLN'), $refreshedAmount);
     }
@@ -71,23 +71,22 @@ class MonthlyCollectedComponentTest extends FunctionalTestCase
     {
         $classRoom = $this->createClassRoom('4B');
 
-        $component = $this->createLiveComponent(MonthlyCollectedComponent::class, [
+        $testComponent = $this->createLiveComponent(MonthlyCollectedComponent::class, [
             'classRoom' => $classRoom,
         ]);
 
-        $component->call('refreshData');
-
-        // The refreshData action should complete without errors
-        $this->assertTrue(true);
+        $testComponent->call('refreshData');
     }
 
     public function testComponentHandlesNoClassRoom(): void
     {
         // No class room exists
-        $component = $this->createLiveComponent(MonthlyCollectedComponent::class, [
+        $testComponent = $this->createLiveComponent(MonthlyCollectedComponent::class, [
             'classRoom' => null,
         ]);
+        /** @var MonthlyCollectedComponent $component */
+        $component = $testComponent->component();
 
-        $this->assertEquals(Money::of(0, 'PLN'), $component->component()->getMonthlyCollected());
+        $this->assertEquals(Money::of(0, 'PLN'), $component->getMonthlyCollected());
     }
 }

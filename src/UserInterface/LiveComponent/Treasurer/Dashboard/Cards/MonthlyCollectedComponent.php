@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\UserInterface\LiveComponent\Treasurer\Dashboard\Cards;
 
 use App\Entity\ClassCouncil\ClassRoom;
-use App\Repository\ClassCouncil\ClassRoomRepository;
 use App\Repository\ClassCouncil\StudentPaymentRepository;
 use Brick\Money\Money;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -27,7 +26,6 @@ class MonthlyCollectedComponent extends AbstractController
     public ?ClassRoom $classRoom = null;
 
     public function __construct(
-        private readonly ClassRoomRepository $classRooms,
         private readonly StudentPaymentRepository $studentPayments,
     ) {
         $this->monthlyCollected = Money::of(0, 'PLN');

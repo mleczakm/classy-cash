@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Repository\ClassCouncil;
 
+use App\Repository\ClassCouncil\ClassExpenseRepository;
 use PHPUnit\Framework\Attributes\Group;
 use App\Entity\ClassCouncil\ClassExpense;
 use App\Entity\ClassCouncil\ClassRoom;
@@ -16,6 +17,9 @@ final class ClassExpenseRepositoryTest extends KernelTestCase
 {
     private EntityManagerInterface $em;
 
+    /**
+     * @var ClassExpenseRepository
+     */
     private $repository;
 
     private ClassRoom $classRoom;
@@ -23,8 +27,11 @@ final class ClassExpenseRepositoryTest extends KernelTestCase
     protected function setUp(): void
     {
         self::bootKernel();
-        $this->em = self::getContainer()->get(EntityManagerInterface::class);
-        $this->repository = $this->em->getRepository(ClassExpense::class);
+        $em = self::getContainer()->get(EntityManagerInterface::class);
+        $this->em = $em;
+        /** @var ClassExpenseRepository $repository */
+        $repository = $this->em->getRepository(ClassExpense::class);
+        $this->repository = $repository;
 
         // Create a test class room
         $this->classRoom = new ClassRoom('Test Class 4A');
@@ -78,7 +85,6 @@ final class ClassExpenseRepositoryTest extends KernelTestCase
 
         $expenses = $this->repository->findByClass($emptyClass);
 
-        $this->assertIsArray($expenses);
         $this->assertCount(0, $expenses);
     }
 

@@ -97,12 +97,6 @@ parameters:
 			path: src/UserInterface/Http/ClassCouncil/TreasurerController.php
 
 		-
-			message: '#^Parameter \#1 \$user of method App\\Entity\\ClassCouncil\\Student\:\:addParent\(\) expects App\\Entity\\User, Symfony\\Component\\Security\\Core\\User\\UserInterface\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/UserInterface/Http/ClassCouncil/TreasurerController.php
-
-		-
 			message: '#^Right side of && is always true\.$#'
 			identifier: booleanAnd.rightAlwaysTrue
 			count: 1
@@ -120,26 +114,3 @@ parameters:
 			count: 1
 			path: tests/Application/CommandHandler/ImportTransfersFromMailHandlerTest.php
 
-		-
-			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertStringContainsString\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 5
-			path: tests/LoginModeToggleTest.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 4
-			path: tests/LoginModeToggleTest.php
-
-		-
-			message: '#^Method App\\Tests\\LoginTest\:\:createTestUser\(\) is unused\.$#'
-			identifier: method.unused
-			count: 1
-			path: tests/LoginTest.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 3
-			path: tests/LoginTest.php

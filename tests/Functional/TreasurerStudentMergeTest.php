@@ -37,14 +37,17 @@ class TreasurerStudentMergeTest extends FunctionalTestCase
         $this->assertResponseRedirects('/treasurer/students');
 
         // Verify payments reassigned to kept student
-        $this->em->refresh($payment1);
-        $this->em->refresh($payment2);
+        $this->getEntityManager()
+            ->refresh($payment1);
+        $this->getEntityManager()
+            ->refresh($payment2);
 
         $this->assertEquals($keepStudent->getId(), $payment1->getStudent()->getId());
         $this->assertEquals($keepStudent->getId(), $payment2->getStudent()->getId());
 
         // Verify soft delete
-        $this->em->refresh($deleteStudent);
+        $this->getEntityManager()
+            ->refresh($deleteStudent);
         $this->assertNotNull($deleteStudent->getDeletedAt());
     }
 
@@ -58,8 +61,10 @@ class TreasurerStudentMergeTest extends FunctionalTestCase
         // Add a parent to the student to be deleted
         $parent = $this->createUser('parent@example.com', 'password');
         $deleteStudent->addParent($parent);
-        $this->em->persist($deleteStudent);
-        $this->em->flush();
+        $this->getEntityManager()
+            ->persist($deleteStudent);
+        $this->getEntityManager()
+            ->flush();
 
         // Log in
         $user = $this->createUser('treasurer2@example.com', 'password');
@@ -77,11 +82,13 @@ class TreasurerStudentMergeTest extends FunctionalTestCase
         $this->assertResponseRedirects('/treasurer/students');
 
         // Verify parent reassigned to kept student
-        $this->em->refresh($keepStudent);
+        $this->getEntityManager()
+            ->refresh($keepStudent);
         $this->assertTrue($keepStudent->getParents()->contains($parent));
 
         // Verify parent removed from deleted student
-        $this->em->refresh($deleteStudent);
+        $this->getEntityManager()
+            ->refresh($deleteStudent);
         $this->assertFalse($deleteStudent->getParents()->contains($parent));
     }
 
