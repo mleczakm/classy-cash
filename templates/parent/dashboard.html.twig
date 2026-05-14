@@ -1,7 +1,7 @@
 {% extends 'parent/layout.html.twig' %}
 
 {% block page_content %}
-<div id="p-dash" class="sub-view active h-full flex flex-col relative pb-20">
+<div id="p-dash" class="flex flex-col">
     <!-- Header with Balance -->
     <div class="bg-[#1a2a52] p-8 text-white relative flex-shrink-0 rounded-b-[32px] shadow-lg">
         <div class="flex justify-between items-start mb-8 relative z-10">
@@ -26,7 +26,7 @@
     </div>
 
     <!-- Main Content -->
-    <div class="flex-1 p-6 overflow-y-auto custom-scroll bg-slate-50">
+    <div class="p-6">
         <!-- Fast Payment Action -->
         <div class="mb-8">
             {{ component('FastPaymentModalComponent', { size: 'lg' }) }}
@@ -59,7 +59,7 @@
         </div>
         
         {% if isTreasurer %}
-            <!-- Treasurer Dashboard Link for Treasurer-Parents -->
+            <!-- Treasurer Dashboard Link -->
             <a href="{{ path('treasurer_dashboard') }}" class="w-full bg-white text-[#1a2a52] border border-slate-200 shadow-sm py-4 rounded-2xl font-bold text-sm mb-4 flex justify-between items-center px-5 hover:bg-slate-50 transition-colors">
                 <div class="flex items-center gap-3 text-blue-600">
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
@@ -67,16 +67,16 @@
                 </div>
                 <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="text-slate-400"><path d="M9 18l6-6-6-6"/></svg>
             </a>
-        {% endif %}
 
-        <!-- Council Section Link -->
-        <button class="w-full bg-white text-[#1a2a52] border border-slate-200 shadow-sm py-4 rounded-2xl font-bold text-sm mb-8 flex justify-between items-center px-5 hover:bg-slate-50 transition-colors">
-            <div class="flex items-center gap-3 text-[#2aa57f]">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                <span class="text-[#1a2a52]">Budżet Klasy</span>
-            </div>
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="text-slate-400"><path d="M9 18l6-6-6-6"/></svg>
-        </button>
+            <!-- Council Section Link for Treasurers -->
+            <a href="{{ path('treasurer_dashboard') }}" class="w-full bg-white text-[#1a2a52] border border-slate-200 shadow-sm py-4 rounded-2xl font-bold text-sm mb-8 flex justify-between items-center px-5 hover:bg-slate-50 transition-colors">
+                <div class="flex items-center gap-3 text-[#2aa57f]">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    <span class="text-[#1a2a52]">Budżet Klasy (Trójka)</span>
+                </div>
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="text-slate-400"><path d="M9 18l6-6-6-6"/></svg>
+            </a>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

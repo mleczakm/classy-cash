@@ -63,13 +63,13 @@ final class DashboardController extends AbstractController
 
         /** @var User $user */
         $user = $this->getUser();
-        
+
         // Parent View Data
         $students = $user->getStudents();
         $unpaidPayments = [];
         $totalUnpaid = Money::of(0, 'PLN');
 
-        if (!$students->isEmpty()) {
+        if (! $students->isEmpty()) {
             $allPayments = $this->studentPayments->findForStudents($students->toArray());
             foreach ($allPayments as $payment) {
                 if ($payment->getStatus() !== StudentPayment::STATUS_PAID) {

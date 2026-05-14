@@ -50,6 +50,8 @@ security:
     access_control:
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/register, roles: PUBLIC_ACCESS }
+        - { path: ^/onboarding, roles: PUBLIC_ACCESS }
+        - { path: ^/_components, roles: PUBLIC_ACCESS }
         - { path: ^/treasurer, roles: ROLE_TREASURER }
         - { path: ^/, roles: ROLE_USER }
 
