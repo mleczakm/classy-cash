@@ -47,7 +47,6 @@ final class TreasurerController extends AbstractController
 
     #[Route('/treasurer/dashboard', name: 'treasurer_dashboard', methods: ['GET'])]
     #[Route('/treasurer', name: 'cc_treasurer_overview', methods: ['GET'])]
-    #[Route('/', name: 'homepage')]
     public function dashboard(): Response
     {
         if ($this->users->countUsers() === 0) {

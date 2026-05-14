@@ -9,8 +9,13 @@
 >
     <button data-action="live#action"
             data-live-action-param="openModal"
-            class="{{ sizeClasses[this.size] }} inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-workshop-red text-white hover:bg-workshop-red/90">
-        Szybka płatność
+            class="{% if this.size == 'lg' %}w-full py-4 flex items-center justify-center gap-3 shadow-xl shadow-amber-200/50{% else %}{{ sizeClasses[this.size] }} inline-flex items-center justify-center gap-2{% endif %} whitespace-nowrap rounded-2xl text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-[#e8b441] text-[#1a2a52] hover:opacity-90 transition-all font-bold">
+        {% if this.size == 'lg' %}
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M22 2L11 13"/><path d="M22 2L15 22L11 13L2 9L22 2Z"/></svg>
+            Opłać wszystko (BLIK)
+        {% else %}
+            Szybka płatność
+        {% endif %}
     </button>
 
     <div data-action="click->live#action"
@@ -19,52 +24,59 @@
          style="pointer-events: auto;" aria-hidden="true"></div>
 
     <dialog {% if modalOpened %}open{% endif %}
-            class="fixed top-1/2 left-1/2 z-50 w-full -translate-x-1/4 -translate-y-1/4 gap-4 border bg-background p-6 shadow-lg duration-200 sm:rounded-lg max-w-3xl max-h-[90vh] overflow-y-auto backdrop:bg-slate-600 backdrop:opacity-80 backdrop:backdrop-blur-sm">
-        {% if generated is not empty %}
-            <div class="space-y-6">
-                {% for item in generated %}
-                    <div class="bg-white border border-gray-200 rounded-lg shadow-md p-6">
-                        <div class="text-2xl font-bold text-workshop-brown mb-2">
-                            {{ 'blik.instruction'|trans }} <span
-                                    class="text-workshop-red whitespace-nowrap"> {{ tenant_phone() ?? ('blik.phone'|trans) }}</span>
+            class="fixed top-1/2 left-1/2 z-50 w-[calc(100%-2rem)] md:w-full -translate-x-1/2 -translate-y-1/2 gap-4 border bg-white p-8 shadow-2xl duration-200 rounded-3xl max-w-lg max-h-[90vh] overflow-y-auto backdrop:bg-slate-600/80 backdrop:backdrop-blur-sm border-slate-100">
+        {% if paymentCode is not empty and paymentAmount is not empty %}
+            <div class="flex flex-col items-center justify-center">
+                <div class="w-full text-center">
+                    <div class="text-2xl font-serif-brand font-bold text-[#1a2a52] mb-6">
+                        Płatność BLIK
+                    </div>
+                    
+                    <div class="bg-slate-50 border border-slate-100 rounded-2xl p-6 mb-8 relative">
+                         <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#e8b441] text-[#1a2a52] text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest shadow-sm">
+                            Kwota do zapłaty
                         </div>
-                        <div class="text-lg mb-2">{{ 'blik.instruction_2'|trans }} <span
-                                    class="text-workshop-red whitespace-nowrap">{{ item.amount|money }}</span>. {{ 'blik.instruction_3'|trans }}
+                        <div class="text-4xl font-serif-brand font-bold text-[#1a2a52]">{{ paymentAmount|money }}</div>
+                    </div>
+
+                    <div class="space-y-6 text-left mb-8">
+                        <div>
+                            <p class="text-[10px] font-bold uppercase tracking-widest text-[#6b7796] mb-2">1. Wyślij przelew na numer</p>
+                            <div class="text-xl font-bold text-[#1a2a52] flex items-center justify-between bg-white border border-slate-100 p-4 rounded-xl shadow-sm">
+                                <span>{{ tenant_phone() ?? '791 234 567' }}</span>
+                                <button class="text-[10px] bg-slate-100 px-3 py-1 rounded-lg hover:bg-slate-200 transition-colors">Kopiuj</button>
+                            </div>
                         </div>
-                        <div class="text-2xl font-mono bg-gray-100 rounded p-4 mb-2 select-all tracking-widest text-workshop-red">{{ item.code }}</div>
-                        <div class="text-muted-foreground text-sm mb-2">{{ 'blik.info'|trans }}</div>
-                        <div class="text-muted-foreground text-sm border-t pt-2 mt-2">
-                            {{ 'blik.alt_transfer'|trans({'title': item.code,'account': '<span class="text-workshop-red whitespace-nowrap">' ~ (tenant_account() ?? '46 2490 0005 0000 4000 1897 5420') ~ '</span>'})|raw }}
+
+                        <div>
+                            <p class="text-[10px] font-bold uppercase tracking-widest text-[#6b7796] mb-2">2. Użyj tytułu przelewu</p>
+                            <div class="text-2xl font-mono font-bold text-red-500 tracking-[0.2em] flex items-center justify-between bg-white border border-slate-100 p-4 rounded-xl shadow-sm">
+                                <span>{{ paymentCode }}</span>
+                                <button class="text-[10px] bg-slate-100 px-3 py-1 rounded-lg hover:bg-slate-200 transition-colors">Kopiuj</button>
+                            </div>
                         </div>
                     </div>
-                {% endfor %}
-            </div>
-        {% elseif paymentCode is not empty and paymentAmount is not empty %}
-            <div class="flex flex-col items-center justify-center min-h-[300px]">
-                <div class="bg-white border border-gray-200 rounded-lg shadow-md p-8 max-w-lg w-full text-center">
-                    <div class="text-2xl font-bold text-workshop-brown mb-4">
-                        {{ 'blik.instruction'|trans }} <span
-                                class="text-workshop-red whitespace-nowrap"> {{ tenant_phone() ?? ('blik.phone'|trans) }}</span>
+
+                    <div class="text-[11px] text-[#6b7796] leading-relaxed mb-8 text-center px-4 italic">
+                        Po wykonaniu przelewu skarbnik otrzyma powiadomienie automatycznie.
                     </div>
-                    <div class="text-lg mb-2">{{ 'blik.instruction_2'|trans }} <span
-                                class="text-workshop-red whitespace-nowrap">{{ paymentAmount|money }}</span>. {{ 'blik.instruction_3'|trans }}
-                    </div>
-                    <div class="text-2xl font-mono bg-gray-100 rounded p-4 mb-4 select-all tracking-widest text-workshop-red">{{ paymentCode }}</div>
-                    <div class="text-muted-foreground text-sm mb-4">{{ 'blik.info'|trans }}</div>
-                    <div class="text-muted-foreground text-sm border-t pt-4 mt-4">
-                        {{ 'blik.alt_transfer'|trans({'title': paymentCode,'account': '<span class="text-workshop-red whitespace-nowrap">' ~ (tenant_account() ?? '46 2490 0005 0000 4000 1897 5420') ~ '</span>'})|raw }}
+
+                    <div class="border-t border-slate-100 pt-6">
+                        <p class="text-[10px] font-bold text-[#6b7796] uppercase mb-2">Przelew tradycyjny (numer konta)</p>
+                        <p class="text-[11px] font-mono text-[#1a2a52] break-all">{{ tenant_account() ?? '46 2490 0005 0000 4000 1897 5420' }}</p>
                     </div>
                 </div>
             </div>
         {% else %}
-            <div class="text-center p-4 text-muted-foreground">Brak zaległych płatności do opłacenia.</div>
+            <div class="text-center p-8 text-[#6b7796]">Brak zaległych płatności do opłacenia.</div>
         {% endif %}
-        <div class="flex justify-end mt-6">
+        
+        <div class="mt-8">
             <button type="button"
                     data-action="live#action"
                     data-live-action-param="closeModal"
-                    class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border bg-background hover:text-accent-foreground h-10 px-4 py-2">
-                {{ 'action.close'|trans }}
+                    class="w-full btn-primary py-4 shadow-lg shadow-blue-900/10">
+                Zamknij okno
             </button>
         </div>
     </dialog>
