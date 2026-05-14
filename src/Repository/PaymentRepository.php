@@ -75,10 +75,11 @@ class PaymentRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Payment[]
+     * @return array<int, Payment>
      */
     public function findRecentByUser(User $user, int $limit = 10): array
     {
+        /** @var array<int, Payment> */
         return $this->createQueryBuilder('p')
             ->andWhere('p.user = :user')
             ->setParameter('user', $user)

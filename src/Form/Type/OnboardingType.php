@@ -8,6 +8,7 @@ use App\Form\Model\OnboardingDto;
 use App\Form\Type\Onboarding\AutomationStepType;
 use App\Form\Type\Onboarding\ClassDetailsStepType;
 use App\Form\Type\Onboarding\IdentityStepType;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Flow\AbstractFlowType;
 use Symfony\Component\Form\Flow\DataStorage\NullDataStorage;
 use Symfony\Component\Form\Flow\FormFlowBuilderInterface;

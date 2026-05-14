@@ -10,7 +10,7 @@ use Brick\Money\Money;
 
 class MoneyNormalizer implements DenormalizerInterface, NormalizerInterface
 {
-    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): Money
     {
         if (! is_array($data)
             || ! isset($data['amount'], $data['currency'])
@@ -43,11 +43,13 @@ class MoneyNormalizer implements DenormalizerInterface, NormalizerInterface
         ];
     }
 
+    /** @return ?array{amount: string, currency: string} */
+
     public function normalize(
         mixed $data,
         ?string $format = null,
         array $context = []
-    ): array|string|int|float|bool|\ArrayObject|null {
+    ): array|null {
         if (! $data instanceof Money) {
             return null;
         }

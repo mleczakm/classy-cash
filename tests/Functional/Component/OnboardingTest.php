@@ -23,7 +23,9 @@ final class OnboardingTest extends KernelTestCase
         $component = $this->createLiveComponent('Onboarding');
 
         // Initial step should be 'identity'
-        $this->assertEquals('identity', $component->component()->getCurrentStepName());
+        /** @var \App\UserInterface\Http\Component\Onboarding $onboardingComponent */
+        $onboardingComponent = $component->component();
+        $this->assertEquals('identity', $onboardingComponent->getCurrentStepName());
 
         // Try to proceed to next step without filling fields - should fail
         try {
@@ -40,7 +42,7 @@ final class OnboardingTest extends KernelTestCase
         } catch (UnprocessableEntityHttpException) {
         }
 
-        $this->assertEquals('identity', $component->component()->getCurrentStepName());
+        $this->assertEquals('identity', $onboardingComponent->getCurrentStepName());
         $this->assertStringContainsString('Imię jest wymagane', $component->render()->toString());
 
         // Fill Step 1
@@ -59,7 +61,7 @@ final class OnboardingTest extends KernelTestCase
         ], 'submit');
 
         // Should be on Step 'class_details' now
-        $this->assertEquals('class_details', $component->component()->getCurrentStepName());
+        $this->assertEquals('class_details', $onboardingComponent->getCurrentStepName());
 
         // Fill Step 2
         $component->submitForm([
@@ -75,7 +77,7 @@ final class OnboardingTest extends KernelTestCase
         ], 'submit');
 
         // Should be on Step 'automation' now
-        $this->assertEquals('automation', $component->component()->getCurrentStepName());
+        $this->assertEquals('automation', $onboardingComponent->getCurrentStepName());
 
         // Submit the final step
         $component->submitForm([

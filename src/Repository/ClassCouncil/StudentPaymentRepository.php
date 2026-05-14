@@ -127,6 +127,9 @@ class StudentPaymentRepository extends ServiceEntityRepository
         ];
     }
 
+    /**
+     * @return array<int, StudentPayment>
+     */
     public function findByClass(ClassRoom $classRoom): array
     {
         return $this->createQueryBuilder('sp')
@@ -139,6 +142,9 @@ class StudentPaymentRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * @return array<int, StudentPayment>
+     */
     public function findPaidSince(ClassRoom $classRoom, \DateTimeImmutable $date): array
     {
         return $this->createQueryBuilder('sp')
@@ -155,6 +161,9 @@ class StudentPaymentRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * @return array<int, StudentPayment>
+     */
     public function findRecentPaid(ClassRoom $classRoom, int $limit = 10): array
     {
         return $this->createQueryBuilder('sp')

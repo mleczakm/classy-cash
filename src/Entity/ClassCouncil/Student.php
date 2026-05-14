@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity\ClassCouncil;
 
+use App\Entity\Contribution;
 use App\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -25,6 +26,23 @@ class Student
     #[ORM\JoinTable(name: 'student_parent')]
     private Collection $parents;
 
+    /**
+     * Student payments for this student.
+     * @var Collection<int, StudentPayment>
+     */
+    #[ORM\OneToMany(targetEntity: StudentPayment::class, mappedBy: 'student')]
+    private Collection $studentPayments;
+
+    /**
+     * Contributions this student is part of.
+     * @var Collection<int, Contribution>
+     */
+    #[ORM\ManyToMany(targetEntity: Contribution::class, mappedBy: 'students')]
+    private Collection $contributions;
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    private ?\DateTimeImmutable $deletedAt = null;
+
     public function __construct(
         #[ORM\ManyToOne(targetEntity: ClassRoom::class, inversedBy: 'students')]
         #[ORM\JoinColumn(nullable: false)]
@@ -36,6 +54,8 @@ class Student
     ) {
         $this->id = new Ulid();
         $this->parents = new ArrayCollection();
+        $this->studentPayments = new ArrayCollection();
+        $this->contributions = new ArrayCollection();
     }
 
     public function getId(): Ulid
@@ -81,5 +101,36 @@ class Student
         if (! $this->parents->contains($user)) {
             $this->parents->add($user);
         }
+    }
+
+    public function removeParent(User $user): void
+    {
+        $this->parents->removeElement($user);
+    }
+
+    public function setDeletedAt(?\DateTimeImmutable $deletedAt): void
+    {
+        $this->deletedAt = $deletedAt;
+    }
+
+    public function getDeletedAt(): ?\DateTimeImmutable
+    {
+        return $this->deletedAt;
+    }
+
+    /**
+     * @return Collection<int, StudentPayment>
+     */
+    public function getStudentPayments(): Collection
+    {
+        return $this->studentPayments;
+    }
+
+    /**
+     * @return Collection<int, Contribution>
+     */
+    public function getContributions(): Collection
+    {
+        return $this->contributions;
     }
 }

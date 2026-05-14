@@ -19,6 +19,9 @@ class ContributionRepository extends ServiceEntityRepository
         parent::__construct($registry, Contribution::class);
     }
 
+    /**
+     * @return array<int, Contribution>
+     */
     public function findByClass(ClassRoom $classRoom): array
     {
         return $this->createQueryBuilder('c')
@@ -29,6 +32,9 @@ class ContributionRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * @return array<int, Contribution>
+     */
     public function findActiveByClass(ClassRoom $classRoom): array
     {
         return $this->createQueryBuilder('c')
@@ -42,6 +48,9 @@ class ContributionRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * @return array<int, Contribution>
+     */
     public function findOverdueByClass(ClassRoom $classRoom): array
     {
         return $this->createQueryBuilder('c')

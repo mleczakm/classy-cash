@@ -45,6 +45,7 @@ final class Onboarding extends AbstractController
      */
     protected function instantiateForm(): FormInterface
     {
+        /** @var FormInterface<OnboardingDto> */
         return $this->createForm(OnboardingType::class, $this->initialFormData ?? new OnboardingDto());
     }
 
@@ -80,6 +81,7 @@ final class Onboarding extends AbstractController
         }
 
         if ($form instanceof FormFlowInterface && ! $form->isFinished()) {
+            /** @var OnboardingDto */
             $this->initialFormData = $form->getData();
             $this->isValidated = false;
             $this->resetForm(false);
