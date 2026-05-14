@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional;
 
+use App\Entity\ClassCouncil\ClassRole;
 use PHPUnit\Framework\Attributes\Group;
 use Brick\Money\Money;
 
@@ -21,8 +22,9 @@ class TreasurerStudentMergeTest extends FunctionalTestCase
         $payment1 = $this->createStudentPayment($deleteStudent, 'Wycieczka', Money::of(35, 'PLN'));
         $payment2 = $this->createStudentPayment($deleteStudent, 'Kino', Money::of(25, 'PLN'));
 
-        // Log in as treasurer (any user for now as per controller logic)
+        // Log in as treasurer
         $user = $this->createUser('treasurer@example.com', 'password');
+        $this->createMembership($user, $classRoom, ClassRole::TREASURER);
         $this->client->loginUser($user);
 
         // Perform merge
@@ -68,6 +70,7 @@ class TreasurerStudentMergeTest extends FunctionalTestCase
 
         // Log in
         $user = $this->createUser('treasurer2@example.com', 'password');
+        $this->createMembership($user, $classRoom, ClassRole::TREASURER);
         $this->client->loginUser($user);
 
         // Perform merge
@@ -94,7 +97,9 @@ class TreasurerStudentMergeTest extends FunctionalTestCase
 
     public function testMergeStudentsHandlesInvalidIds(): void
     {
+        $classRoom = $this->createClassRoom('4B');
         $user = $this->createUser('treasurer3@example.com', 'password');
+        $this->createMembership($user, $classRoom, ClassRole::TREASURER);
         $this->client->loginUser($user);
 
         $this->client->request('POST', '/treasurer/students', [

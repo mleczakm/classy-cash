@@ -16,7 +16,8 @@ class PaymentCode
     public const CHARS = '0123456789ABCDEFGHJKLMNPQRSTUVWXYZ'; // Exclude I and O for readability
 
     #[ORM\Id]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
+    #[ORM\SequenceGenerator(sequenceName: 'payment_code_id_seq', allocationSize: 1, initialValue: 1)]
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\UserInterface;
 
+use App\Entity\ClassCouncil\ClassRoom;
 use App\Tests\Assembler\UserAssembler;
 use App\Tests\Functional\FunctionalTestSettingsTrait;
 use Doctrine\ORM\EntityManagerInterface;
@@ -33,7 +34,7 @@ class HomepageTest extends WebTestCase
     public static function pagesAccessibleWithoutAuthorizationDataProvider(): array
     {
         return [
-            'Homepage' => ['/', 302],
+            'Homepage' => ['/treasurer/', 302],
             'Healthcheck' => ['/health'],
             'Ping' => ['/ping'],
             'Login' => ['/login'],
@@ -50,14 +51,24 @@ class HomepageTest extends WebTestCase
         $this->setupDefaultSettings($em);
 
         $user = UserAssembler::new()
-            ->withRoles('ROLE_USER')
+            ->withRoles('ROLE_ADMIN')
             ->assemble();
         $em = self::getContainer()->get(EntityManagerInterface::class);
         $em->persist($user);
+
+        $classRoom = new ClassRoom('Test Class');
+        $em->persist($classRoom);
+
         $em->flush();
 
         $client->loginUser($user);
         $client->request('GET', $path);
+
+        // Handle redirect from / to /treasurer/
+        if ($path === '/' && $client->getResponse()->isRedirect('/treasurer/')) {
+            $client->followRedirect();
+        }
+
         $this->assertResponseStatusCodeSame($code);
     }
 
@@ -68,7 +79,7 @@ class HomepageTest extends WebTestCase
     {
         return [
             'Panel' => ['/'],
-            'Admin' => ['/treasurer', 302],
+            'Admin' => ['/treasurer/dashboard'],
         ];
     }
 }

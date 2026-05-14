@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Security;
 
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
@@ -14,7 +15,8 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 readonly class AccessDeniedHandler implements EventSubscriberInterface
 {
     public function __construct(
-        private UrlGeneratorInterface $router
+        private UrlGeneratorInterface $router,
+        private Security $security,
     ) {}
 
     public static function getSubscribedEvents(): array
@@ -38,10 +40,11 @@ readonly class AccessDeniedHandler implements EventSubscriberInterface
         $path = $event->getRequest()
             ->getPathInfo();
 
-        if (! str_starts_with($path, $this->router->generate('cc_treasurer_overview')) && ! str_starts_with(
-            $path,
-            $this->router->generate('homepage')
-        )) {
+        if (! str_starts_with($path, '/treasurer')) {
+            return;
+        }
+
+        if ($this->security->getUser()) {
             return;
         }
 

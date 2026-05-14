@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional;
 
+use App\Entity\ClassCouncil\ClassRole;
+use App\Entity\ClassCouncil\ClassMembership;
 use App\Entity\User;
 use App\Entity\ClassCouncil\ClassRoom;
 use App\Entity\ClassCouncil\Student;
@@ -32,15 +34,6 @@ abstract class FunctionalTestCase extends WebTestCase
         $em = static::getContainer()
             ->get(EntityManagerInterface::class);
         $this->em = $em;
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        if ($this->em) {
-            $this->em->close();
-        }
     }
 
     protected function getService(string $class): object
@@ -76,6 +69,18 @@ abstract class FunctionalTestCase extends WebTestCase
             ->flush();
 
         return $classRoom;
+    }
+
+    protected function createMembership(User $user, ClassRoom $classRoom, ClassRole $role): ClassMembership
+    {
+        $membership = new ClassMembership($user, $classRoom, $role);
+
+        $this->getEntityManager()
+            ->persist($membership);
+        $this->getEntityManager()
+            ->flush();
+
+        return $membership;
     }
 
     protected function createStudent(ClassRoom $classRoom, string $firstName, string $lastName): Student

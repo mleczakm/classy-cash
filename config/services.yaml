@@ -108,6 +108,8 @@ services:
     alias: services_resetter
 
   App\Infrastructure\Doctrine\EntityManagerResetter:
+    arguments:
+      $env: '%kernel.environment%'
     public: true
 
   App\Infrastructure\ImapEngine\ConnectionCloserOnResetSubscriber:

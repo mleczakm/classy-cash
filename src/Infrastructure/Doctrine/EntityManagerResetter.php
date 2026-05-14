@@ -12,11 +12,16 @@ use Symfony\Component\HttpKernel\DependencyInjection\ServicesResetterInterface;
 final readonly class EntityManagerResetter implements ServicesResetterInterface
 {
     public function __construct(
-        private EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
+        private string $env,
     ) {}
 
     public function reset(): void
     {
+        if ($this->env === 'test') {
+            return;
+        }
+
         $this->entityManager->close();
     }
 }

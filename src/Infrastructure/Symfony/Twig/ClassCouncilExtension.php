@@ -30,6 +30,10 @@ final class ClassCouncilExtension extends AbstractExtension
 
     public function isTreasurer(): bool
     {
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+            return true;
+        }
+
         $user = $this->security->getUser();
         if (! $user) {
             return false;
@@ -49,6 +53,10 @@ final class ClassCouncilExtension extends AbstractExtension
 
     public function isCarer(): bool
     {
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+            return true;
+        }
+
         $user = $this->security->getUser();
         if (! $user) {
             return false;

@@ -48,9 +48,6 @@
                         <button class="px-4 py-2 border border-slate-200 rounded-lg text-xs font-bold text-[#1a2a52] hover:border-[#1a2a52] transition-colors" onclick="editStudent('{{ student.id }}')">
                             Edytuj dane
                         </button>
-                        <button class="px-4 py-2 bg-amber-50 text-[#e8b441] border border-amber-200 rounded-lg text-xs font-bold hover:bg-amber-100 transition-colors" onclick="showLinkParentModal('{{ student.id }}')">
-                            Połącz rodzica
-                        </button>
                         {% if loop.index0 > 0 %}
                             <button class="px-4 py-2 bg-red-50 text-red-600 border border-red-200 rounded-lg text-xs font-bold hover:bg-red-100 transition-colors" onclick="showMergeModal('{{ student.id }}')">
                             Połącz uczniów
@@ -119,11 +116,6 @@
     function editStudent(studentId) {
         // Implementation for editing student
         window.location.href = '';
-    }
-
-    function showLinkParentModal(studentId) {
-        // Implementation for linking parents
-        window.location.href = '{{ path('cc_link_parent') }}';
     }
 
     function showMergeModal(studentId) {

@@ -18,7 +18,17 @@ class EntityManagerResetterTest extends TestCase
         $em->expects($this->once())
             ->method('close');
 
-        $resetter = new EntityManagerResetter($em);
+        $resetter = new EntityManagerResetter($em, 'not a test');
+        $resetter->reset();
+    }
+
+    public function testInTestEnv(): void
+    {
+        $em = $this->createMock(EntityManagerInterface::class);
+        $em->expects($this->never())
+            ->method('close');
+
+        $resetter = new EntityManagerResetter($em, 'test');
         $resetter->reset();
     }
 }

@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace App\UserInterface\Http;
 
 use App\Entity\User;
+use App\Entity\ClassCouncil\ClassRole;
 use App\Entity\ClassCouncil\ClassRoom;
 use App\Entity\ClassCouncil\Student;
 use App\Entity\ClassCouncil\StudentPayment;
 use App\Entity\ClassCouncil\ClassExpense;
 use App\Entity\Contribution;
 use App\Entity\Payment;
+use App\Repository\ClassCouncil\ClassMembershipRepository;
 use App\Repository\ClassCouncil\ClassRoomRepository;
 use App\Repository\ClassCouncil\StudentPaymentRepository;
 use App\Repository\ClassCouncil\StudentRepository;
@@ -33,6 +35,7 @@ final class TreasurerController extends AbstractController
 {
     public function __construct(
         private readonly ClassRoomRepository $classRooms,
+        private readonly ClassMembershipRepository $memberships,
         private readonly StudentRepository $students,
         private readonly UserRepository $users,
         private readonly StudentPaymentRepository $studentPayments,
@@ -42,7 +45,8 @@ final class TreasurerController extends AbstractController
         private readonly EntityManagerInterface $em,
     ) {}
 
-    #[Route('/dashboard', name: 'treasurer_dashboard', methods: ['GET'])]
+    #[Route('/treasurer/dashboard', name: 'treasurer_dashboard', methods: ['GET'])]
+    #[Route('/treasurer', name: 'cc_treasurer_overview', methods: ['GET'])]
     #[Route('/', name: 'homepage')]
     public function dashboard(): Response
     {
@@ -63,7 +67,7 @@ final class TreasurerController extends AbstractController
         ]);
     }
 
-    #[Route('/payments', name: 'treasurer_payments', methods: ['GET'])]
+    #[Route('/treasurer/payments', name: 'treasurer_payments', methods: ['GET'])]
     public function payments(): Response
     {
         $class = $this->classRooms->findOneBy([]);
@@ -83,7 +87,7 @@ final class TreasurerController extends AbstractController
         ]);
     }
 
-    #[Route('/contributions', name: 'treasurer_contributions', methods: ['GET', 'POST'])]
+    #[Route('/treasurer/contributions', name: 'treasurer_contributions', methods: ['GET', 'POST'])]
     public function contributions(Request $request): Response
     {
         $class = $this->classRooms->findOneBy([]);
@@ -154,7 +158,7 @@ final class TreasurerController extends AbstractController
         ]);
     }
 
-    #[Route('/students', name: 'treasurer_students', methods: ['GET', 'POST'])]
+    #[Route('/treasurer/students', name: 'treasurer_students', methods: ['GET', 'POST'])]
     public function students(Request $request): Response
     {
         $class = $this->classRooms->findOneBy([]);
@@ -184,9 +188,11 @@ final class TreasurerController extends AbstractController
                         $this->addFlash('success', 'Uczniowie zostali połączeni');
                         return $this->redirectToRoute('treasurer_students');
                     }
+                    $this->addFlash('error', 'Nie znaleziono uczniów do połączenia');
                 } catch (\Throwable) {
                     $this->addFlash('error', 'Nieprawidłowe identyfikatory uczniów');
                 }
+                return $this->redirectToRoute('treasurer_students');
             }
         }
 
@@ -203,7 +209,7 @@ final class TreasurerController extends AbstractController
         ]);
     }
 
-    #[Route('/manual-transactions', name: 'treasurer_manual_transactions', methods: ['GET', 'POST'])]
+    #[Route('/treasurer/manual-transactions', name: 'treasurer_manual_transactions', methods: ['GET', 'POST'])]
     public function manualTransactions(Request $request): Response
     {
         $class = $this->classRooms->findOneBy([]);
@@ -296,38 +302,55 @@ final class TreasurerController extends AbstractController
 
     private function mergeStudents(Student $keepStudent, Student $deleteStudent): void
     {
-        // Reassign payments to kept student
-        foreach ($deleteStudent->getStudentPayments() as $payment) {
-            $payment->setStudent($keepStudent);
-        }
-
-        // Reassign parents to kept student
-        foreach ($deleteStudent->getParents() as $parent) {
-            $keepStudent->addParent($parent);
-            $deleteStudent->removeParent($parent);
-        }
-
-        // Reassign contributions to kept student
-        foreach ($deleteStudent->getContributions() as $contribution) {
-            if (! $contribution->getStudents()->contains($keepStudent)) {
-                $contribution->addStudent($keepStudent);
+        try {
+            // Reassign payments to kept student
+            $payments = $this->studentPayments->findBy([
+                'student' => $deleteStudent,
+            ]);
+            foreach ($payments as $payment) {
+                $payment->setStudent($keepStudent);
             }
-            $contribution->removeStudent($deleteStudent);
-        }
 
-        // Soft delete the duplicate student
-        $deleteStudent->setDeletedAt(new \DateTimeImmutable());
-        $this->em->flush();
+            // Reassign parents to kept student
+            foreach ($deleteStudent->getParents()->toArray() as $parent) {
+                $keepStudent->addParent($parent);
+                $deleteStudent->removeParent($parent);
+            }
+
+            // Reassign contributions to kept student
+            foreach ($deleteStudent->getContributions()->toArray() as $contribution) {
+                if (! $contribution->getStudents()->contains($keepStudent)) {
+                    $contribution->addStudent($keepStudent);
+                }
+                $contribution->removeStudent($deleteStudent);
+            }
+
+            // Soft delete the duplicate student
+            $deleteStudent->setDeletedAt(new \DateTimeImmutable());
+            $this->em->flush();
+        } catch (\Throwable $e) {
+            throw $e;
+        }
     }
 
     private function assertTreasurer(ClassRoom $class): void
     {
+        if ($this->isGranted('ROLE_ADMIN')) {
+            return;
+        }
+
         $user = $this->getUser();
         if (! $user instanceof User) {
             throw $this->createAccessDeniedException();
         }
 
-        // For now, assume any authenticated user can access treasurer features
-        // In production, check for treasurer role
+        $membership = $this->memberships->findOneBy([
+            'user' => $user,
+            'classRoom' => $class,
+        ]);
+
+        if (! $membership || $membership->getRole() !== ClassRole::TREASURER) {
+            throw $this->createAccessDeniedException();
+        }
     }
 }

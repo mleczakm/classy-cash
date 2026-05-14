@@ -45,7 +45,7 @@ class StudentPayment
     private ?\DateTimeImmutable $paidAt = null;
 
     public function __construct(
-        #[ORM\ManyToOne(targetEntity: Student::class)]
+        #[ORM\ManyToOne(targetEntity: Student::class, inversedBy: 'studentPayments')]
         #[ORM\JoinColumn(nullable: false)]
         private Student $student,
         #[ORM\Column(type: 'string', length: 128)]

@@ -16,14 +16,10 @@
         <nav class="flex items-center gap-6">
             {% if app.user %}
                 <a href="{{ path('homepage') }}" class="text-sm font-medium text-foreground hover:text-primary transition-colors">Panel</a>
-                {% if cc_is_carer() %}
-                    <a href="{{ path('cc_students') }}" class="text-sm font-medium text-foreground hover:text-primary transition-colors">Uczniowie</a>
-                    <a href="{{ path('cc_link_parent') }}" class="text-sm font-medium text-foreground hover:text-primary transition-colors">Powiąż rodzica</a>
-                {% endif %}
                 {% if cc_is_treasurer() %}
-                    <a href="{{ path('cc_treasurer_overview') }}" class="text-sm font-medium text-foreground hover:text-primary transition-colors">Skarbnik</a>
-                    <a href="{{ path('cc_payment_templates') }}" class="text-sm font-medium text-foreground hover:text-primary transition-colors">Szablony</a>
-                    <a href="{{ path('cc_expenses') }}" class="text-sm font-medium text-foreground hover:text-primary transition-colors">Wydatki</a>
+                    <a href="{{ path('homepage') }}" class="text-sm font-medium text-foreground hover:text-primary transition-colors">Skarbnik</a>
+                    <a href="{{ path('treasurer_students') }}" class="text-sm font-medium text-foreground hover:text-primary transition-colors">Uczniowie</a>
+                    <a href="{{ path('treasurer_contributions') }}" class="text-sm font-medium text-foreground hover:text-primary transition-colors">Składki</a>
                 {% endif %}
                 {% if is_granted('ROLE_ADMIN') %}
                     <a href="{{ path('admin_settings') }}" class="text-sm font-medium text-foreground hover:text-primary transition-colors">Ustawienia</a>

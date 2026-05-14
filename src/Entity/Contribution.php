@@ -22,7 +22,7 @@ class Contribution
     /**
      * @var Collection<int, Student>
      */
-    #[ORM\ManyToMany(targetEntity: Student::class)]
+    #[ORM\ManyToMany(targetEntity: Student::class, inversedBy: 'contributions')]
     #[ORM\JoinTable(name: 'contribution_students')]
     private Collection $students;
 
