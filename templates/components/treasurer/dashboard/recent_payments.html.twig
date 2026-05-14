@@ -1,4 +1,5 @@
-<div {{ attributes }} class="card-elegant !p-0 overflow-hidden bg-white border border-slate-200 shadow-sm relative">
+<div {{ attributes.defaults(stimulus_controller('appear')) }}
+    class="card-elegant !p-0 overflow-hidden bg-white border border-slate-200 shadow-sm relative">
     <div class="p-8 border-slate-50 bg-white sticky top-0 z-10">
         <h3 class="font-bold text-[#1a2a52] text-lg uppercase tracking-tight">Ostatnio zaksięgowane operacje</h3>
         <p class="text-[11px] text-slate-400 font-medium mt-1">Nieskończona historia przepływów (Autoloading)</p>
@@ -15,8 +16,17 @@
                 </tr>
             </thead>
             <tbody id="operations-body" class="divide-y divide-slate-50 text-sm">
-                {% for transaction in this.recentTransactions %}
-                    <tr class="hover:bg-slate-50/50 transition-colors {% if loop.index > 2 %}opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: {{ (loop.index - 3) * 20 }}ms{% endif %}">
+                {# 1. Trick: Keep previous results by "ignoring" them #}
+                {% if page > 1 %}
+                    <tr id="operation-{{ (page - 1) * 10 }}" data-live-ignore style="display: none;"></tr>
+                {% endif %}
+
+                {% set items = this.getItems() %}
+                {% for transaction in items %}
+                    {% set itemIndex = loop.index0 + ((page - 1) * 10) %}
+                    <tr id="operation-{{ itemIndex }}" 
+                        data-live-ignore
+                        class="hover:bg-slate-50/50 transition-colors">
                         <td class="px-8 py-5 text-wrap">
                             {% if transaction.student %}
                                 <div class="font-bold text-[#1a2a52]">{{ transaction.student.firstName }} {{ transaction.student.lastName }}</div>
@@ -36,8 +46,8 @@
                         <td class="px-8 py-5 font-bold {% if transaction.type == 'income' %}text-[#2aa57f]{% else %}text-[#d65a4a]{% endif %}">
                             {% if transaction.type == 'income' %}+{% endif %}{{ transaction.amount|money }}
                         </td>
-                        <td class="px-8 py-5 font-mono text-slate-400 text-xs {% if loop.index > 2 %}italic{% endif %}">
-                            {% if loop.index <= 2 %}{{ this.getCurrentBalance()|money }}{% else %}---{% endif %}
+                        <td class="px-8 py-5 font-mono text-slate-400 text-xs {% if itemIndex < 2 %}font-bold text-slate-600{% else %}italic{% endif %}">
+                            {% if itemIndex < 2 %}{{ this.getCurrentBalance()|money }}{% else %}---{% endif %}
                         </td>
                         <td class="px-8 py-5 text-right">
                             {% if transaction.type == 'income' %}
@@ -48,130 +58,44 @@
                         </td>
                     </tr>
                 {% endfor %}
+
+                {# 2. Render placeholders for the NEXT page #}
+                {% if this.hasMore %}
+                    {# The first placeholder acts as the "Intersection" trigger #}
+                    <tr id="operation-{{ page * 10 }}"
+                        data-appear-target="loader"
+                        data-action="appear->live#action"
+                        data-live-action-param="debounce(750)|more">
+                        <td colspan="5" class="p-12 text-center bg-slate-50/20">
+                            <div class="flex flex-col items-center gap-3">
+                                <svg class="animate-spin w-6 h-6 text-[#e8b441]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                    <circle cx="12" cy="12" r="10" stroke="currentColor" opacity="0.2"></circle>
+                                    <path d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" fill="currentColor"></path>
+                                </svg>
+                                <span class="text-[11px] font-bold text-[#6b7796] uppercase tracking-[0.1em]">Pobieranie starszych operacji...</span>
+                            </div>
+                        </td>
+                    </tr>
+                    {# Additional placeholders to maintain list structure during loading #}
+                    {% for i in 1..9 %}
+                        <tr id="operation-{{ (page * 10) + i }}" style="display: none;" data-live-ignore></tr>
+                    {% endfor %}
+                {% else %}
+                    {% if items|length == 0 and page == 1 %}
+                        <tr>
+                            <td colspan="5" class="p-12 text-center">
+                                <div class="text-xs text-slate-400 font-medium italic">Brak operacji do wyświetlenia</div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="5" class="p-12 text-center">
+                                <div class="text-xs text-slate-300 font-medium italic">Koniec historii finansowej</div>
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endif %}
             </tbody>
         </table>
     </div>
-    
-    <!-- TRIGGER DLA INFINITE SCROLL -->
-    <div id="infinite-scroll-trigger" class="p-12 flex flex-col items-center justify-center gap-4 bg-slate-50/20 border-slate-50">
-        <div id="loading-indicator" class="flex flex-col items-center gap-3 transition-opacity opacity-0" style="opacity: 0;">
-            <svg class="spinner w-6 h-6 text-[#e8b441]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
-                <circle cx="12" cy="12" r="10" stroke="currentColor" opacity="0.2"></circle>
-                <path d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" fill="currentColor"></path>
-            </svg>
-            <span class="text-[11px] font-bold text-[#6b7796] uppercase tracking-[0.1em]">Pobieranie starszych operacji...</span>
-        </div>
-        <div id="end-of-history" class="hidden text-xs text-slate-300 font-medium italic">Koniec historii finansowej</div>
-    </div>
 </div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const operationsBody = document.getElementById('operations-body');
-    const trigger = document.getElementById('infinite-scroll-trigger');
-    const loadingIndicator = document.getElementById('loading-indicator');
-    const endOfHistory = document.getElementById('end-of-history');
-    
-    let currentPage = 1;
-    let isLoading = false;
-    let hasMoreData = true;
-    
-    // Intersection Observer for infinite scroll
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting && !isLoading && hasMoreData) {
-                loadMoreTransactions();
-            }
-        });
-    }, {
-        root: null,
-        rootMargin: '100px',
-        threshold: 0.1
-    });
-    
-    if (trigger) {
-        observer.observe(trigger);
-    }
-    
-    async function loadMoreTransactions() {
-        if (isLoading || !hasMoreData) return;
-        
-        isLoading = true;
-        showLoading();
-        
-        try {
-            // Simulate API call - replace with actual LiveComponent call
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            
-            // Get more transactions from LiveComponent
-            const response = await fetch(window.location.href, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body: new URLSearchParams({
-                    'live_component': 'treasurer:dashboard:recent_payments',
-                    'live_action': 'loadMore',
-                    'page': currentPage + 1
-                })
-            });
-            
-            if (response.ok) {
-                const html = await response.text();
-                
-                // Parse HTML to extract new rows
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                const newRows = doc.querySelectorAll('#operations-body tr');
-                
-                if (newRows.length > 0) {
-                    newRows.forEach((row, index) => {
-                        row.style.animationDelay = `${index * 20}ms`;
-                        operationsBody.appendChild(row);
-                    });
-                    
-                    currentPage++;
-                } else {
-                    hasMoreData = false;
-                    showEndOfHistory();
-                }
-            } else {
-                hasMoreData = false;
-                showEndOfHistory();
-            }
-        } catch (error) {
-            console.error('Error loading more transactions:', error);
-            hasMoreData = false;
-            showEndOfHistory();
-        } finally {
-            isLoading = false;
-            hideLoading();
-        }
-    }
-    
-    function showLoading() {
-        if (loadingIndicator) {
-            loadingIndicator.style.opacity = '1';
-        }
-    }
-    
-    function hideLoading() {
-        if (loadingIndicator) {
-            loadingIndicator.style.opacity = '0';
-        }
-    }
-    
-    function showEndOfHistory() {
-        if (loadingIndicator) {
-            loadingIndicator.style.display = 'none';
-        }
-        if (endOfHistory) {
-            endOfHistory.classList.remove('hidden');
-        }
-        if (trigger) {
-            observer.unobserve(trigger);
-        }
-    }
-});
-</script>

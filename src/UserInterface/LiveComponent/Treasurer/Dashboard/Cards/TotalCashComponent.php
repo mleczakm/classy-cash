@@ -22,6 +22,7 @@ class TotalCashComponent extends AbstractController
 {
     use ComponentToolsTrait;
     use DefaultActionTrait;
+
     private Money $totalCash;
 
     #[LiveProp]

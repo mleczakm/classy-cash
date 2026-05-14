@@ -1059,5 +1059,776 @@
     </div>
 </div>
 
+<div id="recent" class="card-elegant !p-0 overflow-hidden bg-white border border-slate-200 shadow-sm relative">
+    <div class="p-8 border-b border-slate-50 bg-white sticky top-0 z-10">
+        <h3 class="font-bold text-[#1a2a52] text-lg uppercase tracking-tight">Ostatnio zaksięgowane operacje</h3>
+        <p class="text-[11px] text-slate-400 font-medium mt-1">Nieskończona historia przepływów (Autoloading)</p>
+    </div>
+
+    <div class="overflow-x-auto bg-white">
+        <table class="w-full text-left whitespace-nowrap">
+            <thead class="bg-slate-50/50 border-b border-slate-100 text-[10px] uppercase font-bold text-slate-400 tracking-[0.1em]">
+            <tr>
+                <th class="px-8 py-4">Opis operacji / Cel</th>
+                <th class="px-8 py-4 text-center">Data</th>
+                <th class="px-8 py-4">Kwota</th>
+                <th class="px-8 py-4">Saldo po</th>
+                <th class="px-8 py-4 text-right">Status</th>
+            </tr>
+            </thead>
+            <tbody id="operations-body" class="divide-y divide-slate-50 text-sm">
+            <!-- Wstępne wiersze -->
+            <tr class="hover:bg-slate-50/50 transition-colors">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Jan Kowalski <div class="text-[10px] font-normal text-[#6b7796]">Wycieczka (Automatyczna)</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">Dziś, 12:45</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+35,00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs">4 250,00 PLN</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border border-emerald-100">Wpłata</span></td>
+            </tr>
+            <tr class="hover:bg-slate-50/50 transition-colors">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Zakup Biletów: Kino <div class="text-[10px] font-normal text-[#6b7796]">Wydatek grupowy</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">12.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#d65a4a]">- 840,00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs">4 215,00 PLN</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-red-50 text-red-600 border border-red-100">Koszt</span></td>
+            </tr>
+            <!-- Więcej danych zostanie dodanych skryptem -->
+            <tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 0ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Adam Zieliński <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">01.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+27.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 20ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Adam Zieliński <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">28.04.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+49.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 40ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Julia Kwiatkowska <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">05.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+48.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 60ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Piotr Wiśniewski <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">05.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+43.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 80ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Julia Kwiatkowska <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">01.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+27.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 100ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Zakup materiałów plastycznych <div class="text-[10px] font-normal text-[#6b7796]">Faktura VAT</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">05.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#d65a4a]">-54.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-red-50 text-red-600 border-red-100 border">Koszt</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 120ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Piotr Wiśniewski <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">08.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+57.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 140ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Adam Zieliński <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">08.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+62.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 160ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Piotr Wiśniewski <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">05.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+35.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 180ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Julia Kwiatkowska <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">28.04.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+53.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 200ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Zakup materiałów plastycznych <div class="text-[10px] font-normal text-[#6b7796]">Faktura VAT</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">28.04.2026</td>
+                <td class="px-8 py-5 font-bold text-[#d65a4a]">-179.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-red-50 text-red-600 border-red-100 border">Koszt</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 220ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Anna Maj <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">08.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+46.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 240ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Anna Maj <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">28.04.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+28.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 260ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Julia Kwiatkowska <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">08.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+42.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 280ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Piotr Wiśniewski <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">01.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+23.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 300ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Anna Maj <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">28.04.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+28.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 320ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Piotr Wiśniewski <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">28.04.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+23.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 340ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Anna Maj <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">05.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+48.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 360ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Zakup materiałów plastycznych <div class="text-[10px] font-normal text-[#6b7796]">Faktura VAT</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">28.04.2026</td>
+                <td class="px-8 py-5 font-bold text-[#d65a4a]">-105.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-red-50 text-red-600 border-red-100 border">Koszt</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 380ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Piotr Wiśniewski <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">05.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+49.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 400ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Adam Zieliński <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">05.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+41.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 420ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Adam Zieliński <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">08.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+25.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 440ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Adam Zieliński <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">28.04.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+46.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 460ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Anna Maj <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">05.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+31.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 480ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Adam Zieliński <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">08.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+24.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 500ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Zakup materiałów plastycznych <div class="text-[10px] font-normal text-[#6b7796]">Faktura VAT</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">28.04.2026</td>
+                <td class="px-8 py-5 font-bold text-[#d65a4a]">-128.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-red-50 text-red-600 border-red-100 border">Koszt</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 520ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Zakup materiałów plastycznych <div class="text-[10px] font-normal text-[#6b7796]">Faktura VAT</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">08.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#d65a4a]">-36.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-red-50 text-red-600 border-red-100 border">Koszt</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 540ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Piotr Wiśniewski <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">28.04.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+32.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 560ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Zakup materiałów plastycznych <div class="text-[10px] font-normal text-[#6b7796]">Faktura VAT</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">05.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#d65a4a]">-72.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-red-50 text-red-600 border-red-100 border">Koszt</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 580ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Zakup materiałów plastycznych <div class="text-[10px] font-normal text-[#6b7796]">Faktura VAT</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">08.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#d65a4a]">-165.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-red-50 text-red-600 border-red-100 border">Koszt</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 600ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Anna Maj <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">28.04.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+40.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 620ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Anna Maj <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">08.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+25.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 640ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Piotr Wiśniewski <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">01.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+51.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 660ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Anna Maj <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">08.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+54.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 680ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Julia Kwiatkowska <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">01.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+25.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 700ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Zakup materiałów plastycznych <div class="text-[10px] font-normal text-[#6b7796]">Faktura VAT</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">01.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#d65a4a]">-163.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-red-50 text-red-600 border-red-100 border">Koszt</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 720ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Piotr Wiśniewski <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">01.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+31.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 740ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Adam Zieliński <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">05.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+50.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 760ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Adam Zieliński <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">01.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+21.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 780ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Piotr Wiśniewski <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">05.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+52.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 0ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Anna Maj <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">08.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+64.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 20ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Zakup materiałów plastycznych <div class="text-[10px] font-normal text-[#6b7796]">Faktura VAT</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">05.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#d65a4a]">-102.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-red-50 text-red-600 border-red-100 border">Koszt</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 40ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Piotr Wiśniewski <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">28.04.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+34.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 60ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Julia Kwiatkowska <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">01.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+52.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 80ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Adam Zieliński <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">01.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+35.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 100ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Piotr Wiśniewski <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">01.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+53.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 120ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Piotr Wiśniewski <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">01.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+54.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 140ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Adam Zieliński <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">01.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+25.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 160ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Julia Kwiatkowska <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">01.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+22.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 180ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Adam Zieliński <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">01.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+47.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 200ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Piotr Wiśniewski <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">08.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+57.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 220ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Zakup materiałów plastycznych <div class="text-[10px] font-normal text-[#6b7796]">Faktura VAT</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">08.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#d65a4a]">-167.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-red-50 text-red-600 border-red-100 border">Koszt</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 240ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Piotr Wiśniewski <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">08.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+30.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 260ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Julia Kwiatkowska <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">01.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+47.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 280ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Adam Zieliński <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">01.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+21.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 300ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Piotr Wiśniewski <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">05.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+26.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 320ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Julia Kwiatkowska <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">05.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+44.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 340ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Zakup materiałów plastycznych <div class="text-[10px] font-normal text-[#6b7796]">Faktura VAT</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">28.04.2026</td>
+                <td class="px-8 py-5 font-bold text-[#d65a4a]">-40.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-red-50 text-red-600 border-red-100 border">Koszt</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 360ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Adam Zieliński <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">05.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+62.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 380ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Zakup materiałów plastycznych <div class="text-[10px] font-normal text-[#6b7796]">Faktura VAT</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">01.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#d65a4a]">-141.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-red-50 text-red-600 border-red-100 border">Koszt</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 400ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Julia Kwiatkowska <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">08.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+42.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 420ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Piotr Wiśniewski <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">28.04.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+30.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 440ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Piotr Wiśniewski <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">28.04.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+31.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 460ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Anna Maj <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">01.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+45.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 480ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Zakup materiałów plastycznych <div class="text-[10px] font-normal text-[#6b7796]">Faktura VAT</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">05.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#d65a4a]">-165.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-red-50 text-red-600 border-red-100 border">Koszt</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 500ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Julia Kwiatkowska <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">01.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+34.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 520ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Julia Kwiatkowska <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">01.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+17.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 540ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Adam Zieliński <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">28.04.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+19.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 560ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Zakup materiałów plastycznych <div class="text-[10px] font-normal text-[#6b7796]">Faktura VAT</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">05.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#d65a4a]">-183.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-red-50 text-red-600 border-red-100 border">Koszt</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 580ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Anna Maj <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">08.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+31.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 600ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Zakup materiałów plastycznych <div class="text-[10px] font-normal text-[#6b7796]">Faktura VAT</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">05.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#d65a4a]">-71.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-red-50 text-red-600 border-red-100 border">Koszt</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 620ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Anna Maj <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">08.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+36.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 640ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Piotr Wiśniewski <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">05.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+21.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 660ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Anna Maj <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">05.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+48.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 680ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Julia Kwiatkowska <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">05.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+16.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 700ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Adam Zieliński <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">01.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+52.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 720ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Zakup materiałów plastycznych <div class="text-[10px] font-normal text-[#6b7796]">Faktura VAT</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">28.04.2026</td>
+                <td class="px-8 py-5 font-bold text-[#d65a4a]">-90.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-red-50 text-red-600 border-red-100 border">Koszt</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 740ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Zakup materiałów plastycznych <div class="text-[10px] font-normal text-[#6b7796]">Faktura VAT</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">05.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#d65a4a]">-34.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-red-50 text-red-600 border-red-100 border">Koszt</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 760ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Anna Maj <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">05.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+23.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 780ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Adam Zieliński <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">08.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+58.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 0ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Piotr Wiśniewski <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">01.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+26.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 20ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Anna Maj <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">08.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+15.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 40ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Adam Zieliński <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">01.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+64.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 60ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Anna Maj <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">28.04.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+26.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 80ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Anna Maj <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">05.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+39.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 100ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Julia Kwiatkowska <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">01.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+61.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 120ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Anna Maj <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">08.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+30.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 140ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Julia Kwiatkowska <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">28.04.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+64.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 160ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Anna Maj <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">08.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+31.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 180ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Anna Maj <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">08.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+38.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 200ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Julia Kwiatkowska <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">01.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+60.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 220ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Piotr Wiśniewski <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">28.04.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+17.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 240ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Anna Maj <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">08.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+48.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 260ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Adam Zieliński <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">01.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+52.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 280ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Anna Maj <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">28.04.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+32.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 300ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Piotr Wiśniewski <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">01.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+34.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 320ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Zakup materiałów plastycznych <div class="text-[10px] font-normal text-[#6b7796]">Faktura VAT</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">05.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#d65a4a]">-101.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-red-50 text-red-600 border-red-100 border">Koszt</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 340ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Julia Kwiatkowska <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">28.04.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+57.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 360ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Piotr Wiśniewski <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">28.04.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+42.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 380ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Zakup materiałów plastycznych <div class="text-[10px] font-normal text-[#6b7796]">Faktura VAT</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">28.04.2026</td>
+                <td class="px-8 py-5 font-bold text-[#d65a4a]">-42.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-red-50 text-red-600 border-red-100 border">Koszt</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 400ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Piotr Wiśniewski <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">01.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+43.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 420ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Julia Kwiatkowska <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">01.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+39.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 440ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Piotr Wiśniewski <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">05.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+48.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 460ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Julia Kwiatkowska <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">01.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+45.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 480ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Adam Zieliński <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">08.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+41.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 500ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Julia Kwiatkowska <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">28.04.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+46.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 520ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Zakup materiałów plastycznych <div class="text-[10px] font-normal text-[#6b7796]">Faktura VAT</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">28.04.2026</td>
+                <td class="px-8 py-5 font-bold text-[#d65a4a]">-116.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-red-50 text-red-600 border-red-100 border">Koszt</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 540ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Anna Maj <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">05.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+63.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 560ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Anna Maj <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">01.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+56.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 580ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Piotr Wiśniewski <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">28.04.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+39.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 600ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Julia Kwiatkowska <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">01.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+33.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 620ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Anna Maj <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">01.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+28.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 640ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Anna Maj <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">28.04.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+25.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 660ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Adam Zieliński <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">08.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+22.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 680ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Anna Maj <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">08.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+42.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 700ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Anna Maj <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">05.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+17.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 720ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Zakup materiałów plastycznych <div class="text-[10px] font-normal text-[#6b7796]">Faktura VAT</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">28.04.2026</td>
+                <td class="px-8 py-5 font-bold text-[#d65a4a]">-127.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-red-50 text-red-600 border-red-100 border">Koszt</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 740ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Adam Zieliński <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">28.04.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+18.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 760ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Piotr Wiśniewski <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">05.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+38.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr><tr class="hover:bg-slate-50/50 transition-colors opacity-0 animate-in fade-in duration-500 fill-mode-forwards" style="animation-delay: 780ms;">
+                <td class="px-8 py-5 text-wrap font-bold text-[#1a2a52]">Piotr Wiśniewski <div class="text-[10px] font-normal text-[#6b7796]">Składka: Artykuły</div></td>
+                <td class="px-8 py-5 text-center text-slate-400 font-medium">01.05.2026</td>
+                <td class="px-8 py-5 font-bold text-[#2aa57f]">+38.00 PLN</td>
+                <td class="px-8 py-5 font-mono text-slate-400 text-xs italic">---</td>
+                <td class="px-8 py-5 text-right"><span class="status-badge bg-emerald-50 text-emerald-600 border-emerald-100 border">Wpłata</span></td>
+            </tr></tbody>
+        </table>
+    </div>
+
+    <!-- TRIGGER DLA INFINITE SCROLL -->
+    <div id="infinite-scroll-trigger" class="p-12 flex flex-col items-center justify-center gap-4 bg-slate-50/20 border-t border-slate-50">
+        <div id="loading-indicator" class="flex flex-col items-center gap-3 transition-opacity opacity-0" style="opacity: 0;">
+            <svg class="spinner w-6 h-6 text-[#e8b441]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" opacity="0.2"></circle>
+                <path d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" fill="currentColor"></path>
+            </svg>
+            <span class="text-[11px] font-bold text-[#6b7796] uppercase tracking-[0.1em]">Pobieranie starszych operacji...</span>
+        </div>
+        <div id="end-of-history" class="hidden text-xs text-slate-300 font-medium italic">Koniec historii finansowej</div>
+    </div>
+</div>
+
 </body>
 </html>

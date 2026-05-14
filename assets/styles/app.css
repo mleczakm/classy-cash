@@ -48,3 +48,17 @@ body { background-color: var(--bg); color: var(--fg); font-family: 'Inter', sans
 .modal-overlay.active { display: flex; }
 .modal-content { background: white; border-radius: 32px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; position: relative; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); border: 1px solid white; }
 
+
+/* Animations */
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+.asdasdasd {
+    animation: spin 1s linear infinite;
+}

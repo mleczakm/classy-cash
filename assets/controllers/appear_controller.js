@@ -1,0 +1,24 @@
+import { Controller } from '@hotwired/stimulus';
+
+/* stimulusFetch: 'lazy' */
+export default class extends Controller {
+    static targets = ['loader'];
+
+    loaderTargetConnected(element) {
+        this.observer ??= new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    console.log('Loader is intersecting, dispatching appear event');
+                    entry.target.dispatchEvent(new CustomEvent('appear', {detail: {entry}}));
+                }
+            });
+        }, {
+            rootMargin: '100px',
+        });
+        this.observer?.observe(element);
+    }
+
+    loaderTargetDisconnected(element) {
+        this.observer?.unobserve(element);
+    }
+}

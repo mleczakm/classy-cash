@@ -25,14 +25,8 @@ class RecentPaymentsComponent extends AbstractController
     use ComponentToolsTrait;
     use DefaultActionTrait;
 
-    #[LiveProp(useSerializerForHydration: true)]
-    public array $recentTransactions = [];
-
     #[LiveProp]
     public int $page = 1;
-
-    #[LiveProp]
-    public bool $hasMoreData = true;
 
     #[LiveProp]
     public ?ClassRoom $classRoom = null;
@@ -43,23 +37,12 @@ class RecentPaymentsComponent extends AbstractController
         private readonly ClassExpenseRepository $expenses,
         private readonly PaymentRepository $payments,
         private readonly LoggerInterface $logger,
-
     ) {}
-
-    public function mount(): void
-    {
-        $this->loadRecentTransactions();
-    }
-
-    public function getRecentTransactions(): array
-    {
-        $this->loadRecentTransactions();
-        return $this->recentTransactions;
-    }
 
     public function getCurrentBalance(): Money
     {
-        if (! $this->classRoom) {
+        $class = $this->getClassRoom();
+        if (! $class) {
             return Money::of(0, 'PLN');
         }
 
@@ -67,7 +50,7 @@ class RecentPaymentsComponent extends AbstractController
         $sumExpenses = Money::of(0, 'PLN');
 
         // Calculate total paid student payments
-        $payments = $this->studentPayments->findByClass($this->classRoom);
+        $payments = $this->studentPayments->findByClass($class);
         foreach ($payments as $payment) {
             if ($payment->getStatus() === StudentPayment::STATUS_PAID) {
                 $sumPaid = $sumPaid->plus($payment->getAmount());
@@ -75,7 +58,7 @@ class RecentPaymentsComponent extends AbstractController
         }
 
         // Calculate total expenses
-        $expenses = $this->expenses->findByClass($this->classRoom);
+        $expenses = $this->expenses->findByClass($class);
         foreach ($expenses as $expense) {
             $sumExpenses = $sumExpenses->plus($expense->getAmount());
         }
@@ -86,35 +69,68 @@ class RecentPaymentsComponent extends AbstractController
     #[LiveAction]
     public function refreshData(): void
     {
-        $this->loadRecentTransactions();
         $this->emit('recentTransactionsRefreshed');
     }
 
     #[LiveAction]
-    public function loadMore(): void
+    public function more(): void
     {
-        $this->page++;
-        $this->loadRecentTransactions();
-        $this->emit('moreTransactionsLoaded');
+        $this->logger->info('RecentPaymentsComponent::more() action called, current page: ' . $this->page);
+        ++$this->page;
     }
 
-    private function loadRecentTransactions(): void
+    public function hasMore(): bool
     {
-        if (! $this->classRoom) {
-            $this->recentTransactions = [];
-            $this->hasMoreData = false;
-            return;
-        }
+        $totalTransactions = count($this->getAllTransactions());
+        return $totalTransactions > ($this->page * 10);
+    }
 
-        $transactions = [];
-        $this->logger->debug('ClassRoom: ' . $this->classRoom->getName());
+    /**
+     * @return list<array{type: string, description: string, amount: Money, date: \DateTimeInterface, student: ?Student, method: string, methodClass: string}>
+     */
+    public function getItems(): array
+    {
+        $transactions = $this->getAllTransactions();
 
-        // Calculate pagination limits
+        // Apply pagination
         $limit = 10;
         $offset = ($this->page - 1) * $limit;
 
+        $items = array_slice($transactions, $offset, $limit);
+        $this->logger->info(
+            sprintf('RecentPaymentsComponent::getItems() page=%d, offset=%d, count=%d', $this->page, $offset, count(
+                $items
+            ))
+        );
+
+        return $items;
+    }
+
+    private function getClassRoom(): ?ClassRoom
+    {
+        if ($this->classRoom) {
+            return $this->classRoom;
+        }
+
+        // Fallback: find first class room
+        return $this->classRooms->findOneBy([]);
+    }
+
+    private function getAllTransactions(): array
+    {
+        $class = $this->getClassRoom();
+        if (! $class) {
+            $this->logger->warning(
+                'RecentPaymentsComponent::getAllTransactions() - classRoom is NULL even after fallback'
+            );
+            return [];
+        }
+
+        $transactions = [];
+
         // Get recent paid student payments
-        $studentPayments = $this->studentPayments->findRecentPaid($this->classRoom, 50); // Get more for pagination
+        $studentPayments = $this->studentPayments->findRecentPaid($class, 100);
+        $this->logger->info('RecentPaymentsComponent - found ' . count($studentPayments) . ' student payments');
         foreach ($studentPayments as $payment) {
             $transactions[] = [
                 'type' => 'income',
@@ -128,12 +144,9 @@ class RecentPaymentsComponent extends AbstractController
         }
 
         // Get recent expenses
-        $expenses = $this->expenses->findByClass($this->classRoom);
-        $this->logger->debug('Found ' . count($expenses) . ' expenses');
-
-        $expenses = array_slice($expenses, 0, 50); // Get more for pagination
+        $expenses = $this->expenses->findByClass($class);
+        $this->logger->info('RecentPaymentsComponent - found ' . count($expenses) . ' expenses');
         foreach ($expenses as $expense) {
-            $this->logger->debug('Adding expense: ' . $expense->getLabel());
             $transactions[] = [
                 'type' => 'expense',
                 'description' => $expense->getLabel(),
@@ -146,38 +159,34 @@ class RecentPaymentsComponent extends AbstractController
         }
 
         // Get recent general payments (not linked to student payments)
-        $generalPayments = $this->payments->findRecentByUser($this->getUser(), 50); // Get more for pagination
-        foreach ($generalPayments as $payment) {
-            $transactions[] = [
-                'type' => 'income',
-                'description' => 'Wpłata ogólna',
-                'amount' => $payment->getAmount(),
-                'date' => $payment->getCreatedAt(),
-                'student' => null,
-                'method' => 'Ręcznie',
-                'methodClass' => 'bg-blue-50 text-blue-600',
-            ];
+        // We use the user from security context
+        $user = $this->getUser();
+        if ($user) {
+            $generalPayments = $this->payments->findRecentByUser($user, 100);
+            $this->logger->info('RecentPaymentsComponent - found ' . count($generalPayments) . ' general payments');
+            foreach ($generalPayments as $payment) {
+                // Check if this payment is already linked to a student payment to avoid duplicates
+                $isLinked = count($this->studentPayments->findByPayment($payment)) > 0;
+                if (! $isLinked) {
+                    $transactions[] = [
+                        'type' => 'income',
+                        'description' => 'Wpłata ogólna',
+                        'amount' => $payment->getAmount(),
+                        'date' => $payment->getCreatedAt(),
+                        'student' => null,
+                        'method' => 'Ręcznie',
+                        'methodClass' => 'bg-blue-50 text-blue-600',
+                    ];
+                }
+            }
         }
 
         // Sort all transactions by date (most recent first)
         usort($transactions, fn($a, $b) => $b['date'] <=> $a['date']);
 
-        // Apply pagination
-        $paginatedTransactions = array_slice($transactions, $offset, $limit);
-        
-        // Check if there's more data
-        $totalTransactions = count($transactions);
-        $this->hasMoreData = ($offset + $limit) < $totalTransactions;
+        $this->logger->info('RecentPaymentsComponent - total transactions sorted: ' . count($transactions));
 
-        // For first page, replace all transactions. For subsequent pages, append
-        if ($this->page === 1) {
-            $this->recentTransactions = $paginatedTransactions;
-        } else {
-            $this->recentTransactions = array_merge($this->recentTransactions, $paginatedTransactions);
-        }
-
-        $this->logger->debug('Final transactions count: ' . count($this->recentTransactions));
-        $this->logger->debug('Has more data: ' . ($this->hasMoreData ? 'true' : 'false'));
+        return $transactions;
     }
 
     public function getPaymentMethod(StudentPayment $payment): string
@@ -187,8 +196,7 @@ class RecentPaymentsComponent extends AbstractController
             return 'Ręcznie';
         }
 
-        // Try to determine method from transfer title or other logic
-        return 'Auto'; // This would be enhanced with actual transfer analysis
+        return 'Auto';
     }
 
     public function getPaymentMethodClass(StudentPayment $payment): string
@@ -196,8 +204,7 @@ class RecentPaymentsComponent extends AbstractController
         $method = $this->getPaymentMethod($payment);
 
         return match ($method) {
-            'Auto (BLIK)' => 'bg-emerald-50 text-emerald-600',
-            'Auto (Przelew)' => 'bg-emerald-50 text-emerald-600',
+            'Auto' => 'bg-emerald-50 text-emerald-600',
             'Ręcznie' => 'bg-blue-50 text-blue-600',
             default => 'bg-gray-50 text-gray-600'
         };

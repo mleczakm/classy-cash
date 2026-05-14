@@ -32,7 +32,6 @@ class OutstandingPaymentsComponent extends AbstractController
     public function __construct(
         private readonly ClassRoomRepository $classRooms,
         private readonly StudentPaymentRepository $studentPayments,
-
     ) {
         $this->outstandingAmount = Money::of(0, 'PLN');
         $this->outstandingCount = 0;
