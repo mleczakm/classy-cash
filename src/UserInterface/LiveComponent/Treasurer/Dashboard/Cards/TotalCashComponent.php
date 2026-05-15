@@ -50,9 +50,6 @@ class TotalCashComponent extends AbstractController
 
     private function calculateTotalCash(): void
     {
-        error_log(
-            'DEBUG: TotalCashComponent classRoom is ' . ($this->classRoom ? $this->classRoom->getName() : 'NULL')
-        );
         $class = $this->classRoom;
         if (! $class) {
             $this->totalCash = Money::of(0, 'PLN');

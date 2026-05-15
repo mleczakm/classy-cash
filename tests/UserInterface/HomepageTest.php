@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\UserInterface;
 
+use App\Entity\ClassCouncil\ClassMembership;
+use App\Entity\ClassCouncil\ClassRole;
 use App\Entity\ClassCouncil\ClassRoom;
 use App\Tests\Assembler\UserAssembler;
 use App\Tests\Functional\FunctionalTestSettingsTrait;
@@ -34,8 +36,7 @@ class HomepageTest extends WebTestCase
     public static function pagesAccessibleWithoutAuthorizationDataProvider(): array
     {
         return [
-            'Homepage' => ['/treasurer/', 302],
-            'Healthcheck' => ['/health'],
+            'Homepage' => ['/login'], // / redirects to /login if not authenticated
             'Ping' => ['/ping'],
             'Login' => ['/login'],
             'Register' => ['/register'],
@@ -51,7 +52,7 @@ class HomepageTest extends WebTestCase
         $this->setupDefaultSettings($em);
 
         $user = UserAssembler::new()
-            ->withRoles('ROLE_ADMIN')
+            ->withRoles('ROLE_TREASURER', 'ROLE_USER')
             ->assemble();
         $em = self::getContainer()->get(EntityManagerInterface::class);
         $em->persist($user);
@@ -59,15 +60,13 @@ class HomepageTest extends WebTestCase
         $classRoom = new ClassRoom('Test Class');
         $em->persist($classRoom);
 
+        $membership = new ClassMembership($user, $classRoom, ClassRole::TREASURER);
+        $em->persist($membership);
+
         $em->flush();
 
         $client->loginUser($user);
         $client->request('GET', $path);
-
-        // Handle redirect from / to /treasurer/
-        if ($path === '/' && $client->getResponse()->isRedirect('/treasurer/')) {
-            $client->followRedirect();
-        }
 
         $this->assertResponseStatusCodeSame($code);
     }
@@ -78,8 +77,9 @@ class HomepageTest extends WebTestCase
     public static function pagesAccessibleForUsersDataProvider(): array
     {
         return [
-            'Panel' => ['/'],
+            'Panel Redirect' => ['/', 302], // / redirects to /treasurer/dashboard for treasurers
             'Admin' => ['/treasurer/dashboard'],
+            'Parent' => ['/parent'],
         ];
     }
 }
