@@ -27,7 +27,7 @@ class StudentPayment
     #[ORM\JoinColumn(nullable: false)]
     private ClassRoom $classRoom;
 
-    #[ORM\ManyToOne(targetEntity: Payment::class)]
+    #[ORM\ManyToOne(targetEntity: Payment::class, inversedBy: 'studentPayments')]
     #[ORM\JoinColumn(nullable: true)]
     private ?Payment $payment = null;
 

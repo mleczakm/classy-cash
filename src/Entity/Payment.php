@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Application\Service\TransferMoneyParser;
+use App\Entity\ClassCouncil\StudentPayment;
 use App\Repository\PaymentRepository;
 use Brick\Money\Money;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -77,6 +79,12 @@ class Payment
     #[ORM\OneToMany(mappedBy: 'payment', targetEntity: Transfer::class)]
     private Collection $transfers;
 
+    /**
+     * @var Collection<int, StudentPayment>
+     */
+    #[ORM\OneToMany(mappedBy: 'payment', targetEntity: StudentPayment::class)]
+    private Collection $studentPayments;
+
     public function __construct(
         #[ORM\ManyToOne(targetEntity: User::class)]
         #[ORM\JoinColumn(nullable: false)]
@@ -87,6 +95,7 @@ class Payment
         $this->id = new Ulid();
         $this->createdAt = new \DateTimeImmutable();
         $this->transfers = new ArrayCollection();
+        $this->studentPayments = new ArrayCollection();
     }
 
     public function getId(): Ulid
@@ -193,17 +202,42 @@ class Payment
     public function getAmountPaid(): Money
     {
         return $this->transfers->map(
-            fn(Transfer $transfer): Money => Money::of($transfer->amount, 'PLN')
+            fn(Transfer $transfer): Money => TransferMoneyParser::transferMoneyStringToMoneyObject($transfer->amount)
         )->reduce(fn(Money $carry, Money $transfer) => $carry->plus($transfer), Money::zero('PLN'));
     }
 
     public function amountMatch(Transfer $transfer): bool
     {
-        return $this->amount->isEqualTo(Money::of($transfer->amount, 'PLN')->getAmount());
+        return $this->amount->isEqualTo(TransferMoneyParser::transferMoneyStringToMoneyObject($transfer->amount));
+    }
+
+    public function getAmountDifference(Transfer $transfer): Money
+    {
+        return TransferMoneyParser::transferMoneyStringToMoneyObject($transfer->amount)
+            ->minus($this->amount);
     }
 
     public function getAmount(): Money
     {
         return $this->amount;
+    }
+
+    /**
+     * @return Collection<int, StudentPayment>
+     */
+    public function getStudentPayments(): Collection
+    {
+        return $this->studentPayments;
+    }
+
+    public function getLabel(): string
+    {
+        if ($this->studentPayments->isEmpty()) {
+            return 'Wpłata ogólna';
+        }
+
+        $labels = array_map(fn(StudentPayment $sp) => $sp->getLabel(), $this->studentPayments->toArray());
+
+        return implode(', ', array_unique($labels));
     }
 }
