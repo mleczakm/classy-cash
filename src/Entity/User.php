@@ -17,14 +17,14 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\Table(name: '`user`')]
-#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+#[ORM\Table(name: 'users', schema: 'classycash')]
+#[ORM\UniqueConstraint(name: 'classycash_users_email_unique', fields: ['email'])]
 #[UniqueEntity('email', message: 'user.mail_uniqueness')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
-    #[ORM\SequenceGenerator(sequenceName: 'user_id_seq', allocationSize: 1, initialValue: 1)]
+    #[ORM\SequenceGenerator(sequenceName: 'classycash.user_id_seq', allocationSize: 1, initialValue: 1)]
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 

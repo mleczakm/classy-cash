@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Ulid;
 
 #[ORM\Entity(repositoryClass: ClassExpenseRepository::class)]
+#[ORM\Table(schema: 'classycash')]
 class ClassExpense
 {
     #[ORM\Id]

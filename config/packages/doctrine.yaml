@@ -1,7 +1,10 @@
 doctrine:
     dbal:
-        url: '%env(resolve:DATABASE_URL)%'
-        schema_filter: '~^(?!public\.|.*sessions$)~'
+        url: '%env(resolve:DATABASE_URL)%&schema=classycash&options=search_path%3Dclassycash'
+        schema_filter: '~^classycash\.~'
+        options:
+            1002: "SET search_path TO classycash"
+            schema: 'classycash'
         types:
             ulid: Symfony\Bridge\Doctrine\Types\UlidType
 

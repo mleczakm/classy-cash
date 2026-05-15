@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Ulid;
 
 #[ORM\Entity]
+#[ORM\Table(schema: 'classycash')]
 class StudentPayment
 {
     public const STATUS_PENDING = 'pending';

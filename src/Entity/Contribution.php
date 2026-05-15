@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Ulid;
 
 #[ORM\Entity]
+#[ORM\Table(schema: 'classycash')]
 class Contribution
 {
     #[ORM\Id]
@@ -23,7 +24,7 @@ class Contribution
      * @var Collection<int, Student>
      */
     #[ORM\ManyToMany(targetEntity: Student::class, inversedBy: 'contributions')]
-    #[ORM\JoinTable(name: 'contribution_students')]
+    #[ORM\JoinTable(name: 'contribution_students', schema: 'classycash')]
     private Collection $students;
 
     #[ORM\Column(type: 'datetime_immutable')]

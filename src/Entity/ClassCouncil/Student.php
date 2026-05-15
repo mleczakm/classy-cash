@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Ulid;
 
 #[ORM\Entity]
+#[ORM\Table(schema: 'classycash')]
 class Student
 {
     #[ORM\Id]
@@ -23,7 +24,7 @@ class Student
      * @var Collection<int, User>
      */
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'students')]
-    #[ORM\JoinTable(name: 'student_parent')]
+    #[ORM\JoinTable(name: 'student_parent', schema: 'classycash')]
     private Collection $parents;
 
     /**

@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Ulid;
 
 #[ORM\Entity(repositoryClass: NotificationRepository::class)]
-#[ORM\Table(name: 'notification')]
+#[ORM\Table(name: 'notification', schema: 'classycash')]
 #[ORM\Index(columns: ['user_id', 'read_at', 'deleted_at', 'created_at'], name: 'idx_notification_user_state_created')]
 class Notification
 {

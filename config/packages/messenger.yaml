@@ -12,7 +12,11 @@ framework:
                 retry_strategy:
                     max_retries: 5
                     multiplier: 2
-            failed: 'doctrine://default?queue_name=failed'
+            failed:
+                dsn: 'doctrine://default?queue_name=failed'
+                options:
+                    # Forces the internal table to live inside your schema
+                    table_name: 'classycash.messenger_messages'
             # sync: 'sync://'
 
         default_bus: messenger.bus.default

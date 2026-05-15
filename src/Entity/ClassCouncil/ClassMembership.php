@@ -9,8 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Ulid;
 
 #[ORM\Entity]
-#[ORM\UniqueConstraint(name: 'uniq_membership_user_class', fields: ['user', 'classRoom'])]
-#[ORM\UniqueConstraint(name: 'uniq_treasurer_per_class', fields: ['classRoom', 'role'])]
+#[ORM\UniqueConstraint(name: 'classycash_uniq_membership_user_class', fields: ['user', 'classRoom'])]
+#[ORM\UniqueConstraint(name: 'classycash_uniq_treasurer_per_class', fields: ['classRoom', 'role'])]
+#[ORM\Table(schema: 'classycash')]
 class ClassMembership
 {
     #[ORM\Id]

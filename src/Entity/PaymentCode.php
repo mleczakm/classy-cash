@@ -7,8 +7,8 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[ORM\Table(name: 'payment_code')]
-#[ORM\UniqueConstraint(name: 'uniq_payment_code', columns: ['code'])]
+#[ORM\Table(name: 'payment_code', schema: 'classycash')]
+#[ORM\UniqueConstraint(name: 'classycash_uniq_payment_code', columns: ['code'])]
 class PaymentCode
 {
     public const CODE_LENGTH = 4;
@@ -17,7 +17,7 @@ class PaymentCode
 
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
-    #[ORM\SequenceGenerator(sequenceName: 'payment_code_id_seq', allocationSize: 1, initialValue: 1)]
+    #[ORM\SequenceGenerator(sequenceName: 'classycash.payment_code_id_seq', allocationSize: 1, initialValue: 1)]
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 

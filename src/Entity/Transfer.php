@@ -10,13 +10,14 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity]
 #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: true)]
+#[ORM\Table(schema: 'classycash')]
 class Transfer
 {
     use SoftDeleteableEntity;
 
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
-    #[ORM\SequenceGenerator(sequenceName: 'transfer_id_seq', allocationSize: 1, initialValue: 1)]
+    #[ORM\SequenceGenerator(sequenceName: 'classycash.transfer_id_seq', allocationSize: 1, initialValue: 1)]
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
