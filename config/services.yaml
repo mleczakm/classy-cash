@@ -128,7 +128,7 @@ services:
       - { name: 'doctrine.event_listener', event: 'onFlush' }
       - { name: 'doctrine.event_listener', event: 'loadClassMetadata' }
 
-  app.cache.adapter.doctrine:
+  cache.adapter.doctrine:
     parent: cache.adapter.doctrine_dbal
     arguments:
       $connOrDsn: '@database_connection'
