@@ -25,11 +25,13 @@
          style="pointer-events: auto;" aria-hidden="true"></div>
 
     <!-- Modal Content -->
-    <dialog {% if modalOpened %}open{% endif %}
-            class="fixed top-1/2 left-1/2 z-[101] w-[calc(100%-2rem)] md:w-full -translate-x-1/2 -translate-y-1/2 gap-0 border-none bg-white p-0 shadow-2xl duration-300 rounded-[32px] max-w-lg overflow-hidden backdrop:hidden animate-in zoom-in-95">
+    <div {% if not modalOpened %}hidden{% endif %}
+            class="fixed top-1/2 left-1/2 z-101 w-[calc(100%-2rem)] md:w-full -translate-x-1/2 -translate-y-1/2 gap-0 border-none bg-white p-0 shadow-2xl duration-300 rounded-[32px] max-w-lg overflow-hidden animate-in zoom-in-95"
+            role="dialog"
+            aria-modal="true">
         
-        {% if (this.paymentCode is defined and this.paymentCode is not empty) or (paymentCode is defined and paymentCode is not empty) %}
-            <div class="flex flex-col h-full">
+        {% if paymentCode is not empty and paymentAmount is not empty %}
+            <div class="flex flex-col h-full z-102">
                 <!-- Header -->
                 <div class="bg-[#1a2a52] p-8 text-white text-center relative overflow-hidden">
                     <div class="relative z-10">

@@ -79,7 +79,7 @@ final class FastPaymentModalComponent extends AbstractController
             return; // not logged in
         }
 
-        $class = $this->classRooms->findOneBy([]);
+        $class = array_first($this->classRooms->findAll());
         if (! $class) {
             return;
         }

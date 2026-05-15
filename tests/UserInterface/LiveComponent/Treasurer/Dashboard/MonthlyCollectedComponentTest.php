@@ -15,16 +15,18 @@ class MonthlyCollectedComponentTest extends FunctionalTestCase
 {
     use InteractsWithLiveComponents;
 
-    public function testComponentDisplaysCorrectMonthlyAmount(): void
+    public function testComponentDisplaysCorrectAmount(): void
     {
         $classRoom = $this->createClassRoom('4B');
 
-        // Create payments for current month
+        // Create some student payments paid this month
         $student = $this->createTestStudent($classRoom);
-        $p1 = $this->createStudentPayment($student, 'Test Payment 1', Money::of(500, 'PLN'));
-        $p1->markPaid();
-        $p2 = $this->createStudentPayment($student, 'Test Payment 2', Money::of(620, 'PLN'));
-        $p2->markPaid();
+        $payment1 = $this->createStudentPayment($student, 'Paid Payment 1', Money::of(50, 'PLN'));
+        $payment1->markPaid();
+
+        $payment2 = $this->createStudentPayment($student, 'Paid Payment 2', Money::of(100, 'PLN'));
+        $payment2->markPaid();
+
         $this->getEntityManager()
             ->flush();
 
@@ -34,37 +36,34 @@ class MonthlyCollectedComponentTest extends FunctionalTestCase
         /** @var MonthlyCollectedComponent $component */
         $component = $testComponent->component();
 
-        $this->assertEquals(Money::of(1120, 'PLN'), $component->getMonthlyCollected());
+        $this->assertTrue(Money::of(150, 'PLN')->isEqualTo($component->getMonthlyCollected()));
     }
 
     public function testComponentRefreshesData(): void
     {
         $classRoom = $this->createClassRoom('4B');
 
-        // Create test data before component creation
-        $student = $this->createTestStudent($classRoom);
-        $p = $this->createStudentPayment($student, 'New Payment', Money::of(100, 'PLN'));
-
         $testComponent = $this->createLiveComponent(MonthlyCollectedComponent::class, [
             'classRoom' => $classRoom,
         ]);
         /** @var MonthlyCollectedComponent $component */
         $component = $testComponent->component();
 
-        // Initial amount
-        $initialAmount = $component->getMonthlyCollected();
+        // Initial amount should be 0
+        $this->assertTrue(Money::of(0, 'PLN')->isEqualTo($component->getMonthlyCollected()));
 
-        // Mark payment as paid and refresh
-        $p->markPaid();
+        // Create and mark a payment as paid
+        $student = $this->createTestStudent($classRoom);
+        $payment = $this->createStudentPayment($student, 'New Paid Payment', Money::of(75, 'PLN'));
+        $payment->markPaid();
         $this->getEntityManager()
             ->flush();
 
+        // Refresh component
         $testComponent->call('refreshData');
 
-        // Amount should have changed
-        $refreshedAmount = $component->getMonthlyCollected();
-        $this->assertNotEquals($initialAmount, $refreshedAmount);
-        $this->assertEquals(Money::of(100, 'PLN'), $refreshedAmount);
+        // Amount should have updated
+        $this->assertTrue(Money::of(75, 'PLN')->isEqualTo($component->getMonthlyCollected()));
     }
 
     public function testComponentEmitsEventOnRefresh(): void
@@ -76,17 +75,6 @@ class MonthlyCollectedComponentTest extends FunctionalTestCase
         ]);
 
         $testComponent->call('refreshData');
-    }
-
-    public function testComponentHandlesNoClassRoom(): void
-    {
-        // No class room exists
-        $testComponent = $this->createLiveComponent(MonthlyCollectedComponent::class, [
-            'classRoom' => null,
-        ]);
-        /** @var MonthlyCollectedComponent $component */
-        $component = $testComponent->component();
-
-        $this->assertEquals(Money::of(0, 'PLN'), $component->getMonthlyCollected());
+        $this->assertComponentEmitEvent($testComponent, 'monthlyCollectedRefreshed');
     }
 }

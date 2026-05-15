@@ -52,12 +52,16 @@ security:
         - { path: ^/register, roles: PUBLIC_ACCESS }
         - { path: ^/onboarding, roles: PUBLIC_ACCESS }
         - { path: ^/_components, roles: PUBLIC_ACCESS }
+        - { path: ^/ping, roles: PUBLIC_ACCESS }
+        - { path: ^/reset-password, roles: PUBLIC_ACCESS }
+        - { path: ^/logout, roles: PUBLIC_ACCESS }
         - { path: ^/treasurer, roles: ROLE_TREASURER }
         - { path: ^/, roles: ROLE_USER }
 
     # Custom access denied handler
     role_hierarchy:
         ROLE_ADMIN:       ROLE_USER
+        ROLE_TREASURER:   ROLE_USER
         ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
 when@test:

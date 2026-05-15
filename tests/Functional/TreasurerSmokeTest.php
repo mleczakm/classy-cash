@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Functional;
 
 use App\Entity\ClassCouncil\ClassRole;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use PHPUnit\Framework\Attributes\Group;
 
 #[Group('smoke')]
@@ -91,7 +90,8 @@ class TreasurerSmokeTest extends FunctionalTestCase
         $classRoom = $this->createClassRoom('4B');
         $user = $this->createUser('treasurer@example.com', 'password');
         $user->setRoles(['ROLE_TREASURER', 'ROLE_USER']);
-        $this->getEntityManager()->flush();
+        $this->getEntityManager()
+            ->flush();
 
         // Assign treasurer role
         $this->createMembership($user, $classRoom, ClassRole::TREASURER);

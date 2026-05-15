@@ -100,8 +100,7 @@ class StudentPaymentRepository extends ServiceEntityRepository
         // total
         $qb = $this->createQueryBuilder('sp')
             ->select('COUNT(sp.id) AS total')
-            ->innerJoin('sp.student', 's')
-            ->andWhere('s.classRoom = :class')
+            ->where('sp.classRoom = :class')
             ->andWhere('sp.label = :label')
             ->setParameter('class', $classRoom->getId(), 'ulid')
             ->setParameter('label', $label);
@@ -111,8 +110,7 @@ class StudentPaymentRepository extends ServiceEntityRepository
         // paid
         $qb2 = $this->createQueryBuilder('sp')
             ->select('COUNT(sp.id) AS paid')
-            ->innerJoin('sp.student', 's')
-            ->andWhere('s.classRoom = :class')
+            ->where('sp.classRoom = :class')
             ->andWhere('sp.label = :label')
             ->andWhere('sp.status = :paid')
             ->setParameter('class', $classRoom->getId(), 'ulid')
@@ -134,9 +132,7 @@ class StudentPaymentRepository extends ServiceEntityRepository
     {
         /** @var array<int, StudentPayment> $result */
         $result = $this->createQueryBuilder('sp')
-            ->innerJoin('sp.student', 's')
-            ->innerJoin('s.classRoom', 'c')
-            ->where('c.id = :classRoom')
+            ->where('sp.classRoom = :classRoom')
             ->setParameter('classRoom', $classRoom->getId(), 'ulid')
             ->orderBy('sp.createdAt', 'DESC')
             ->getQuery()
@@ -152,9 +148,7 @@ class StudentPaymentRepository extends ServiceEntityRepository
     {
         /** @var array<int, StudentPayment> $result */
         $result = $this->createQueryBuilder('sp')
-            ->innerJoin('sp.student', 's')
-            ->innerJoin('s.classRoom', 'c')
-            ->where('c.id = :classRoom')
+            ->where('sp.classRoom = :classRoom')
             ->andWhere('sp.status = :status')
             ->andWhere('sp.paidAt >= :date')
             ->setParameter('classRoom', $classRoom->getId(), 'ulid')
@@ -174,9 +168,7 @@ class StudentPaymentRepository extends ServiceEntityRepository
     {
         /** @var array<int, StudentPayment> $result */
         $result = $this->createQueryBuilder('sp')
-            ->innerJoin('sp.student', 's')
-            ->innerJoin('s.classRoom', 'c')
-            ->where('c.id = :classRoom')
+            ->where('sp.classRoom = :classRoom')
             ->andWhere('sp.status = :status')
             ->setParameter('classRoom', $classRoom->getId(), 'ulid')
             ->setParameter('status', StudentPayment::STATUS_PAID)

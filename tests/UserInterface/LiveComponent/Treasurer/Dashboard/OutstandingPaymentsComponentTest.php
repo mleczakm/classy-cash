@@ -30,7 +30,10 @@ class OutstandingPaymentsComponentTest extends FunctionalTestCase
         /** @var OutstandingPaymentsComponent $component */
         $component = $testComponent->component();
 
-        $this->assertEquals(Money::of(150, 'PLN'), $component->getOutstandingAmount());
+        $this->assertTrue(
+            Money::of(150, 'PLN')->isEqualTo($component->getOutstandingAmount()),
+            'Outstanding amount should be 150.00 PLN'
+        );
         $this->assertEquals(2, $component->getOutstandingCount());
         $this->assertTrue($component->hasOutstanding());
     }
@@ -51,15 +54,19 @@ class OutstandingPaymentsComponentTest extends FunctionalTestCase
 
         // Initial amount
         $initialAmount = $component->getOutstandingAmount();
+        $this->assertTrue(Money::of(25, 'PLN')->isEqualTo($initialAmount));
+
+        // Create another payment
+        $this->createStudentPayment($student, 'Refreshed Payment', Money::of(50, 'PLN'));
 
         // Refresh component to include new payment
         $testComponent->call('refreshData');
 
         // Amount should have changed
         $refreshedAmount = $component->getOutstandingAmount();
-        $this->assertNotEquals($initialAmount, $refreshedAmount);
-        $this->assertEquals(Money::of(175, 'PLN'), $refreshedAmount);
-        $this->assertEquals(3, $component->getOutstandingCount());
+        $this->assertFalse($initialAmount->isEqualTo($refreshedAmount), 'Amount should have changed after refresh');
+        $this->assertTrue(Money::of(75, 'PLN')->isEqualTo($refreshedAmount));
+        $this->assertEquals(2, $component->getOutstandingCount());
     }
 
     public function testComponentEmitsEventOnRefresh(): void
@@ -71,6 +78,7 @@ class OutstandingPaymentsComponentTest extends FunctionalTestCase
         ]);
 
         $testComponent->call('refreshData');
+        $this->assertComponentEmitEvent($testComponent, 'outstandingPaymentsRefreshed');
     }
 
     public function testComponentHandlesNoOutstanding(): void
@@ -84,7 +92,7 @@ class OutstandingPaymentsComponentTest extends FunctionalTestCase
         /** @var OutstandingPaymentsComponent $component */
         $component = $testComponent->component();
 
-        $this->assertEquals(Money::of(0, 'PLN'), $component->getOutstandingAmount());
+        $this->assertTrue(Money::of(0, 'PLN')->isEqualTo($component->getOutstandingAmount()));
         $this->assertEquals(0, $component->getOutstandingCount());
         $this->assertFalse($component->hasOutstanding());
     }
@@ -98,7 +106,7 @@ class OutstandingPaymentsComponentTest extends FunctionalTestCase
         /** @var OutstandingPaymentsComponent $component */
         $component = $testComponent->component();
 
-        $this->assertEquals(Money::of(0, 'PLN'), $component->getOutstandingAmount());
+        $this->assertTrue(Money::of(0, 'PLN')->isEqualTo($component->getOutstandingAmount()));
         $this->assertEquals(0, $component->getOutstandingCount());
         $this->assertFalse($component->hasOutstanding());
     }

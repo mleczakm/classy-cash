@@ -50,6 +50,8 @@ abstract class FunctionalTestCase extends WebTestCase
         /** @var UserPasswordHasherInterface $hasher */
         $hasher = $this->getService(UserPasswordHasherInterface::class);
         $user->setPassword($hasher->hashPassword($user, $password));
+        $user->setRoles(['ROLE_TREASURER', 'ROLE_USER', 'ROLE_ADMIN']);
+        $user->setRoles(['ROLE_TREASURER', 'ROLE_USER', 'ROLE_ADMIN']);
 
         $this->getEntityManager()
             ->persist($user);

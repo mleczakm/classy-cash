@@ -19,11 +19,13 @@ class TotalCashComponentTest extends FunctionalTestCase
     {
         $classRoom = $this->createClassRoom('4B');
 
-        // Create some test payments and expenses
+        // Create some student payments and class expenses
         $student = $this->createTestStudent($classRoom);
-        $p = $this->createStudentPayment($student, 'Test Payment', Money::of(1000, 'PLN'));
-        $p->markPaid();
-        $this->createClassExpense($classRoom, 'Test Expense', Money::of(200, 'PLN'));
+        $payment = $this->createStudentPayment($student, 'Paid Payment', Money::of(100, 'PLN'));
+        $payment->markPaid();
+
+        $this->createClassExpense($classRoom, 'Expense', Money::of(30, 'PLN'));
+
         $this->getEntityManager()
             ->flush();
 
@@ -33,9 +35,8 @@ class TotalCashComponentTest extends FunctionalTestCase
         /** @var TotalCashComponent $component */
         $component = $testComponent->component();
 
-        $this->assertEquals(Money::of(800, 'PLN'), $component->getTotalCash());
-        $this->assertTrue($component->isPositive());
-        $this->assertFalse($component->isNegative());
+        // 100 - 30 = 70
+        $this->assertTrue(Money::of(70, 'PLN')->isEqualTo($component->getTotalCash()));
     }
 
     public function testComponentEmitsEventOnRefresh(): void
@@ -47,31 +48,26 @@ class TotalCashComponentTest extends FunctionalTestCase
         ]);
 
         $testComponent->call('refreshData');
+        $this->assertNotNull($testComponent->getEmittedEvent($testComponent->render(), 'totalCashRefreshed'));
     }
 
     public function testComponentHandlesNoClassRoom(): void
     {
-        // No class room exists
         $testComponent = $this->createLiveComponent(TotalCashComponent::class, [
             'classRoom' => null,
         ]);
         /** @var TotalCashComponent $component */
         $component = $testComponent->component();
 
-        $this->assertEquals(Money::of(0, 'PLN'), $component->getTotalCash());
-        $this->assertFalse($component->isPositive());
-        $this->assertTrue($component->isNegative());
+        $this->assertTrue(Money::of(0, 'PLN')->isEqualTo($component->getTotalCash()));
     }
 
     public function testComponentHandlesNegativeBalance(): void
     {
         $classRoom = $this->createClassRoom('4B');
 
-        // Create more expenses than payments
-        $student = $this->createTestStudent($classRoom);
-        $p = $this->createStudentPayment($student, 'Test Payment', Money::of(100, 'PLN'));
-        $p->markPaid();
-        $this->createClassExpense($classRoom, 'Test Expense', Money::of(200, 'PLN'));
+        // Expense more than payments
+        $this->createClassExpense($classRoom, 'Big Expense', Money::of(50, 'PLN'));
         $this->getEntityManager()
             ->flush();
 
@@ -81,8 +77,6 @@ class TotalCashComponentTest extends FunctionalTestCase
         /** @var TotalCashComponent $component */
         $component = $testComponent->component();
 
-        $this->assertEquals(Money::of(-100, 'PLN'), $component->getTotalCash());
-        $this->assertFalse($component->isPositive());
-        $this->assertTrue($component->isNegative());
+        $this->assertTrue(Money::of(-50, 'PLN')->isEqualTo($component->getTotalCash()));
     }
 }

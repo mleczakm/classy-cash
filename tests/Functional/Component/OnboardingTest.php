@@ -32,9 +32,7 @@ final class OnboardingTest extends KernelTestCase
         try {
             $component->submitForm([
                 'onboarding' => [
-                    'identity' => [
-                        'firstName' => '',
-                    ],
+                    'firstName' => '',
                     'navigator' => [
                         'next' => '',
                     ],
@@ -49,12 +47,10 @@ final class OnboardingTest extends KernelTestCase
         // Fill Step 1
         $component->submitForm([
             'onboarding' => [
-                'identity' => [
-                    'firstName' => 'Jan',
-                    'lastName' => 'Kowalski',
-                    'email' => 'jan@example.com',
-                    'password' => 'securepassword123',
-                ],
+                'firstName' => 'Jan',
+                'lastName' => 'Kowalski',
+                'email' => 'jan@example.com',
+                'password' => 'securepassword123',
                 'navigator' => [
                     'next' => '',
                 ],
@@ -67,10 +63,8 @@ final class OnboardingTest extends KernelTestCase
         // Fill Step 2
         $component->submitForm([
             'onboarding' => [
-                'class_details' => [
-                    'className' => '4B',
-                    'schoolName' => 'SP 12',
-                ],
+                'className' => '4B',
+                'schoolName' => 'SP 12',
                 'navigator' => [
                     'next' => '',
                 ],
@@ -122,10 +116,8 @@ final class OnboardingTest extends KernelTestCase
         try {
             $component->submitForm([
                 'onboarding' => [
-                    'identity' => [
-                        'firstName' => '',
-                        'lastName' => '',
-                    ],
+                    'firstName' => '',
+                    'lastName' => '',
                     'navigator' => [
                         'next' => '',
                     ],

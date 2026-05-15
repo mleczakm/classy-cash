@@ -59,6 +59,6 @@ body { background-color: var(--bg); color: var(--fg); font-family: 'Inter', sans
     animation: spin 1s linear infinite;
 }
 
-.asdasdasd {
-    animation: spin 1s linear infinite;
+.z-101 {
+    z-index: 101;
 }
