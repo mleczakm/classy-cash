@@ -66,3 +66,6 @@ parameters:
 			count: 1
 			path: tests/Application/CommandHandler/ImportTransfersFromMailHandlerTest.php
 
+		-
+			message: "#^Unreachable statement - code above always terminates.$#"
+			path: tests

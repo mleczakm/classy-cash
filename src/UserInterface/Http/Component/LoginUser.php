@@ -48,9 +48,7 @@ class LoginUser extends AbstractController
      */
     protected function instantiateForm(): FormInterface
     {
-        $formBuilder = $this->createFormBuilder(null, [
-            'csrf_protection' => false,
-        ])
+        $formBuilder = $this->createFormBuilder()
             ->add('email', EmailType::class, [
                 'constraints' => [new Email(), new NotBlank()],
             ]);

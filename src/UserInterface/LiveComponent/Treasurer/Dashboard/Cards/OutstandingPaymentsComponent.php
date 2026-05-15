@@ -42,11 +42,13 @@ class OutstandingPaymentsComponent extends AbstractController
 
     public function getOutstandingAmount(): Money
     {
+        $this->calculateOutstandingPayments();
         return $this->outstandingAmount;
     }
 
     public function getOutstandingCount(): int
     {
+        $this->calculateOutstandingPayments();
         return $this->outstandingCount;
     }
 

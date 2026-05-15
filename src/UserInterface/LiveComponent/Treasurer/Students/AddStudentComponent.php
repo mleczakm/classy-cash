@@ -17,6 +17,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
+use Symfony\UX\LiveComponent\Attribute\LiveArg;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\ComponentWithFormTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
@@ -46,9 +47,11 @@ class AddStudentComponent extends AbstractController
 
     private ?Student $student = null;
 
-    private bool $isSubmitted = false;
+    #[LiveProp]
+    public bool $submitted = false;
 
-    private bool $isSuccessful = false;
+    #[LiveProp]
+    public bool $successful = false;
 
     public function __construct(
         private readonly ClassRoomRepository $classRooms,
@@ -62,11 +65,9 @@ class AddStudentComponent extends AbstractController
     protected function instantiateForm(): FormInterface
     {
         $classRoom = $this->getCurrentClassRoom();
-        if (! $classRoom) {
-            throw new \RuntimeException('No classroom found');
+        if ($classRoom) {
+            $this->student = new Student($classRoom, 'placeholder', 'placeholder');
         }
-
-        $this->student = new Student($classRoom, 'placeholder', 'placeholder');
 
         /** @var FormInterface<Student> $form */
         $form = $this->createFormBuilder($this->student)
@@ -121,6 +122,10 @@ class AddStudentComponent extends AbstractController
     #[LiveAction]
     public function addStudent(): void
     {
+        if (! $this->getCurrentClassRoom()) {
+            throw new \RuntimeException('No classroom found');
+        }
+
         $this->submitForm();
 
         if ($this->getForm()->isValid()) {
@@ -143,8 +148,8 @@ class AddStudentComponent extends AbstractController
             $this->emit('studentAdded', [
                 'student' => $student,
             ]);
-            $this->isSuccessful = true;
-            $this->isSubmitted = true;
+            $this->successful = true;
+            $this->submitted = true;
             $this->modalOpened = false;
 
             $this->resetForm();
@@ -152,8 +157,8 @@ class AddStudentComponent extends AbstractController
             $this->lastName = null;
             $this->selectedParents = [];
         } else {
-            $this->isSubmitted = true;
-            $this->isSuccessful = false;
+            $this->submitted = true;
+            $this->successful = false;
         }
     }
 
@@ -161,7 +166,7 @@ class AddStudentComponent extends AbstractController
      * @return array<int, User>
      */
     #[LiveAction]
-    public function searchParents(string $query): array
+    public function searchParents(#[LiveArg] string $query): array
     {
         if (strlen($query) < 3) {
             return [];
@@ -171,7 +176,7 @@ class AddStudentComponent extends AbstractController
     }
 
     #[LiveAction]
-    public function addParent(int $userId): void
+    public function addParent(#[LiveArg] int $userId): void
     {
         if (! in_array($userId, $this->selectedParents, true)) {
             $this->selectedParents[] = $userId;
@@ -179,9 +184,9 @@ class AddStudentComponent extends AbstractController
     }
 
     #[LiveAction]
-    public function removeParent(int $userId): void
+    public function removeParent(#[LiveArg] int $userId): void
     {
-        $this->selectedParents = array_filter($this->selectedParents, fn($id) => $id !== $userId);
+        $this->selectedParents = array_values(array_filter($this->selectedParents, fn($id) => $id !== $userId));
     }
 
     #[LiveAction]
@@ -190,18 +195,18 @@ class AddStudentComponent extends AbstractController
         $this->firstName = null;
         $this->lastName = null;
         $this->selectedParents = [];
-        $this->isSubmitted = false;
-        $this->isSuccessful = false;
+        $this->submitted = false;
+        $this->successful = false;
     }
 
     public function isSubmitted(): bool
     {
-        return $this->isSubmitted;
+        return $this->submitted;
     }
 
     public function isSuccessful(): bool
     {
-        return $this->isSuccessful;
+        return $this->successful;
     }
 
     public function getClassCode(): string
@@ -217,7 +222,7 @@ class AddStudentComponent extends AbstractController
     {
         $allParents = $this->users->findByRole('ROLE_USER');
 
-        return array_filter($allParents, fn($parent) => ! $parent->getStudents()->isEmpty());
+        return array_filter($allParents, fn($parent) => ! in_array($parent->getId(), $this->selectedParents, true));
     }
 
     private function getCurrentClassRoom(): ?ClassRoom
