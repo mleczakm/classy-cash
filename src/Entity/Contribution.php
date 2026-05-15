@@ -6,6 +6,7 @@ namespace App\Entity;
 
 use App\Entity\ClassCouncil\ClassRoom;
 use App\Entity\ClassCouncil\Student;
+use Brick\Math\RoundingMode;
 use Brick\Money\Money;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -150,7 +151,7 @@ class Contribution
         }
 
         return $this->totalPaid->getAmount()
-            ->dividedBy($expectedAmount->getAmount())
+            ->dividedBy($expectedAmount->getAmount(), 4, RoundingMode::HalfUp)
             ->toFloat() * 100;
     }
 
