@@ -43,9 +43,7 @@ class ContributionRepository extends ServiceEntityRepository
         /** @var array<int, Contribution> $result */
         $result = $this->createQueryBuilder('c')
             ->where('c.classRoom = :classRoom')
-            ->andWhere('c.dueAt IS NULL OR c.dueAt > :now')
             ->setParameter('classRoom', $classRoom->getId(), 'ulid')
-            ->setParameter('now', new \DateTimeImmutable())
             ->orderBy('c.dueAt', 'ASC')
             ->addOrderBy('c.createdAt', 'DESC')
             ->getQuery()

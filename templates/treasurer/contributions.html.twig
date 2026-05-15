@@ -60,7 +60,7 @@
                     </div>
                     <div class="p-6">
                         <div class="flex justify-between text-sm mb-2 font-bold">
-                            <span class="text-[#6b7796]">Postęp wpłat ({{ contribution.amount.getAmount()|number_format(2, ',', ' ') }} PLN)</span>
+                            <span class="text-[#6b7796]">Postęp wpłat ({{ contribution.amount|money }})</span>
                             <span class="{% if contribution.progressPercentage >= 100 %}text-[#2aa57f]{% else %}text-orange-600{% endif %}">
                                 {{ contribution.paidCount }}/{{ contribution.students|length }} opłacone
                             </span>
