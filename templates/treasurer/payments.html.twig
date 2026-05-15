@@ -54,9 +54,7 @@
                             </td>
                             <td class="px-6 py-4 text-right">
                                 {% if not isMatched %}
-                                    <button class="bg-[#1a2a52] text-white px-4 py-1.5 rounded-lg text-[10px] font-bold shadow-md hover:bg-[#2a4a7a] transition-colors">
-                                        Przypisz ręcznie
-                                    </button>
+                                    {{ component('AssignPaymentModalComponent', { transfer: transfer }) }}
                                 {% elseif isPartial %}
                                     <button class="text-[10px] font-bold text-[#1a2a52] underline hover:text-[#e8b441]">
                                         Powiadom rodzica

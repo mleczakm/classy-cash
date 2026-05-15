@@ -86,6 +86,64 @@ final class TreasurerController extends AbstractController
         ]);
     }
 
+    #[Route('/treasurer/payments/{id}/assign', name: 'treasurer_assign_transfer', methods: ['GET', 'POST'])]
+    public function assignTransfer(int $id, Request $request): Response
+    {
+        $class = $this->classRooms->findOneBy([]);
+        if (! $class) {
+            return $this->redirectToRoute('onboarding');
+        }
+
+        $this->assertTreasurer($class);
+
+        $transfer = $this->transfers->find($id);
+        if (! $transfer) {
+            throw $this->createNotFoundException('Nie znaleziono przelewu');
+        }
+
+        if ($request->isMethod('POST')) {
+            $studentPaymentId = $request->request->get('student_payment_id');
+            if ($studentPaymentId) {
+                try {
+                    $studentPayment = $this->studentPayments->find(Ulid::fromString((string) $studentPaymentId));
+                    if ($studentPayment) {
+                        /** @var User $user */
+                        $user = $this->getUser();
+                        
+                        $payment = $studentPayment->getPayment();
+                        if (!$payment) {
+                            $amount = Money::of($transfer->amount, 'PLN');
+                            $payment = new Payment($user, $amount);
+                            $this->em->persist($payment);
+                            $studentPayment->setPayment($payment);
+                        }
+                        
+                        $transfer->setPayment($payment);
+                        $studentPayment->markPaid();
+                        
+                        $this->em->flush();
+                        
+                        $this->addFlash('success', 'Przelew został przypisany pomyślnie');
+                        return $this->redirectToRoute('treasurer_payments');
+                    }
+                } catch (\Throwable $e) {
+                    $this->addFlash('error', 'Wystąpił błąd podczas przypisywania: ' . $e->getMessage());
+                }
+            }
+        }
+
+        $pendingPayments = $this->studentPayments->findBy([
+            'classRoom' => $class,
+            'status' => [StudentPayment::STATUS_PENDING, StudentPayment::STATUS_PARTIAL],
+        ]);
+
+        return $this->render('treasurer/assign_transfer.html.twig', [
+            'classRoom' => $class,
+            'transfer' => $transfer,
+            'pendingPayments' => $pendingPayments,
+        ]);
+    }
+
     #[Route('/treasurer/contributions', name: 'treasurer_contributions', methods: ['GET', 'POST'])]
     public function contributions(Request $request): Response
     {

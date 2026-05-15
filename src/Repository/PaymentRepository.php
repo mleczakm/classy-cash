@@ -48,8 +48,8 @@ class PaymentRepository extends ServiceEntityRepository
             ->setParameter('status', Payment::STATUS_PENDING);
 
         if ($search) {
-            $qb->join('p.user', 'u')
-                ->join('p.paymentCode', 'pc')
+            $qb->leftJoin('p.user', 'u')
+                ->leftJoin('p.paymentCode', 'pc')
                 ->andWhere(
                     'u.name LIKE :search OR u.email LIKE :search OR pc.code LIKE :search OR JSON_GET_TEXT(p.amount, \'amount\') LIKE :search'
                 )
@@ -58,7 +58,8 @@ class PaymentRepository extends ServiceEntityRepository
         }
 
         /** @var Payment[] $result */
-        $result = $qb->getQuery()
+        $result = $qb->orderBy('p.createdAt', 'DESC')
+            ->getQuery()
             ->getResult();
 
         return $result;
