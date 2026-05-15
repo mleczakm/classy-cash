@@ -109,20 +109,20 @@ final class TreasurerController extends AbstractController
                     if ($studentPayment) {
                         /** @var User $user */
                         $user = $this->getUser();
-                        
+
                         $payment = $studentPayment->getPayment();
-                        if (!$payment) {
+                        if (! $payment) {
                             $amount = Money::of($transfer->amount, 'PLN');
                             $payment = new Payment($user, $amount);
                             $this->em->persist($payment);
                             $studentPayment->setPayment($payment);
                         }
-                        
+
                         $transfer->setPayment($payment);
                         $studentPayment->markPaid();
-                        
+
                         $this->em->flush();
-                        
+
                         $this->addFlash('success', 'Przelew został przypisany pomyślnie');
                         return $this->redirectToRoute('treasurer_payments');
                     }

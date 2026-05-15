@@ -95,7 +95,7 @@ class AssignPaymentModalComponent extends AbstractController
         $this->addFlash('success', 'Przelew został pomyślnie przypisany do płatności.');
 
         $this->closeModal();
-        
+
         $this->redirectToRoute('treasurer_payments');
     }
 
