@@ -78,6 +78,9 @@ Aby wdrożenie działało poprawnie, w ustawieniach repozytorium GitHub należy 
 - `MIKRUS_SSH_PORT` - Port SSH (domyślnie `10115` dla Mikrus)
 - `MIKRUS_IPV6` - Adres IPv6 serwera Mikrus
 
+**Aplikacja:**
+- `DOTENV` - Zmienne środowiskowe dla aplikacji w formacie .env (np. `DATABASE_URL=..., APP_SECRET=..., MAILER_DSN=...`)
+
 **Cytrus:**
 - `CYTRUS_IPV4` - Adres IPv4 usługi Cytrus (np. `135.181.95.85`)
 - `CYTRUS_API_TOKEN` - Token API Cytrus

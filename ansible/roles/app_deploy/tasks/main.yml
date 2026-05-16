@@ -10,12 +10,32 @@
   command: "docker rm {{ app.name }}"
   ignore_errors: yes
 
+- name: "Read .env.production file"
+  slurp:
+    src: .env.production
+  register: env_file_content
+  delegate_to: localhost
+
+- name: "Parse env file into dictionary"
+  set_fact:
+    app_env_vars: >-
+      {{
+        (env_file_content.content | b64decode).split('\n')
+        | select('match', '^[A-Z]')
+        | map('regex_replace', '([^=]+)=(.*)', '\1=\2')
+        | map('split', '=', 1)
+        | items2dict(key_name=0, value_name=1)
+      }}
+
 - name: "Run new container: {{ app.name }}"
   command: >
     docker run -d
     --name {{ app.name }}
     --restart always
     -p "[{{ app.ipv6 }}]:{{ app.port }}:9501"
+    {% for key, value in (app_env_vars | default({})).items() %}
+    -e {{ key }}="{{ value }}"
+    {% endfor %}
     {% for key, value in (app.env | default({})).items() %}
     -e {{ key }}="{{ value }}"
     {% endfor %}

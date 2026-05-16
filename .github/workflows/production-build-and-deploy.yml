@@ -70,6 +70,10 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
+      - name: Create .env file
+        run: |
+          echo "${{ secrets.DOTENV }}" > .env.production
+
       - name: Deploy to Mikrus
         run: |
           ansible-playbook -i ansible/inventory.ini ansible/playbooks/deploy.yml \
