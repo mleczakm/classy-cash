@@ -64,6 +64,44 @@ Projekt oparty jest o framework **Symfony** i konteneryzację **Docker**.
 
 ---
 
+## 🚀 Production Deployment
+
+Aplikacja jest automatycznie wdrażana na serwer Mikrus przy użyciu GitHub Actions. Proces deployment jest uruchamiany przy każdym pushu tagu do repozytorium.
+
+### Wymagane GitHub Secrets
+
+Aby wdrożenie działało poprawnie, w ustawieniach repozytorium GitHub należy skonfigurować następujące sekrety:
+
+**SSH i Mikrus:**
+- `SSH_PRIVATE_KEY` - Klucz prywatny SSH do autoryzacji na serwerze Mikrus
+- `MIKRUS_SSH_HOST` - Host serwera Mikrus (np. `karol115.mikrus.xyz`)
+- `MIKRUS_SSH_PORT` - Port SSH (domyślnie `10115` dla Mikrus)
+- `MIKRUS_IPV6` - Adres IPv6 serwera Mikrus
+
+**Cytrus:**
+- `CYTRUS_IPV4` - Adres IPv4 usługi Cytrus (np. `135.181.95.85`)
+- `CYTRUS_API_TOKEN` - Token API Cytrus
+
+**Cloudflare:**
+- `CLOUDFLARE_API_TOKEN` - Token API Cloudflare z uprawnieniami do edycji DNS
+- `CLOUDFLARE_ZONE_ID` - ID strefy Cloudflare dla domeny
+
+### Proces wdrożenia
+
+1. **Build** - Obraz Docker jest budowany i pushowany do GitHub Container Registry (GHCR)
+2. **Deploy** - Ansible wdraża aplikację na serwer Mikrus:
+   - Pobiera najnowszy obraz z GHCR
+   - Zatrzymuje i usuwa stary kontener
+   - Uruchamia nowy kontener z odpowiednią konfiguracją
+   - Weryfikuje domenę w Cytrus
+   - Aktualizuje rekord DNS w Cloudflare
+
+### Konfiguracja domeny
+
+Przed wdrożeniem upewnij się, że domena jest skonfigurowana w panelu Cytrus. Ansible automatycznie zweryfikuje, czy domena znajduje się na liście domen dostępnych w Cytrus.
+
+---
+
 ## 📄 Licencja
 
 Projekt udostępniany jest na licencji **MIT**. Szczegóły znajdują się w pliku LICENSE.

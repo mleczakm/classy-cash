@@ -73,11 +73,12 @@ jobs:
       - name: Deploy to Mikrus
         run: |
           ansible-playbook -i ansible/inventory.ini ansible/playbooks/deploy.yml \
-            --extra-vars "app_version=${{ github.ref_name }} mikrus_ipv4=${{ secrets.MIKRUS_IPV4 }}" \
+            --extra-vars "app_version=${{ github.ref_name }} cytrus_host=${{ secrets.CYTRUS_IPV4 }}" \
             --extra-vars "cloudflare_api_token=${{ secrets.CLOUDFLARE_API_TOKEN }}" \
             --extra-vars "cloudflare_zone_id=${{ secrets.CLOUDFLARE_ZONE_ID }}" \
             --extra-vars "cytrus_api_token=${{ secrets.CYTRUS_API_TOKEN }}" \
-            --extra-vars "ansible_host=${{ secrets.MIKRUS_IPV4 }}"
+            --extra-vars "ansible_host=${{ secrets.MIKRUS_SSH_HOST }} mikrus_ipv6=${{ secrets.MIKRUS_IPV6 }}" \
+            --extra-vars "ansible_port=${{ secrets.MIKRUS_SSH_PORT }}"
         env:
           ANSIBLE_HOST_KEY_CHECKING: False
           ANSIBLE_ROLES_PATH: ./infrastructure-mikrus/ansible/roles
