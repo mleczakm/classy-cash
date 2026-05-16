@@ -20,6 +20,8 @@ final readonly class AliorNotificationMailProvider implements IncomingNotificati
     public function __invoke(): iterable
     {
         try {
+            $this->mailbox->reconnect();
+
             yield from @$this->mailbox->inbox()
                 ->messages()
                 ->from('powiadomienia@alior.pl')
