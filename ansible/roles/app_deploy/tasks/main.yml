@@ -17,7 +17,7 @@
 
 - name: "Read .env.production file"
   slurp:
-    src: .env.production
+    src: "{{ env_file_path }}"
   register: env_file_content
   delegate_to: localhost
 

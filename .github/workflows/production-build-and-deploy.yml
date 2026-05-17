@@ -73,6 +73,7 @@ jobs:
       - name: Create .env file
         run: |
           echo "${{ secrets.DOTENV }}" > .env.production
+          echo "ENV_FILE_PATH=$(pwd)/.env.production" >> $GITHUB_ENV
 
       - name: Deploy to Mikrus
         run: |
@@ -83,7 +84,8 @@ jobs:
             --extra-vars "cytrus_api_token=${{ secrets.CYTRUS_API_TOKEN }}" \
             --extra-vars "ansible_host=${{ secrets.MIKRUS_SSH_HOST }} mikrus_ipv6=${{ secrets.MIKRUS_IPV6 }}" \
             --extra-vars "ansible_port=${{ secrets.MIKRUS_SSH_PORT }}" \
-            --extra-vars "github_actor=${{ github.actor }} github_token=${{ secrets.GITHUB_TOKEN }}"
+            --extra-vars "github_actor=${{ github.actor }} github_token=${{ secrets.GITHUB_TOKEN }}" \
+            --extra-vars "env_file_path=${{ env.ENV_FILE_PATH }}"
         env:
           ANSIBLE_HOST_KEY_CHECKING: False
           ANSIBLE_ROLES_PATH: ./ansible/roles:./infrastructure-mikrus/ansible/roles
