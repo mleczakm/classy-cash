@@ -52,8 +52,8 @@
     method: POST
     body_format: form-urlencoded
     body:
-      srv: "{{ cytrus_srv }}"
-      key: "{{ cytrus_api_token }}"
+      srv: "{{ cytrus_srv | default('') }}"
+      key: "{{ cytrus_api_token | default('') }}"
     status_code: 200
   register: cytrus_domains
   delegate_to: localhost
@@ -68,10 +68,10 @@
 
 - name: "Update Cloudflare DNS for {{ app.domain }}"
   uri:
-    url: "https://api.cloudflare.com/client/v4/zones/{{ cloudflare_zone_id }}/dns_records"
+    url: "https://api.cloudflare.com/client/v4/zones/{{ cloudflare_zone_id | default('') }}/dns_records"
     method: GET
     headers:
-      Authorization: "Bearer {{ cloudflare_api_token }}"
+      Authorization: "Bearer {{ cloudflare_api_token | default('') }}"
       Content-Type: "application/json"
   register: cf_records
   delegate_to: localhost
@@ -84,7 +84,7 @@
 
 - name: "Update Cloudflare A record"
   uri:
-    url: "https://api.cloudflare.com/client/v4/zones/{{ cloudflare_zone_id }}/dns_records/{{ cf_record_id }}"
+    url: "https://api.cloudflare.com/client/v4/zones/{{ cloudflare_zone_id | default('') }}/dns_records/{{ cf_record_id }}"
     method: PUT
     headers:
       Authorization: "Bearer {{ cloudflare_api_token }}"

@@ -11,10 +11,3 @@
       loop: "{{ apps }}"
       loop_control:
         loop_var: app
-      vars:
-        # These should be passed via --extra-vars or env
-        cytrus_srv: "{{ cytrus_srv | default('') }}"
-        cytrus_api_token: "{{ cytrus_api_token | default('') }}"
-        cloudflare_api_token: "{{ cloudflare_api_token | default('') }}"
-        cloudflare_zone_id: "{{ cloudflare_zone_id | default('') }}"
-        mikrus_ipv6: "{{ mikrus_ipv6 | default('') }}"
