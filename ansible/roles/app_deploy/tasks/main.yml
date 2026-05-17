@@ -25,12 +25,24 @@
   set_fact:
     app_env_vars: >-
       {{
-        (env_file_content.content | b64decode).split('\n')
+        (env_file_content.content | b64decode | regex_replace('\r', '')).split('\n')
         | select('match', '^[A-Z]')
         | map('regex_replace', '([^=]+)=(.*)', '\1=\2')
         | map('split', '=', 1)
         | items2dict(key_name=0, value_name=1)
       }}
+
+- name: "Create temporary .env file on remote"
+  copy:
+    content: |
+      {% for key, value in (app_env_vars | default({})).items() %}
+      {{ key }}={{ value }}
+      {% endfor %}
+      {% for key, value in (app.env | default({})).items() %}
+      {{ key }}={{ value }}
+      {% endfor %}
+    dest: "/tmp/{{ app.name }}.env"
+    mode: '0600'
 
 - name: "Run new container: {{ app.name }}"
   command: >
@@ -38,13 +50,13 @@
     --name {{ app.name }}
     --restart always
     -p "[{{ app.ipv6 }}]:{{ app.port }}:9501"
-    {% for key, value in (app_env_vars | default({})).items() %}
-    -e {{ key }}="{{ value }}"
-    {% endfor %}
-    {% for key, value in (app.env | default({})).items() %}
-    -e {{ key }}="{{ value }}"
-    {% endfor %}
+    --env-file "/tmp/{{ app.name }}.env"
     {{ app.image }}
+
+- name: "Remove temporary .env file"
+  file:
+    path: "/tmp/{{ app.name }}.env"
+    state: absent
 
 - name: "Verify Cytrus Domain for {{ app.domain }}"
   uri:
