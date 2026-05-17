@@ -85,6 +85,4 @@ jobs:
             --extra-vars "ansible_port=${{ secrets.MIKRUS_SSH_PORT }}"
         env:
           ANSIBLE_HOST_KEY_CHECKING: False
-          ANSIBLE_ROLES_PATH: ./infrastructure-mikrus/ansible/roles
-
-      
+          ANSIBLE_ROLES_PATH: ./ansible/roles:./infrastructure-mikrus/ansible/roles
