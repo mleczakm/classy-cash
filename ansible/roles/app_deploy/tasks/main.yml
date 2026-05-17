@@ -52,12 +52,13 @@
     method: POST
     body_format: form-urlencoded
     body:
-      srv: "{{ cytrus_srv | default('') }}"
-      key: "{{ cytrus_api_token | default('') }}"
+      srv: "{{ ansible_host | regex_replace('\\..*', '') }}"
+      key: "{{ cytrus_api_token }}"
     status_code: 200
   register: cytrus_domains
   delegate_to: localhost
   when: app.proxied | default(false)
+
 
 - name: "Check if {{ app.domain }} is in Cytrus domains"
   assert:
@@ -68,10 +69,10 @@
 
 - name: "Update Cloudflare DNS for {{ app.domain }}"
   uri:
-    url: "https://api.cloudflare.com/client/v4/zones/{{ cloudflare_zone_id | default('') }}/dns_records"
+    url: "https://api.cloudflare.com/client/v4/zones/{{ cloudflare_zone_id }}/dns_records"
     method: GET
     headers:
-      Authorization: "Bearer {{ cloudflare_api_token | default('') }}"
+      Authorization: "Bearer {{ cloudflare_api_token }}"
       Content-Type: "application/json"
   register: cf_records
   delegate_to: localhost
@@ -84,11 +85,12 @@
 
 - name: "Update Cloudflare A record"
   uri:
-    url: "https://api.cloudflare.com/client/v4/zones/{{ cloudflare_zone_id | default('') }}/dns_records/{{ cf_record_id }}"
+    url: "https://api.cloudflare.com/client/v4/zones/{{ cloudflare_zone_id }}/dns_records/{{ cf_record_id }}"
     method: PUT
     headers:
       Authorization: "Bearer {{ cloudflare_api_token }}"
       Content-Type: "application/json"
+
     body_format: json
     body:
       type: "A"
