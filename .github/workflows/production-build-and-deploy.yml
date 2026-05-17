@@ -82,7 +82,8 @@ jobs:
             --extra-vars "cloudflare_zone_id=${{ secrets.CLOUDFLARE_ZONE_ID }}" \
             --extra-vars "cytrus_api_token=${{ secrets.CYTRUS_API_TOKEN }}" \
             --extra-vars "ansible_host=${{ secrets.MIKRUS_SSH_HOST }} mikrus_ipv6=${{ secrets.MIKRUS_IPV6 }}" \
-            --extra-vars "ansible_port=${{ secrets.MIKRUS_SSH_PORT }}"
+            --extra-vars "ansible_port=${{ secrets.MIKRUS_SSH_PORT }}" \
+            --extra-vars "github_actor=${{ github.actor }} github_token=${{ secrets.GITHUB_TOKEN }}"
         env:
           ANSIBLE_HOST_KEY_CHECKING: False
           ANSIBLE_ROLES_PATH: ./ansible/roles:./infrastructure-mikrus/ansible/roles
