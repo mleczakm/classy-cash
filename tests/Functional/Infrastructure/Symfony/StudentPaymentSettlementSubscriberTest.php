@@ -87,11 +87,13 @@ final class StudentPaymentSettlementSubscriberTest extends KernelTestCase
         self::assertNotNull($html, 'Email should contain a body');
         $body = (string) $html;
 
-        // Contains key parts from template
+        self::assertStringContainsString('#1a2a52', $body);
+        self::assertStringContainsString('#e8b441', $body);
+        self::assertStringContainsString('System zarządzania finansami klasowymi', $body);
         self::assertStringContainsString('Potwierdzenie płatności', $body);
         self::assertStringContainsString('Jan Kowalski', $body);
         self::assertStringContainsString('Rada rodziców', $body);
-        self::assertStringContainsString('100 zł', $body); // money filter default formatting
-        self::assertStringContainsString('1/1', $body); // N/M progress
+        self::assertStringContainsString('100 zł', $body);
+        self::assertStringContainsString('1/1', $body);
     }
 }

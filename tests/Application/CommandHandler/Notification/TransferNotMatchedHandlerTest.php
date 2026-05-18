@@ -108,6 +108,11 @@ class TransferNotMatchedHandlerTest extends KernelTestCase
         $email->assertContains('100.00');
         $email->assertContains($now->format('Y-m-d H:i'));
 
+        $body = (string) ($email->getHtmlBody() ?? $email->getTextBody());
+        $this->assertStringContainsString('#1a2a52', $body);
+        $this->assertStringContainsString('#e8b441', $body);
+        $this->assertStringContainsString('System zarządzania finansami klasowymi', $body);
+
         // Test caching - should not send another notification
         $this->mailer()
             ->reset();

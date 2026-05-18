@@ -67,5 +67,13 @@ parameters:
 			path: tests/Application/CommandHandler/ImportTransfersFromMailHandlerTest.php
 
 		-
-			message: "#^Unreachable statement - code above always terminates.$#"
-			path: tests
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: tests/Functional/Component/OnboardingTest.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 5
+			path: tests/UserInterface/LiveComponent/Treasurer/Students/AddStudentComponentTest.php

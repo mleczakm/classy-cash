@@ -1,85 +1,96 @@
 body {
-    /* Inter jest fontem systemowym w nowym stylu app.css */
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
-    line-height: 1.6;
-    color: #1a2a3a; /* Ciemny granat (foreground) */
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f8fafc; /* Jasne tło z app.css */
+    margin: 0;
+    padding: 0;
+    background-color: #f7f6f0;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #15203d;
 }
 
 .email-container {
     background-color: #ffffff;
-    border-radius: 12px;
-    padding: 40px;
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    margin: 0 auto;
+    width: 100%;
+    max-width: 600px;
+    border-spacing: 0;
 }
 
 .header {
+    background-color: #1a2a52;
+    padding: 30px;
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 0;
 }
 
 .logo {
-    font-size: 28px;
+    color: #e8b441;
+    font-size: 24px;
     font-weight: bold;
-    color: #1a2a3a; /* Primary: Granat */
-    letter-spacing: -0.02em;
+    letter-spacing: 2px;
 }
 
-/* Kolory akcentowe z baneru */
-.primary { color: #1a2a3a; } /* Granat */
-.teal { color: #45a092; }    /* Morski / Secondary */
-.gold { color: #eab308; }    /* Złoto / Accent */
-.green { color: #22c55e; }   /* Sukces / Listek w logo */
+.content-area {
+    padding: 40px;
+    line-height: 24px;
+    font-size: 16px;
+}
 
-h1 {
-    color: #1a2a3a;
-    margin-top: 0;
+h1, .lead {
     font-size: 24px;
-    font-weight: 700;
+    margin: 0 0 20px 0;
+    color: #1a2a52;
+}
+
+.lead {
+    font-size: 16px;
+    font-weight: normal;
 }
 
 .button {
     display: inline-block;
-    /* Gradient nawiązujący do przycisku w aplikacji */
-    background: #1a2a3a linear-gradient(135deg, #1a2a3a, #2c3e50);
-    color: #ffffff !important;
+    padding: 14px 30px;
+    background-color: #e8b441;
+    color: #1a2a52 !important;
     text-decoration: none;
-    padding: 14px 28px;
-    border-radius: 8px;
-    font-weight: 600;
-    margin: 25px 0;
-    text-align: center;
+    border-radius: 10px;
+    font-weight: bold;
+    margin: 20px 0;
+}
+
+.card {
+    background-color: #fcfcfc;
+    border: 1px solid #e2e6ee;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
 }
 
 .note {
-    /* Styl notatki nawiązujący do koloru morskiego/teal */
-    background-color: rgba(69, 160, 146, 0.05);
+    background-color: #fcfcfc;
+    border: 1px solid #e2e6ee;
+    border-left: 4px solid #e8b441;
     padding: 15px;
-    border-left: 4px solid #45a092;
     margin: 20px 0;
-    color: #1a2a3a;
 }
 
 .footer {
-    margin-top: 30px;
+    padding: 20px;
     text-align: center;
-    font-size: 13px;
-    color: #64748b; /* Muted foreground */
-}
-
-.footer b {
-    color: #1a2a3a;
+    font-size: 11px;
+    color: #6b7796;
 }
 
 .help-text {
     font-size: 12px;
-    color: #94a3b8;
+    color: #6b7796;
     overflow-wrap: break-word;
-    margin-top: 20px;
-    border-top: 1px solid #e2e8f0;
-    padding-top: 10px;
+    margin-top: 16px;
+}
+
+.email-container.warning .content-area {
+    border-top: 4px solid #e8b441;
+}
+
+.email-container.alert .content-area h1,
+.email-container.alert .lead {
+    color: #d65a4a;
 }

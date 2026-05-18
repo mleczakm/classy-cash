@@ -73,8 +73,11 @@ class NewUserHandlerTest extends KernelTestCase
         foreach ($emails as $email) {
             $to = $email->getTo()[0]
                 ->getAddress();
+            $body = (string) ($email->getHtmlBody() ?? $email->getTextBody());
+            $this->assertStringContainsString('#1a2a52', $body);
+            $this->assertStringContainsString('System zarządzania finansami klasowymi', $body);
+
             if (in_array($to, ['admin1@example.com', 'admin2@example.com'], true)) {
-                $body = (string) ($email->getHtmlBody() ?? $email->getTextBody());
                 $this->assertStringContainsString((string) $userId, $body);
                 $this->assertStringContainsString($userEmail, $body);
                 $this->assertStringContainsString($userName, $body);

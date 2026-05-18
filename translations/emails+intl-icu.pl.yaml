@@ -1,4 +1,4 @@
-footer: <p>&copy; 2025. Wszystkie prawa zastrzeżone.</p>
+footer: Classy Cash — System zarządzania finansami klasowymi.<br>Ta wiadomość została wysłana automatycznie. Prosimy na nią nie odpowiadać.
 exception: Załączony ślad stosu wyjątku.
 
 link_warning_upper: Jeśli powyższy przycisk nie działa, możesz skopiować i wkleić poniższy link do swojej przeglądarki
@@ -156,7 +156,7 @@ lesson_rescheduled_by_admin_notification:
 
 at: o
 emails:
-  footer_unbranded: 'Classy-Cash'
+  footer_unbranded: 'Classy Cash — System zarządzania finansami klasowymi.'
 
 reschedule:
   notification:
