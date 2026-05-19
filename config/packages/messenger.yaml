@@ -29,8 +29,7 @@ framework:
                     - messenger.middleware.validation
 
         routing:
-            # Route your messages to the transports
-            # 'App\Message\YourMessage': async
+            '*': async
 
 when@test:
     framework:
