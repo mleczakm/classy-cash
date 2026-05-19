@@ -9,7 +9,9 @@ use App\Application\Command\TriggerMatchPaymentForTransferForPastTransfers;
 use App\Entity\Transfer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Clock\Clock;
+use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Stamp\DispatchAfterCurrentBusStamp;
 
 readonly class TriggerMatchPaymentForTransferForPastTransfersHandler
 {
@@ -31,7 +33,10 @@ readonly class TriggerMatchPaymentForTransferForPastTransfersHandler
 
         /** @var Transfer $transfer */
         foreach (is_array($transfers) ? $transfers : [] as $transfer) {
-            $this->bus->dispatch(new MatchPaymentForTransfer($transfer));
+            $this->bus->dispatch(
+                new Envelope(new MatchPaymentForTransfer($transfer))
+                    ->with(new DispatchAfterCurrentBusStamp())
+            );
         }
     }
 }

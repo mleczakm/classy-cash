@@ -11,7 +11,9 @@ use App\Entity\Transfer;
 use DirectoryTree\ImapEngine\Message;
 use Symfony\Component\Clock\Clock;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
+use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Stamp\DispatchAfterCurrentBusStamp;
 
 #[AsMessageHandler]
 readonly class ImportTransfersFromMailHandler
@@ -48,7 +50,10 @@ readonly class ImportTransfersFromMailHandler
         }
 
         foreach ($transfers as $transfer) {
-            $this->messageBus->dispatch(new SaveTransfer($transfer));
+            $this->messageBus->dispatch(
+                new Envelope(new SaveTransfer($transfer))
+                    ->with(new DispatchAfterCurrentBusStamp())
+            );
         }
     }
 }
