@@ -82,13 +82,8 @@ services:
   SymfonyHealthCheckBundle\Check\DoctrineORMCheck:
     alias: symfony_health_check.doctrine_orm_check
 
-  # Sentry services for Monolog handler
-  Sentry\State\HubInterface:
-    factory: [ 'Sentry\SentrySdk', 'getCurrentHub' ]
-
-  BGalati\MonologSentryHandler\SentryHandler:
-    arguments:
-      $hub: '@Sentry\State\HubInterface'
+  # Monolog → Sentry: use the bundle HubInterface (with bindClient), do not override it.
+  BGalati\MonologSentryHandler\SentryHandler: ~
   Sentry\Integration\RequestIntegration:
   Sentry\Integration\EnvironmentIntegration:
   Sentry\Integration\FrameContextifierIntegration:
