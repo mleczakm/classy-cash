@@ -1,25 +1,27 @@
 swoole:
   http_server:
     static: advanced
+    exception_handler:
+      type: symfony
     services:
       trust_all_proxies_handler: true
       access_log:
         enabled: true
     trusted_proxies: '*'
     settings:
-      worker_count: 4
+      worker_count: 1
       log_file: '/proc/self/fd/2'
   task_worker:
     services:
       reset_handler: true
     settings:
-      worker_count: 4
+      worker_count: 1
 
 when@prod:
   swoole_bundle_resetter:
     # default 0 - if set, the connection ping operation will be executed each X seconds
     # (instead of at the beginning of each request)
-    ping_interval: 10
+    ping_interval: 0
     # default false - if set to true, the app will check if there is an active transaction
     # in the processed connection, and it will rollback the transaction
     check_active_transactions: true

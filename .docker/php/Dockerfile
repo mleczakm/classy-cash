@@ -2,6 +2,8 @@ FROM php:8.5-cli-alpine AS base
 
 WORKDIR /app
 ENV APP_ENV=prod
+# Swoole runs under CLI; tell Symfony runtime to use web error rendering and logging behavior.
+ENV APP_RUNTIME_MODE=web=1
 EXPOSE 9501
 
 CMD bin/console swoole:server:run
