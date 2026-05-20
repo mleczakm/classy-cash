@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\CommandHandler;
 
+use App\Entity\Transfer;
 use App\Application\Command\MatchPaymentForTransfer;
 use App\Application\Command\Notification\TransferNotMatchedCommand;
 use App\Entity\PaymentCode;
@@ -21,8 +22,13 @@ final readonly class MatchPaymentForTransferHandler
 
     public function __invoke(MatchPaymentForTransfer $command): void
     {
-        $transfer = $command->transfer;
-        $title = $command->transfer->title;
+        $transfer = $this->entityManager->find(Transfer::class, $command->transfer->getId());
+
+        if (! $transfer) {
+            return;
+        }
+
+        $title = $transfer->title;
 
         foreach ($this->tokenizeTitle($title) as $word) {
             $paymentCode = $this->entityManager->getRepository(PaymentCode::class)

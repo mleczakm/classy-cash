@@ -17,11 +17,13 @@ use App\Tests\Assembler\UserAssembler;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Clock\Clock;
+use Zenstruck\Messenger\Test\InteractsWithMessenger;
 use Zenstruck\Mailer\Test\InteractsWithMailer;
 
 #[Group('functional')]
 class TransferNotMatchedHandlerTest extends KernelTestCase
 {
+    use InteractsWithMessenger;
     use InteractsWithMailer;
     use FunctionalTestSettingsTrait;
 
@@ -86,6 +88,8 @@ class TransferNotMatchedHandlerTest extends KernelTestCase
         // Create and handle the command
         $command = new TransferNotMatchedCommand($transfer);
         ($this->handler)($command);
+        $this->transport('async')
+            ->process();
 
         // Assert emails were sent to all admins
         $this->assertEmailCount(2);
@@ -117,6 +121,8 @@ class TransferNotMatchedHandlerTest extends KernelTestCase
         $this->mailer()
             ->reset();
         ($this->handler)($command);
+        $this->transport('async')
+            ->process();
         $this->assertCount(0, $this->mailer()->sentEmails()->all());
     }
 
@@ -138,6 +144,8 @@ class TransferNotMatchedHandlerTest extends KernelTestCase
         // Create and handle the command
         $command = new TransferNotMatchedCommand($transfer);
         ($this->handler)($command);
+        $this->transport('async')
+            ->process();
 
         // Assert no emails were sent
         $this->assertEmailCount(0);

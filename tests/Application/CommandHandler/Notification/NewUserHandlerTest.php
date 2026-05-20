@@ -12,12 +12,14 @@ use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Bundle\FrameworkBundle\Test\NotificationAssertionsTrait;
+use Zenstruck\Messenger\Test\InteractsWithMessenger;
 use Zenstruck\Mailer\Test\InteractsWithMailer;
 use Zenstruck\Mailer\Test\TestEmail;
 
 #[Group('functional')]
 class NewUserHandlerTest extends KernelTestCase
 {
+    use InteractsWithMessenger;
     use NotificationAssertionsTrait;
     use InteractsWithMailer;
     use FunctionalTestSettingsTrait;
@@ -51,6 +53,8 @@ class NewUserHandlerTest extends KernelTestCase
 
         // Act
         $handler(new NewUser($user));
+        $this->transport('async')
+            ->process();
 
         // Assert
         $this->mailer()

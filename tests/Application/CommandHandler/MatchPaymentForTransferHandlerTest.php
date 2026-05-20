@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Application\CommandHandler;
 
+use App\Entity\Transfer;
 use App\Application\Command\MatchPaymentForTransfer;
 use App\Application\Command\Notification\TransferNotMatchedCommand;
 use App\Entity\Payment;
@@ -106,10 +107,17 @@ class MatchPaymentForTransferHandlerTest extends KernelTestCase
         // Act
         $command = new MatchPaymentForTransfer($transfer);
         $this->messageBus->dispatch($command);
+        $this->transport('async')
+            ->process();
 
         // Assert
-        $this->entityManager->refresh($payment);
-        $this->entityManager->refresh($transfer);
+        $this->entityManager = self::getContainer()->get(EntityManagerInterface::class);
+        $payment = $this->entityManager->find(Payment::class, $payment->getId()) ?: throw new \RuntimeException(
+            'Payment not found'
+        );
+        $transfer = $this->entityManager->find(Transfer::class, $transfer->getId()) ?: throw new \RuntimeException(
+            'Transfer not found'
+        );
 
         $this->assertTrue($payment->getTransfers()->contains($transfer));
         $this->assertSame($payment, $transfer->getPayment());
@@ -149,10 +157,17 @@ class MatchPaymentForTransferHandlerTest extends KernelTestCase
         // Act
         $command = new MatchPaymentForTransfer($transfer);
         $this->messageBus->dispatch($command);
+        $this->transport('async')
+            ->process();
 
         // Assert
-        $this->entityManager->refresh($payment);
-        $this->entityManager->refresh($transfer);
+        $this->entityManager = self::getContainer()->get(EntityManagerInterface::class);
+        $payment = $this->entityManager->find(Payment::class, $payment->getId()) ?: throw new \RuntimeException(
+            'Payment not found'
+        );
+        $transfer = $this->entityManager->find(Transfer::class, $transfer->getId()) ?: throw new \RuntimeException(
+            'Transfer not found'
+        );
 
         $this->assertTrue($payment->getTransfers()->contains($transfer));
         $this->assertSame($payment, $transfer->getPayment());
@@ -191,10 +206,17 @@ class MatchPaymentForTransferHandlerTest extends KernelTestCase
         // Act
         $command = new MatchPaymentForTransfer($transfer);
         $this->messageBus->dispatch($command);
+        $this->transport('async')
+            ->process();
 
         // Assert
-        $this->entityManager->refresh($payment);
-        $this->entityManager->refresh($transfer);
+        $this->entityManager = self::getContainer()->get(EntityManagerInterface::class);
+        $payment = $this->entityManager->find(Payment::class, $payment->getId()) ?: throw new \RuntimeException(
+            'Payment not found'
+        );
+        $transfer = $this->entityManager->find(Transfer::class, $transfer->getId()) ?: throw new \RuntimeException(
+            'Transfer not found'
+        );
 
         $this->assertTrue($payment->getTransfers()->contains($transfer));
         $this->assertSame($payment, $transfer->getPayment());
@@ -246,11 +268,20 @@ class MatchPaymentForTransferHandlerTest extends KernelTestCase
         // Act
         $command = new MatchPaymentForTransfer($transfer);
         $this->messageBus->dispatch($command);
+        $this->transport('async')
+            ->process();
 
         // Assert
-        $this->entityManager->refresh($payment1);
-        $this->entityManager->refresh($payment2);
-        $this->entityManager->refresh($transfer);
+        $this->entityManager = self::getContainer()->get(EntityManagerInterface::class);
+        $payment1 = $this->entityManager->find(Payment::class, $payment1->getId()) ?: throw new \RuntimeException(
+            'Payment not found'
+        );
+        $payment2 = $this->entityManager->find(Payment::class, $payment2->getId()) ?: throw new \RuntimeException(
+            'Payment not found'
+        );
+        $transfer = $this->entityManager->find(Transfer::class, $transfer->getId()) ?: throw new \RuntimeException(
+            'Transfer not found'
+        );
 
         // Should match the first payment (AAA1) because it appears first in the title
         $this->assertTrue($payment1->getTransfers()->contains($transfer));
@@ -294,10 +325,17 @@ class MatchPaymentForTransferHandlerTest extends KernelTestCase
         // Act
         $command = new MatchPaymentForTransfer($transfer);
         $this->messageBus->dispatch($command);
+        $this->transport('async')
+            ->process();
 
         // Assert
-        $this->entityManager->refresh($payment);
-        $this->entityManager->refresh($transfer);
+        $this->entityManager = self::getContainer()->get(EntityManagerInterface::class);
+        $payment = $this->entityManager->find(Payment::class, $payment->getId()) ?: throw new \RuntimeException(
+            'Payment not found'
+        );
+        $transfer = $this->entityManager->find(Transfer::class, $transfer->getId()) ?: throw new \RuntimeException(
+            'Transfer not found'
+        );
 
         $this->assertTrue($payment->getTransfers()->contains($transfer));
         $this->assertSame($payment, $transfer->getPayment());
@@ -336,10 +374,17 @@ class MatchPaymentForTransferHandlerTest extends KernelTestCase
         // Act
         $command = new MatchPaymentForTransfer($transfer);
         $this->messageBus->dispatch($command);
+        $this->transport('async')
+            ->process();
 
         // Assert
-        $this->entityManager->refresh($payment);
-        $this->entityManager->refresh($transfer);
+        $this->entityManager = self::getContainer()->get(EntityManagerInterface::class);
+        $payment = $this->entityManager->find(Payment::class, $payment->getId()) ?: throw new \RuntimeException(
+            'Payment not found'
+        );
+        $transfer = $this->entityManager->find(Transfer::class, $transfer->getId()) ?: throw new \RuntimeException(
+            'Transfer not found'
+        );
 
         // Transfer should still be associated with payment
         $this->assertTrue($payment->getTransfers()->contains($transfer));
@@ -371,9 +416,14 @@ class MatchPaymentForTransferHandlerTest extends KernelTestCase
         // Act
         $command = new MatchPaymentForTransfer($transfer);
         $this->messageBus->dispatch($command);
+        $this->transport('async')
+            ->process();
 
         // Assert
-        $this->entityManager->refresh($transfer);
+        $this->entityManager = self::getContainer()->get(EntityManagerInterface::class);
+        $transfer = $this->entityManager->find(Transfer::class, $transfer->getId()) ?: throw new \RuntimeException(
+            'Transfer not found'
+        );
         $this->assertNull($transfer->getPayment());
         $this->bus()
             ->dispatched()
@@ -401,9 +451,14 @@ class MatchPaymentForTransferHandlerTest extends KernelTestCase
         // Act
         $command = new MatchPaymentForTransfer($transfer);
         $this->messageBus->dispatch($command);
+        $this->transport('async')
+            ->process();
 
         // Assert
-        $this->entityManager->refresh($transfer);
+        $this->entityManager = self::getContainer()->get(EntityManagerInterface::class);
+        $transfer = $this->entityManager->find(Transfer::class, $transfer->getId()) ?: throw new \RuntimeException(
+            'Transfer not found'
+        );
         $this->assertNull($transfer->getPayment());
         $this->bus()
             ->dispatched()

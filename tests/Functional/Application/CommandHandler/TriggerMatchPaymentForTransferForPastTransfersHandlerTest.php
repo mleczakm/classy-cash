@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Application\CommandHandler;
 
+use App\Entity\Transfer;
 use PHPUnit\Framework\Attributes\Group;
 use Doctrine\ORM\EntityManagerInterface;
+use Zenstruck\Messenger\Test\InteractsWithMessenger;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use App\Entity\Payment;
 use App\Application\Command\TriggerMatchPaymentForTransferForPastTransfers;
@@ -19,6 +21,8 @@ use Brick\Money\Money;
 #[Group('functional')]
 class TriggerMatchPaymentForTransferForPastTransfersHandlerTest extends WebTestCase
 {
+    use InteractsWithMessenger;
+
     private EntityManagerInterface $entityManager;
 
     protected function setUp(): void
@@ -65,10 +69,20 @@ class TriggerMatchPaymentForTransferForPastTransfersHandlerTest extends WebTestC
         // Act: run handler
         $handler = self::getContainer()->get(TriggerMatchPaymentForTransferForPastTransfersHandler::class);
         $handler(new TriggerMatchPaymentForTransferForPastTransfers());
+        $this->transport('async')
+            ->dispatched()
+            ->assertCount(1);
+        $this->transport('async')
+            ->process();
 
         // Assert: transfer should be matched to payment (if logic allows)
-        $this->entityManager->refresh($transfer);
-        $this->entityManager->refresh($payment);
+        $this->entityManager = self::getContainer()->get(EntityManagerInterface::class);
+        $transfer = $this->entityManager->find(Transfer::class, $transfer->getId()) ?: throw new \RuntimeException(
+            'Transfer not found'
+        );
+        $payment = $this->entityManager->find(Payment::class, $payment->getId()) ?: throw new \RuntimeException(
+            'Payment not found'
+        );
         $this->assertSame($payment, $transfer->getPayment());
     }
 
@@ -109,6 +123,8 @@ class TriggerMatchPaymentForTransferForPastTransfersHandlerTest extends WebTestC
         // Act: run handler
         $handler = self::getContainer()->get(TriggerMatchPaymentForTransferForPastTransfersHandler::class);
         $handler(new TriggerMatchPaymentForTransferForPastTransfers());
+        $this->transport('async')
+            ->process();
 
         // Assert: transfer should NOT be matched to payment (older than threshold)
         $this->entityManager->refresh($transfer);

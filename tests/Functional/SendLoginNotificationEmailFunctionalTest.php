@@ -12,12 +12,14 @@ use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Zenstruck\Messenger\Test\InteractsWithMessenger;
 use Zenstruck\Mailer\Test\InteractsWithMailer;
 use Zenstruck\Mailer\Test\TestEmail;
 
 #[Group('functional')]
 final class SendLoginNotificationEmailFunctionalTest extends WebTestCase
 {
+    use InteractsWithMessenger;
     use FunctionalTestSettingsTrait;
     use InteractsWithMailer;
 
@@ -42,6 +44,8 @@ final class SendLoginNotificationEmailFunctionalTest extends WebTestCase
 
         $handler = $container->get(SendLoginNotificationHandler::class);
         $handler(new SendLoginNotification('parent@example.com'));
+        $this->transport('async')
+            ->process();
 
         $this->assertEmailCount(1);
         /** @var TestEmail $email */
@@ -72,6 +76,8 @@ final class SendLoginNotificationEmailFunctionalTest extends WebTestCase
 
         $handler = $container->get(SendLoginNotificationHandler::class);
         $handler(new SendLoginNotification('unknown@example.com'));
+        $this->transport('async')
+            ->process();
 
         $this->assertEmailCount(1);
         /** @var TestEmail $email */

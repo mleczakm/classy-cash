@@ -25,7 +25,10 @@ readonly class NewUserHandler
 
     public function __invoke(NewUser $command): void
     {
-        $user = $command->user;
+        $user = $this->userRepository->find($command->user->getId());
+        if (! $user) {
+            return;
+        }
         $user->setConfirmedAt(Clock::get()->now());
 
         $this->sendUserConfirmation($user);
