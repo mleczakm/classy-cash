@@ -71,11 +71,11 @@
     "symfony/yaml": "7.4.*",
     "symfonycasts/tailwind-bundle": "^0.10.1",
     "tales-from-a-dev/flowbite-bundle": "^0.8.1",
-    "twig/cssinliner-extra": "^3.24",
+    "twig/cssinliner-extra": "^3.26",
     "twig/extra-bundle": "^3.24.0",
-    "twig/inky-extra": "^3.24",
-    "twig/intl-extra": "^3.24.0",
-    "twig/twig": "^3.24.0"
+    "twig/inky-extra": "^3.26",
+    "twig/intl-extra": "^3.26.0",
+    "twig/twig": "^3.26.0"
   },
   "config": {
     "allow-plugins": {
@@ -279,9 +279,9 @@
     "dama/doctrine-test-bundle": "^8.6.0",
     "kodus/mock-cache": "^2.1",
     "phpstan/extension-installer": "^1.4.3",
-    "phpstan/phpstan": "^2.1.54",
+    "phpstan/phpstan": "^2.1.55",
     "phpstan/phpstan-doctrine": "^2.0.22",
-    "phpstan/phpstan-symfony": "^2.0.17",
+    "phpstan/phpstan-symfony": "^2.0.18",
     "phpunit/phpunit": "^11.5.55",
     "rector/rector": "^2.4.3",
     "roave/security-advisories": "dev-latest",
@@ -295,7 +295,7 @@
     "symfony/stopwatch": "7.4.*",
     "symfony/web-profiler-bundle": "7.4.*",
     "symplify/easy-coding-standard": "^12.6.2",
-    "zenstruck/foundry": "^2.9.2",
+    "zenstruck/foundry": "^2.10.1",
     "zenstruck/mailer-test": "^1.5.0",
     "zenstruck/messenger-test": "^1.14"
   }
