@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b5794973f08ac249cae8f562bbc7379b",
+    "content-hash": "caecbd7ec84493f13db2c27c450d0691",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -399,16 +399,16 @@
         },
         {
             "name": "directorytree/imapengine",
-            "version": "v1.24.0",
+            "version": "v1.24.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/DirectoryTree/ImapEngine.git",
-                "reference": "703ef29f6279c38a6c74b5aaa528d016b74cfbf8"
+                "reference": "d545ff3f6d2155ce7f9f612f0444579477d7bab8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DirectoryTree/ImapEngine/zipball/703ef29f6279c38a6c74b5aaa528d016b74cfbf8",
-                "reference": "703ef29f6279c38a6c74b5aaa528d016b74cfbf8",
+                "url": "https://api.github.com/repos/DirectoryTree/ImapEngine/zipball/d545ff3f6d2155ce7f9f612f0444579477d7bab8",
+                "reference": "d545ff3f6d2155ce7f9f612f0444579477d7bab8",
                 "shasum": ""
             },
             "require": {
@@ -449,7 +449,7 @@
             ],
             "support": {
                 "issues": "https://github.com/DirectoryTree/ImapEngine/issues",
-                "source": "https://github.com/DirectoryTree/ImapEngine/tree/v1.24.0"
+                "source": "https://github.com/DirectoryTree/ImapEngine/tree/v1.24.1"
             },
             "funding": [
                 {
@@ -457,7 +457,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-03-23T01:03:59+00:00"
+            "time": "2026-05-20T13:36:53+00:00"
         },
         {
             "name": "doctrine/collections",
@@ -1157,16 +1157,16 @@
         },
         {
             "name": "doctrine/orm",
-            "version": "3.6.5",
+            "version": "3.6.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/orm.git",
-                "reference": "7e88b416153dceeb563352ca2b12465f09eea173"
+                "reference": "471b12949ff9bc23ecdc809ce838613c1aa9a0b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/orm/zipball/7e88b416153dceeb563352ca2b12465f09eea173",
-                "reference": "7e88b416153dceeb563352ca2b12465f09eea173",
+                "url": "https://api.github.com/repos/doctrine/orm/zipball/471b12949ff9bc23ecdc809ce838613c1aa9a0b9",
+                "reference": "471b12949ff9bc23ecdc809ce838613c1aa9a0b9",
                 "shasum": ""
             },
             "require": {
@@ -1239,9 +1239,9 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/orm/issues",
-                "source": "https://github.com/doctrine/orm/tree/3.6.5"
+                "source": "https://github.com/doctrine/orm/tree/3.6.6"
             },
-            "time": "2026-05-11T06:47:19+00:00"
+            "time": "2026-05-21T06:05:47+00:00"
         },
         {
             "name": "doctrine/persistence",
@@ -2022,16 +2022,16 @@
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "7.10.2",
+            "version": "7.10.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "aed36fd5fb4844f284252a999d9abf35d3a9a1ae"
+                "reference": "47ba23c7a55247e2e1b7407aca90e9bbed0d9d86"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/aed36fd5fb4844f284252a999d9abf35d3a9a1ae",
-                "reference": "aed36fd5fb4844f284252a999d9abf35d3a9a1ae",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/47ba23c7a55247e2e1b7407aca90e9bbed0d9d86",
+                "reference": "47ba23c7a55247e2e1b7407aca90e9bbed0d9d86",
                 "shasum": ""
             },
             "require": {
@@ -2129,7 +2129,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/guzzle/issues",
-                "source": "https://github.com/guzzle/guzzle/tree/7.10.2"
+                "source": "https://github.com/guzzle/guzzle/tree/7.10.3"
             },
             "funding": [
                 {
@@ -2145,20 +2145,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-05-20T11:58:52+00:00"
+            "time": "2026-05-20T22:59:19+00:00"
         },
         {
             "name": "guzzlehttp/promises",
-            "version": "2.3.1",
+            "version": "2.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/promises.git",
-                "reference": "d2d8dfae4757f384d630fdffc2d8d6618d8f4c5e"
+                "reference": "09e8a212562fb1fb6a512c4156ed71525969d6c2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/promises/zipball/d2d8dfae4757f384d630fdffc2d8d6618d8f4c5e",
-                "reference": "d2d8dfae4757f384d630fdffc2d8d6618d8f4c5e",
+                "url": "https://api.github.com/repos/guzzle/promises/zipball/09e8a212562fb1fb6a512c4156ed71525969d6c2",
+                "reference": "09e8a212562fb1fb6a512c4156ed71525969d6c2",
                 "shasum": ""
             },
             "require": {
@@ -2212,7 +2212,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/promises/issues",
-                "source": "https://github.com/guzzle/promises/tree/2.3.1"
+                "source": "https://github.com/guzzle/promises/tree/2.4.1"
             },
             "funding": [
                 {
@@ -2228,7 +2228,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-05-19T18:30:48+00:00"
+            "time": "2026-05-20T22:57:30+00:00"
         },
         {
             "name": "guzzlehttp/psr7",
@@ -4689,123 +4689,127 @@
         },
         {
             "name": "swoole-bundle/swoole-bundle",
-            "version": "v0.25.1",
+            "version": "v0.27.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony-swoole/swoole-bundle.git",
-                "reference": "1c18e2ba75d7671052d1ba07104747bebcbf6bab"
+                "reference": "be508dc081a134367f087aa4a1c2e2248bbf4ec6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony-swoole/swoole-bundle/zipball/1c18e2ba75d7671052d1ba07104747bebcbf6bab",
-                "reference": "1c18e2ba75d7671052d1ba07104747bebcbf6bab",
+                "url": "https://api.github.com/repos/symfony-swoole/swoole-bundle/zipball/be508dc081a134367f087aa4a1c2e2248bbf4ec6",
+                "reference": "be508dc081a134367f087aa4a1c2e2248bbf4ec6",
                 "shasum": ""
             },
             "require": {
                 "beberlei/assert": "^3.3.3",
                 "ext-json": "*",
+                "friendsofphp/proxy-manager-lts": "^1.0.19",
                 "laminas/laminas-code": "^4.7||^4.8",
                 "monolog/monolog": "^3.6",
-                "php": "^8.2",
-                "symfony/cache": "^6.4|^7.2",
-                "symfony/config": "^6.4|^7.2",
-                "symfony/console": "^6.4|^7.2",
-                "symfony/dependency-injection": "^6.4|^7.2",
-                "symfony/filesystem": "^6.4|^7.2",
-                "symfony/http-foundation": "^6.4|^7.2",
-                "symfony/http-kernel": "^6.4|^7.2",
-                "symfony/process": "^6.4|^7.2",
-                "symfony/proxy-manager-bridge": "^6.4|^7.2",
-                "upscale/ext-openswoole": "^25.2.0",
-                "upscale/ext-swoole": "^6.0.0"
+                "php": "^8.3",
+                "symfony/cache": "^7.4|^8.0",
+                "symfony/config": "^7.4|^8.0",
+                "symfony/console": "^7.4|^8.0",
+                "symfony/dependency-injection": "^7.4|^8.0",
+                "symfony/filesystem": "^7.4|^8.0",
+                "symfony/http-foundation": "^7.4|^8.0",
+                "symfony/http-kernel": "^7.4|^8.0",
+                "symfony/process": "^7.4|^8.0",
+                "upscale/ext-openswoole": "^26.2.0",
+                "upscale/ext-swoole": "6.2.0"
             },
             "conflict": {
-                "amphp/amp": "<3.1.0",
+                "amphp/amp": "<3.1.1",
+                "amphp/cache": "<2.0.1",
                 "amphp/dns": "<2.4.0",
+                "amphp/parallel": "<2.3.3",
                 "amphp/process": "<2.0.3",
                 "amphp/socket": "<2.3.1",
-                "laravel/serializable-closure": "<1.3.7",
-                "revolt/event-loop": "<1.0.7",
-                "symfony/cache": "<6.4.18",
+                "doctrine/persistence": "<3.4.3",
+                "laravel/serializable-closure": "<2.0.9",
+                "revolt/event-loop": "<1.0.8",
+                "symfony/cache": "<6.4.33",
                 "symfony/cache-contracts": "<3.5.1",
-                "symfony/clock": "<6.4.13",
-                "symfony/config": "<6.4.14",
-                "symfony/console": "<6.4.17",
-                "symfony/dependency-injection": "<6.4.16",
-                "symfony/doctrine-bridge": "<6.4.18",
-                "symfony/dotenv": "<6.4.16",
-                "symfony/error-handler": "<6.4.18",
-                "symfony/event-dispatcher": "<6.4.13",
+                "symfony/clock": "<6.4.30",
+                "symfony/config": "<6.4.32",
+                "symfony/console": "<6.4.24",
+                "symfony/dependency-injection": "<6.4.32",
+                "symfony/doctrine-bridge": "<6.4.32",
+                "symfony/dotenv": "<6.4.30",
+                "symfony/error-handler": "<6.4.32",
+                "symfony/event-dispatcher": "<6.4.24",
                 "symfony/event-dispatcher-contracts": "<3.5.1",
-                "symfony/expression-language": "<6.4.13",
-                "symfony/filesystem": "<6.4.13",
-                "symfony/framework-bundle": "<6.4.18",
-                "symfony/http-foundation": "<6.4.18",
-                "symfony/http-kernel": "<6.4.18",
-                "symfony/messenger": "<6.4.16",
-                "symfony/monolog-bridge": "<6.4.13",
+                "symfony/expression-language": "<6.4.32",
+                "symfony/filesystem": "<6.4.24",
+                "symfony/framework-bundle": "<6.4.33",
+                "symfony/http-foundation": "<6.4.33",
+                "symfony/http-kernel": "<6.4.33",
+                "symfony/messenger": "<6.4.32",
+                "symfony/monolog-bridge": "<6.4.32",
                 "symfony/polyfill-php83": "<1.31.0",
-                "symfony/process": "<6.4.15",
-                "symfony/routing": "<6.4.18",
-                "symfony/stopwatch": "<6.4.13",
-                "symfony/string": "<6.4.15",
+                "symfony/process": "<6.4.33",
+                "symfony/routing": "<6.4.32",
+                "symfony/stopwatch": "<6.4.24",
+                "symfony/string": "<6.4.30",
                 "symfony/translation-contracts": "<3.5.1",
-                "symfony/twig-bridge": "<6.4.17",
-                "symfony/twig-bundle": "<6.4.13",
-                "symfony/var-dumper": "<6.4.18",
-                "symfony/var-exporter": "<6.4.13",
-                "symfony/yaml": "<6.4.18"
+                "symfony/twig-bridge": "<6.4.32",
+                "symfony/twig-bundle": "<6.4.32",
+                "symfony/var-dumper": "<6.4.32",
+                "symfony/var-exporter": "<6.4.26",
+                "symfony/yaml": "<6.4.30"
             },
             "require-dev": {
                 "blackfire/php-sdk": "^2.5",
                 "doctrine/dbal": "^3.7 || ^4.0",
-                "doctrine/doctrine-bundle": "^2.7",
-                "doctrine/doctrine-migrations-bundle": "^3.2.4",
+                "doctrine/doctrine-bundle": "^2.7 || ^3.0",
+                "doctrine/doctrine-migrations-bundle": "^3.2.4 || ^4.0",
                 "doctrine/migrations": "^3.5",
                 "doctrine/orm": "^2.17 || ^3.0",
-                "doctrine/persistence": "^3.2",
-                "ext-ffi": "^8.2",
+                "doctrine/persistence": "^3.2 || ^4.0",
+                "ext-ffi": "^8.3",
                 "ext-intl": "*",
-                "friendsofphp/php-cs-fixer": "^3.7",
-                "jangregor/phpstan-prophecy": "^2.0",
+                "friendsofphp/php-cs-fixer": "^3.94",
+                "jangregor/phpstan-prophecy": "^2.3",
                 "openswoole/core": "^22.2",
-                "openswoole/ide-helper": "^22.1.5",
-                "phpro/grumphp": "^2.10",
-                "phpspec/prophecy": "^1.17",
-                "phpspec/prophecy-phpunit": "^2.0",
+                "openswoole/ide-helper": "^26.2",
+                "phpro/grumphp": "^2.19",
+                "phpspec/prophecy": "^1.26",
+                "phpspec/prophecy-phpunit": "^2.5",
                 "phpstan/extension-installer": "^1.4",
-                "phpstan/phpstan": "^2.0",
+                "phpstan/phpstan": "^2.1",
                 "phpstan/phpstan-beberlei-assert": "^2.0",
                 "phpstan/phpstan-doctrine": "^2.0",
                 "phpstan/phpstan-phpunit": "^2.0",
-                "phpunit/php-code-coverage": "^10.1",
-                "phpunit/phpcov": "^9.0",
-                "phpunit/phpunit": "^10.5.45",
+                "phpunit/php-code-coverage": "^12.0",
+                "phpunit/phpcov": "^11.0",
+                "phpunit/phpunit": "^12.5",
                 "ramsey/uuid": "^4.7",
-                "rector/rector": "^2.0",
-                "slevomat/coding-standard": "^8.14",
-                "squizlabs/php_codesniffer": "^3.8",
-                "swoole-bundle/resetter-bundle": "^1.1",
-                "swoole-bundle/z-engine": "8.2.3||8.3.1||8.4.1",
+                "rector/rector": "^2.3",
+                "slevomat/coding-standard": "^8.22",
+                "squizlabs/php_codesniffer": "^4.0",
+                "swoole-bundle/resetter-bundle": "^2.0",
+                "swoole-bundle/z-engine": "8.3.1|8.4.1|8.5.1",
                 "swoole/ide-helper": "^6.0.0",
-                "symfony/debug-bundle": "^6.4|^7.2",
-                "symfony/doctrine-messenger": "^6.4|^7.2",
-                "symfony/error-handler": "^6.4|^7.2",
+                "symfony/debug-bundle": "^7.4|^8.0",
+                "symfony/doctrine-messenger": "^7.4|^8.0",
+                "symfony/error-handler": "^7.4|^8.0",
                 "symfony/flex": "^2.4.7",
-                "symfony/framework-bundle": "^6.4|^7.2",
-                "symfony/messenger": "^6.4|^7.2",
-                "symfony/monolog-bridge": "^6.4|^7.2",
-                "symfony/monolog-bundle": "^3.10",
-                "symfony/stopwatch": "^6.4|^7.2",
-                "symfony/twig-bridge": "^6.4|^7.2",
-                "symfony/twig-bundle": "^6.4|^7.2",
-                "symfony/var-dumper": "^6.4|^7.2",
-                "symfony/var-exporter": "^6.4|^7.2",
-                "symfony/web-profiler-bundle": "^6.4|^7.2",
-                "symfony/yaml": "^6.4|^7.2",
+                "symfony/framework-bundle": "^7.4|^8.0",
+                "symfony/messenger": "^7.4|^8.0",
+                "symfony/monolog-bridge": "^7.4|^8.0",
+                "symfony/monolog-bundle": "^3.10 || ^4.0",
+                "symfony/stopwatch": "^7.4|^8.0",
+                "symfony/twig-bridge": "^7.4|^8.0",
+                "symfony/twig-bundle": "^7.4|^8.0",
+                "symfony/var-dumper": "^7.4|^8.0",
+                "symfony/var-exporter": "^7.4|^8.0",
+                "symfony/web-profiler-bundle": "^7.4|^8.0",
+                "symfony/yaml": "^7.4|^8.0",
                 "tideways/ext-tideways-stubs": "^5.5",
-                "twig/twig": "^3.19",
-                "upscale/swoole-blackfire": "^4.3"
+                "twig/twig": "^3.24",
+                "upscale/swoole-blackfire": "^4.3",
+                "upscale/swoole-reflection": "dev-reflection-fix as 3.3.0"
             },
             "suggest": {
                 "doctrine/orm": "For using Entity Manager Handler",
@@ -4819,7 +4823,7 @@
             "type": "library",
             "extra": {
                 "symfony": {
-                    "require": "6.4.*"
+                    "require": "7.4.*"
                 }
             },
             "autoload": {
@@ -4859,7 +4863,7 @@
             ],
             "support": {
                 "issues": "https://github.com/symfony-swoole/swoole-bundle/issues",
-                "source": "https://github.com/symfony-swoole/swoole-bundle/tree/v0.25.1"
+                "source": "https://github.com/symfony-swoole/swoole-bundle/tree/v0.27.1"
             },
             "funding": [
                 {
@@ -4871,7 +4875,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-11-30T18:51:21+00:00"
+            "time": "2026-05-20T21:16:35+00:00"
         },
         {
             "name": "swoole-bundle/z-engine",
@@ -11857,16 +11861,16 @@
         },
         {
             "name": "upscale/ext-swoole",
-            "version": "v6.2.1",
+            "version": "v6.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/upscalesoftware/ext-swoole.git",
-                "reference": "ea0cdc3f45234b96ee44938aba68c2788a1d4c67"
+                "reference": "aee1a9efcdea0427d441d8c1f48553a0fde69358"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/upscalesoftware/ext-swoole/zipball/ea0cdc3f45234b96ee44938aba68c2788a1d4c67",
-                "reference": "ea0cdc3f45234b96ee44938aba68c2788a1d4c67",
+                "url": "https://api.github.com/repos/upscalesoftware/ext-swoole/zipball/aee1a9efcdea0427d441d8c1f48553a0fde69358",
+                "reference": "aee1a9efcdea0427d441d8c1f48553a0fde69358",
                 "shasum": ""
             },
             "require": {
@@ -11891,22 +11895,22 @@
             ],
             "support": {
                 "issues": "https://github.com/upscalesoftware/ext-swoole/issues",
-                "source": "https://github.com/upscalesoftware/ext-swoole/tree/v6.2.1"
+                "source": "https://github.com/upscalesoftware/ext-swoole/tree/v6.2.0"
             },
-            "time": "2026-05-01T00:42:23+00:00"
+            "time": "2026-03-01T00:28:17+00:00"
         },
         {
             "name": "webmozart/assert",
-            "version": "2.3.0",
+            "version": "2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webmozarts/assert.git",
-                "reference": "eb0d790f735ba6cff25c683a85a1da0eadeff9e4"
+                "reference": "9007ea6f45ecf352a9422b36644e4bfc039b9155"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webmozarts/assert/zipball/eb0d790f735ba6cff25c683a85a1da0eadeff9e4",
-                "reference": "eb0d790f735ba6cff25c683a85a1da0eadeff9e4",
+                "url": "https://api.github.com/repos/webmozarts/assert/zipball/9007ea6f45ecf352a9422b36644e4bfc039b9155",
+                "reference": "9007ea6f45ecf352a9422b36644e4bfc039b9155",
                 "shasum": ""
             },
             "require": {
@@ -11922,7 +11926,11 @@
             },
             "type": "library",
             "extra": {
+                "psalm": {
+                    "pluginClass": "Webmozart\\Assert\\PsalmPlugin"
+                },
                 "branch-alias": {
+                    "dev-master": "2.0-dev",
                     "dev-feature/2-0": "2.0-dev"
                 }
             },
@@ -11953,9 +11961,9 @@
             ],
             "support": {
                 "issues": "https://github.com/webmozarts/assert/issues",
-                "source": "https://github.com/webmozarts/assert/tree/2.3.0"
+                "source": "https://github.com/webmozarts/assert/tree/2.4.0"
             },
-            "time": "2026-04-11T10:33:05+00:00"
+            "time": "2026-05-20T13:07:01+00:00"
         },
         {
             "name": "zbateson/mail-mime-parser",
@@ -13364,16 +13372,16 @@
         },
         {
             "name": "rector/rector",
-            "version": "2.4.3",
+            "version": "2.4.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "891824c6c59f02a56a5dd58ea8edc44e6c0ece29"
+                "reference": "4661c582a20f03df585d2e3fdc4af1b83d67a091"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/891824c6c59f02a56a5dd58ea8edc44e6c0ece29",
-                "reference": "891824c6c59f02a56a5dd58ea8edc44e6c0ece29",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/4661c582a20f03df585d2e3fdc4af1b83d67a091",
+                "reference": "4661c582a20f03df585d2e3fdc4af1b83d67a091",
                 "shasum": ""
             },
             "require": {
@@ -13412,7 +13420,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rectorphp/rector/issues",
-                "source": "https://github.com/rectorphp/rector/tree/2.4.3"
+                "source": "https://github.com/rectorphp/rector/tree/2.4.4"
             },
             "funding": [
                 {
@@ -13420,7 +13428,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-05-12T11:17:24+00:00"
+            "time": "2026-05-20T19:30:21+00:00"
         },
         {
             "name": "roave/security-advisories",
@@ -13428,12 +13436,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "97022e308bdad1cbd320841c461437ba13fa64d5"
+                "reference": "4c1054300f091028eb2270a56f7cf90528a2a19e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/97022e308bdad1cbd320841c461437ba13fa64d5",
-                "reference": "97022e308bdad1cbd320841c461437ba13fa64d5",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/4c1054300f091028eb2270a56f7cf90528a2a19e",
+                "reference": "4c1054300f091028eb2270a56f7cf90528a2a19e",
                 "shasum": ""
             },
             "conflict": {
@@ -13553,7 +13561,7 @@
                 "ckeditor/ckeditor": "<4.25",
                 "clickstorm/cs-seo": ">=6,<6.8|>=7,<7.5|>=8,<8.4|>=9,<9.3",
                 "co-stack/fal_sftp": "<0.2.6",
-                "cockpit-hq/cockpit": "<2.14",
+                "cockpit-hq/cockpit": "<=2.14",
                 "code16/sharp": "<9.22",
                 "codeception/codeception": "<3.1.3|>=4,<4.1.22",
                 "codeigniter/framework": "<3.1.10",
@@ -13751,7 +13759,7 @@
                 "funadmin/funadmin": "<=7.1.0.0-RC6",
                 "gaoming13/wechat-php-sdk": "<=1.10.2",
                 "genix/cms": "<=1.1.11",
-                "georgringer/news": "<1.3.3",
+                "georgringer/news": "<11.4.4|>=12,<12.3.2|>=13,<13.0.2|>=14,<14.0.3",
                 "geshi/geshi": "<=1.0.9.1",
                 "getformwork/formwork": "<=2.3.3",
                 "getgrav/grav": "<=2.0.0.0-RC1",
@@ -13859,13 +13867,14 @@
                 "kimai/kimai": "<=2.55",
                 "kitodo/presentation": "<3.2.3|>=3.3,<3.3.4",
                 "klaviyo/magento2-extension": ">=1,<3",
-                "knplabs/knp-snappy": "<=1.4.2",
+                "knplabs/knp-snappy": "<=1.7",
                 "kohana/core": "<3.3.3",
                 "koillection/koillection": "<1.6.12",
                 "krayin/laravel-crm": "<=2.2",
                 "kreait/firebase-php": ">=3.2,<3.8.1",
                 "kumbiaphp/kumbiapp": "<=1.1.1",
                 "la-haute-societe/tcpdf": "<6.2.22",
+                "laktak/hjson": "<2.3",
                 "laminas/laminas-diactoros": "<2.18.1|==2.19|==2.20|==2.21|==2.22|==2.23|>=2.24,<2.24.2|>=2.25,<2.25.2",
                 "laminas/laminas-form": "<2.17.1|>=3,<3.0.2|>=3.1,<3.1.1",
                 "laminas/laminas-http": "<2.14.2",
@@ -14053,7 +14062,7 @@
                 "phpmailer/phpmailer": "<6.5",
                 "phpmussel/phpmussel": ">=1,<1.6",
                 "phpmyadmin/phpmyadmin": "<5.2.2",
-                "phpmyfaq/phpmyfaq": "<=4.1.1",
+                "phpmyfaq/phpmyfaq": "<4.1.3",
                 "phpoffice/common": "<0.2.9",
                 "phpoffice/math": "<=0.2",
                 "phpoffice/phpexcel": "<=1.8.2",
@@ -14296,7 +14305,7 @@
                 "thelia/thelia": ">=2.1,<2.1.3",
                 "theonedemon/phpwhois": "<=4.2.5",
                 "thinkcmf/thinkcmf": "<6.0.8",
-                "thorsten/phpmyfaq": "<=4.1.1",
+                "thorsten/phpmyfaq": "<4.1.3",
                 "tikiwiki/tiki-manager": "<=17.1",
                 "timber/timber": ">=0.16.6,<1.23.1|>=1.24,<1.24.1|>=2,<2.1",
                 "tinymce/tinymce": "<7.2",
@@ -14501,7 +14510,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-05-20T11:05:08+00:00"
+            "time": "2026-05-21T20:38:42+00:00"
         },
         {
             "name": "rregeer/phpunit-coverage-check",

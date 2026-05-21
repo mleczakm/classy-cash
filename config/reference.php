@@ -1518,7 +1518,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         port?: scalar|Param|null, // Default: 9501
  *         trusted_hosts?: mixed, // Default: []
  *         trusted_proxies?: mixed, // Default: []
- *         running_mode?: "process"|"reactor"|"thread"|Param, // Default: "process"
+ *         running_mode?: "process"|"reactor"|Param, // Default: "process"
  *         socket_type?: "tcp"|"tcp_ipv6"|"udp"|"udp_ipv6"|"unix_dgram"|"unix_stream"|Param, // Default: "tcp"
  *         ssl_enabled?: bool|Param, // Default: false
  *         hmr?: array{
@@ -1584,6 +1584,9 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         },
  *     },
  *     platform?: array{
+ *         fiber_context?: array{
+ *             enabled?: "auto"|"off"|"on"|Param, // Default: "auto"
+ *         },
  *         coroutines?: array{
  *             enabled?: bool|Param, // Default: false
  *             max_coroutines?: scalar|Param|null, // Default: 100000

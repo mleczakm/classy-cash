@@ -3,13 +3,13 @@ FROM php:8.5-cli-alpine AS base
 WORKDIR /app
 ENV APP_ENV=prod
 # Swoole runs under CLI; tell Symfony runtime to use web error rendering and logging behavior.
-ENV APP_RUNTIME_MODE="web=1&worker=1"
+#ENV APP_RUNTIME_MODE="web=1&worker=1"
 EXPOSE 9501
 
 CMD bin/console swoole:server:run
 
 RUN --mount=type=bind,from=mlocati/php-extension-installer:latest,source=/usr/bin/install-php-extensions,target=/usr/local/bin/install-php-extensions \
-    install-php-extensions apcu ds-^1 ffi intl pcntl pdo_pgsql sysvsem swoole xsl
+    install-php-extensions apcu ds-^1 ffi intl pcntl pdo_pgsql sysvsem swoole-6.2.0 xsl
 
 COPY .docker/php/ini/zz-php.ini /usr/local/etc/php/conf.d/zz-php.ini
 
