@@ -10,8 +10,6 @@ use App\Tests\Assembler\UserAssembler;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Zenstruck\Messenger\Test\InteractsWithMessenger;
 use Zenstruck\Mailer\Test\InteractsWithMailer;
 use Zenstruck\Mailer\Test\TestEmail;
@@ -27,7 +25,6 @@ final class SendLoginNotificationEmailFunctionalTest extends WebTestCase
     {
         self::bootKernel();
         $container = static::getContainer();
-        $container->get(RequestStack::class)->push(Request::create('/login'));
 
         /** @var EntityManagerInterface $em */
         $em = $container->get('doctrine')
@@ -65,9 +62,8 @@ final class SendLoginNotificationEmailFunctionalTest extends WebTestCase
 
     public function testUnknownEmailNotificationUsesNewStyling(): void
     {
-        $client = static::createClient();
-        $client->request('GET', '/login');
-        $container = $client->getContainer();
+        self::bootKernel();
+        $container = static::getContainer();
 
         /** @var EntityManagerInterface $em */
         $em = $container->get('doctrine')

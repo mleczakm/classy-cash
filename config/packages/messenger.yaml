@@ -17,18 +17,26 @@ framework:
                 options:
                     # Forces the internal table to live inside your schema
                     table_name: 'classycash.messenger_messages'
-            # sync: 'sync://'
+            sync: 'sync://'
 
         default_bus: messenger.bus.default
 
         buses:
             messenger.bus.default:
                 middleware:
+                    - messenger.middleware.router_context
                     - messenger.middleware.doctrine_close_connection
                     - messenger.middleware.doctrine_transaction
                     - messenger.middleware.validation
 
         routing:
+            'Symfony\Component\Notifier\Message\MessageInterface': sync
+            'Symfony\Component\Mailer\Messenger\SendEmailMessage': sync
+            'App\Application\Command\SaveTransfer': sync
+            'App\Application\Command\MatchPaymentForTransfer': sync
+            'App\Application\Command\Notification\NewUser': sync
+            'App\Application\Command\Notification\SendSettlementConfirmationEmail': sync
+            'App\Application\Command\Notification\TransferNotMatchedCommand': sync
             '*': async
 
 when@test:

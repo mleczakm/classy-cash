@@ -31,7 +31,7 @@
     "scienta/doctrine-json-functions": "^6.5",
     "sentry/sentry-symfony": "^5.10.0",
     "swoole-bundle/resetter-bundle": "^1.2.0",
-    "swoole-bundle/swoole-bundle": "^0.27.1",
+    "swoole-bundle/swoole-bundle": "dev-master#636e920ffe61580be386f3e439677f13560884f2 as 0.27.1",
     "swoole-bundle/z-engine": "^8.5.1",
     "symfony/asset": "7.4.*",
     "symfony/asset-mapper": "7.4.*",

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "caecbd7ec84493f13db2c27c450d0691",
+    "content-hash": "0bd7162adb8ed2d7cd8375e56b718555",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -4689,16 +4689,16 @@
         },
         {
             "name": "swoole-bundle/swoole-bundle",
-            "version": "v0.27.1",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony-swoole/swoole-bundle.git",
-                "reference": "be508dc081a134367f087aa4a1c2e2248bbf4ec6"
+                "reference": "636e920ffe61580be386f3e439677f13560884f2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony-swoole/swoole-bundle/zipball/be508dc081a134367f087aa4a1c2e2248bbf4ec6",
-                "reference": "be508dc081a134367f087aa4a1c2e2248bbf4ec6",
+                "url": "https://api.github.com/repos/symfony-swoole/swoole-bundle/zipball/636e920ffe61580be386f3e439677f13560884f2",
+                "reference": "636e920ffe61580be386f3e439677f13560884f2",
                 "shasum": ""
             },
             "require": {
@@ -16655,11 +16655,19 @@
             "time": "2026-02-11T10:02:00+00:00"
         }
     ],
-    "aliases": [],
+    "aliases": [
+        {
+            "package": "swoole-bundle/swoole-bundle",
+            "version": "9999999-dev",
+            "alias": "0.27.1",
+            "alias_normalized": "0.27.1.0"
+        }
+    ],
     "minimum-stability": "stable",
     "stability-flags": {
         "logdash/php-sdk": 20,
-        "roave/security-advisories": 20
+        "roave/security-advisories": 20,
+        "swoole-bundle/swoole-bundle": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
