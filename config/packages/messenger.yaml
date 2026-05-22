@@ -44,3 +44,13 @@ when@test:
         messenger:
             transports:
                 async: test://
+            routing:
+                'App\Application\Command\SaveTransfer': async
+                'App\Application\Command\MatchPaymentForTransfer': async
+                'App\Application\Command\Notification\NewUser': async
+                'App\Application\Command\Notification\SendSettlementConfirmationEmail': async
+                'App\Application\Command\Notification\TransferNotMatchedCommand': async
+                'Symfony\Component\Notifier\Message\MessageInterface': async
+                'Symfony\Component\Mailer\Messenger\SendEmailMessage': async
+                '*': async
+

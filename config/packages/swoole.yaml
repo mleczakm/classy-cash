@@ -16,6 +16,9 @@ swoole:
       reset_handler: true
     settings:
       worker_count: 1
+  platform:
+    coroutines:
+      enabled: false
 
 when@prod:
   swoole_bundle_resetter:

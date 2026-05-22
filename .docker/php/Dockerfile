@@ -8,6 +8,7 @@ EXPOSE 9501
 
 CMD bin/console swoole:server:run
 
+ENV IPE_SWOOLE_WITHOUT_IOURING=1
 RUN --mount=type=bind,from=mlocati/php-extension-installer:latest,source=/usr/bin/install-php-extensions,target=/usr/local/bin/install-php-extensions \
     install-php-extensions apcu ds-^1 ffi intl pcntl pdo_pgsql sysvsem swoole-6.2.0 xsl
 
