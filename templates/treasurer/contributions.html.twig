@@ -73,13 +73,15 @@
 
                         <div class="space-y-3">
                             {% for student in contribution.students %}
-                                {% set isPaid = false %}
-                                {# Check if student has paid this contribution #}
-                                {% for payment in student.studentPayments %}
-                                    {% if payment.label == contribution.title and payment.status == 'paid' %}
-                                        {% set isPaid = true %}
+                                {% set studentPayment = null %}
+                                {% for sp in student.studentPayments %}
+                                    {% if sp.label == contribution.title %}
+                                        {% set studentPayment = sp %}
                                     {% endif %}
                                 {% endfor %}
+
+                                {% set isPaid = studentPayment and studentPayment.status == 'paid' %}
+                                {% set hasPayment = studentPayment and studentPayment.payment %}
                                 
                                 <div class="flex justify-between items-center {% if isPaid %}bg-slate-50{% else %}bg-white{% endif %} p-4 rounded-xl border border-slate-200 shadow-sm">
                                     <div class="flex items-center gap-4">
@@ -94,13 +96,18 @@
                                         </div>
                                         <span class="text-sm font-bold text-[#1a2a52]">{{ student.firstName }} {{ student.lastName }}</span>
                                     </div>
-                                    {% if isPaid %}
-                                        <span class="text-[10px] font-bold text-emerald-600 px-3 uppercase tracking-wider">Zapłacono (Nie można anulować)</span>
-                                    {% else %}
-                                        <button class="px-3 py-1.5 text-[10px] font-bold text-red-600 bg-red-50 hover:bg-red-100 rounded-md transition-colors border border-red-100">
-                                            Anuluj obowiązek zapłaty
-                                        </button>
-                                    {% endif %}
+                                    <div class="flex items-center gap-2">
+                                        {% if isPaid %}
+                                            <span class="text-[10px] font-bold text-emerald-600 px-3 uppercase tracking-wider">Zapłacono</span>
+                                        {% else %}
+                                            {% if studentPayment %}
+                                                {{ component('CreateContributionPayment', { studentPayment: studentPayment }) }}
+                                            {% endif %}
+                                            <button class="px-3 py-1.5 text-[10px] font-bold text-red-600 bg-red-50 hover:bg-red-100 rounded-md transition-colors border border-red-100">
+                                                Anuluj
+                                            </button>
+                                        {% endif %}
+                                    </div>
                                 </div>
                             {% endfor %}
                         </div>
