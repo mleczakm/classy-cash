@@ -100,12 +100,11 @@
                                         {% if isPaid %}
                                             <span class="text-[10px] font-bold text-emerald-600 px-3 uppercase tracking-wider">Zapłacono</span>
                                         {% else %}
-                                            {% if studentPayment %}
-                                                {{ component('CreateContributionPayment', { studentPayment: studentPayment }) }}
-                                            {% endif %}
-                                            <button class="px-3 py-1.5 text-[10px] font-bold text-red-600 bg-red-50 hover:bg-red-100 rounded-md transition-colors border border-red-100">
-                                                Anuluj
-                                            </button>
+                                            {{ component('ContributionStudentActions', { 
+                                                contribution: contribution, 
+                                                student: student, 
+                                                studentPayment: studentPayment 
+                                            }) }}
                                         {% endif %}
                                     </div>
                                 </div>
