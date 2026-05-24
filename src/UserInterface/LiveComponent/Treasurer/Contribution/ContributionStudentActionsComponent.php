@@ -19,7 +19,10 @@ use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-#[AsLiveComponent('ContributionStudentActions', template: 'components/treasurer/contribution/student_actions.html.twig')]
+#[AsLiveComponent(
+    'ContributionStudentActions',
+    template: 'components/treasurer/contribution/student_actions.html.twig'
+)]
 class ContributionStudentActionsComponent extends AbstractController
 {
     use DefaultActionTrait;
@@ -43,7 +46,7 @@ class ContributionStudentActionsComponent extends AbstractController
     {
         $this->assertTreasurer();
 
-        if (!$this->studentPayment || $this->studentPayment->getPayment()) {
+        if (! $this->studentPayment || $this->studentPayment->getPayment()) {
             return;
         }
 
@@ -73,7 +76,8 @@ class ContributionStudentActionsComponent extends AbstractController
             }
 
             if ($payment = $this->studentPayment->getPayment()) {
-                $payment->getStudentPayments()->removeElement($this->studentPayment);
+                $payment->getStudentPayments()
+                    ->removeElement($this->studentPayment);
                 if ($payment->getStudentPayments()->isEmpty()) {
                     $this->entityManager->remove($payment);
                 }
