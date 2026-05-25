@@ -9,13 +9,13 @@ swoole:
         enabled: true
     trusted_proxies: '*'
     settings:
-      worker_count: 1
+      worker_count: auto
       log_file: '/proc/self/fd/2'
   task_worker:
     services:
       reset_handler: true
     settings:
-      worker_count: 1
+      worker_count: ~
   platform:
     coroutines:
       enabled: false
