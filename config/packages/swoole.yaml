@@ -9,7 +9,7 @@ swoole:
         enabled: true
     trusted_proxies: '*'
     settings:
-      worker_count: auto
+      worker_count: 4
       log_file: '/proc/self/fd/2'
   task_worker:
     services:
