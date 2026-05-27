@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\UserInterface\LiveComponent\Treasurer\Contribution;
 
+use App\Application\Command\RecalculateCashState;
 use App\Entity\Contribution;
 use App\Entity\ClassCouncil\Student;
 use App\Entity\ClassCouncil\StudentPayment;
@@ -14,6 +15,7 @@ use App\Entity\ClassCouncil\ClassRole;
 use App\Repository\ClassCouncil\ClassMembershipRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
@@ -39,6 +41,7 @@ class ContributionStudentActionsComponent extends AbstractController
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly ClassMembershipRepository $memberships,
+        private readonly MessageBusInterface $commandBus,
     ) {}
 
     #[LiveAction]
@@ -58,6 +61,8 @@ class ContributionStudentActionsComponent extends AbstractController
 
         $this->studentPayment->setPayment($payment);
         $this->entityManager->flush();
+
+        $this->commandBus->dispatch(new RecalculateCashState(payment: $payment));
 
         $this->addFlash('success', 'Płatność została utworzona');
     }

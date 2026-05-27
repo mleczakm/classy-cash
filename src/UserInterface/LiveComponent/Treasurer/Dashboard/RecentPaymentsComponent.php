@@ -4,15 +4,20 @@ declare(strict_types=1);
 
 namespace App\UserInterface\LiveComponent\Treasurer\Dashboard;
 
-use App\Entity\User;
+use App\Entity\CashStateRegistry;
+use App\Entity\ClassCouncil\ClassExpense;
 use App\Entity\ClassCouncil\ClassRoom;
 use App\Entity\ClassCouncil\Student;
-use Brick\Money\Money;
 use App\Entity\ClassCouncil\StudentPayment;
+use App\Entity\Payment;
+use App\Entity\Transfer;
+use App\Entity\User;
+use App\Repository\ClassCouncil\ClassExpenseRepository;
 use App\Repository\ClassCouncil\ClassRoomRepository;
 use App\Repository\ClassCouncil\StudentPaymentRepository;
-use App\Repository\ClassCouncil\ClassExpenseRepository;
+use App\Repository\CashStateRegistryRepository;
 use App\Repository\PaymentRepository;
+use Brick\Money\Money;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
@@ -38,6 +43,7 @@ class RecentPaymentsComponent extends AbstractController
         private readonly StudentPaymentRepository $studentPayments,
         private readonly ClassExpenseRepository $expenses,
         private readonly PaymentRepository $payments,
+        private readonly CashStateRegistryRepository $registry,
         private readonly LoggerInterface $logger,
     ) {}
 
@@ -88,17 +94,31 @@ class RecentPaymentsComponent extends AbstractController
     }
 
     /**
-     * @return list<array{type: string, description: string, amount: Money, date: \DateTimeInterface, student: Student|null, method: string, methodClass: string}>
+     * @return list<array{type: string, description: string, amount: Money, date: \DateTimeInterface, student: Student|null, method: string, methodClass: string, balanceAfter: Money|null}>
      */
     public function getItems(): array
     {
         $transactions = $this->getAllTransactions();
 
+        // Get all registry entries to map balance after each transaction
+        $registryEntries = $this->registry->findAllOrderedDesc();
+        $balanceMap = [];
+        foreach ($registryEntries as $entry) {
+            $key = $this->getTransactionKey($entry);
+            $balanceMap[$key] = $entry->getBalanceAfter();
+        }
+
+        // Add balance after to each transaction
+        foreach ($transactions as &$transaction) {
+            $key = $this->getTransactionKeyFromArray($transaction);
+            $transaction['balanceAfter'] = $balanceMap[$key] ?? null;
+        }
+
         // Apply pagination
         $limit = 10;
         $offset = ($this->page - 1) * $limit;
 
-        /** @var list<array{type: string, description: string, amount: Money, date: \DateTimeInterface, student: Student|null, method: string, methodClass: string}> $items */
+        /** @var list<array{type: string, description: string, amount: Money, date: \DateTimeInterface, student: Student|null, method: string, methodClass: string, balanceAfter: Money|null}> $items */
         $items = array_slice($transactions, $offset, $limit);
         $this->logger->info(
             sprintf('RecentPaymentsComponent::getItems() page=%d, offset=%d, count=%d', $this->page, $offset, count(
@@ -107,6 +127,37 @@ class RecentPaymentsComponent extends AbstractController
         );
 
         return $items;
+    }
+
+    private function getTransactionKey(CashStateRegistry $entry): string
+    {
+        if ($entry->getPayment()) {
+            return 'payment_' . $entry->getPayment()->getId()->toBase58();
+        }
+        if ($entry->getTransfer()) {
+            return 'transfer_' . $entry->getTransfer()->getId();
+        }
+        if ($entry->getExpense()) {
+            return 'expense_' . $entry->getExpense()->getId()->toBase58();
+        }
+        return 'unknown';
+    }
+
+    /**
+     * @param array{type: string, description: string, amount: Money, date: \DateTimeInterface, student: Student|null, method: string, methodClass: string, payment?: Payment, transfer?: Transfer, expense?: ClassExpense} $transaction
+     */
+    private function getTransactionKeyFromArray(array $transaction): string
+    {
+        if (isset($transaction['payment'])) {
+            return 'payment_' . $transaction['payment']->getId()->toBase58();
+        }
+        if (isset($transaction['transfer'])) {
+            return 'transfer_' . $transaction['transfer']->getId();
+        }
+        if (isset($transaction['expense'])) {
+            return 'expense_' . $transaction['expense']->getId()->toBase58();
+        }
+        return 'unknown';
     }
 
     private function getClassRoom(): ?ClassRoom
@@ -120,7 +171,7 @@ class RecentPaymentsComponent extends AbstractController
     }
 
     /**
-     * @return list<array{type: string, description: string, amount: Money, date: \DateTimeInterface, student: Student|null, method: string, methodClass: string}>
+     * @return list<array{type: string, description: string, amount: Money, date: \DateTimeInterface, student: Student|null, method: string, methodClass: string, payment?: Payment, transfer?: Transfer, expense?: ClassExpense}>
      */
     private function getAllTransactions(): array
     {
@@ -146,6 +197,7 @@ class RecentPaymentsComponent extends AbstractController
                 'student' => $payment->getStudent(),
                 'method' => $this->getPaymentMethod($payment),
                 'methodClass' => $this->getPaymentMethodClass($payment),
+                'payment' => $payment->getPayment(),
             ];
         }
 
@@ -161,6 +213,7 @@ class RecentPaymentsComponent extends AbstractController
                 'student' => null,
                 'method' => 'Wydatek',
                 'methodClass' => 'bg-red-50 text-red-600',
+                'expense' => $expense,
             ];
         }
 
@@ -182,6 +235,7 @@ class RecentPaymentsComponent extends AbstractController
                         'student' => null,
                         'method' => 'Ręcznie',
                         'methodClass' => 'bg-blue-50 text-blue-600',
+                        'payment' => $payment,
                     ];
                 }
             }
@@ -192,7 +246,7 @@ class RecentPaymentsComponent extends AbstractController
 
         $this->logger->info('RecentPaymentsComponent - total transactions sorted: ' . count($transactions));
 
-        /** @var list<array{type: string, description: string, amount: Money, date: \DateTimeInterface, student: Student|null, method: string, methodClass: string}> $transactions */
+        /** @var list<array{type: string, description: string, amount: Money, date: \DateTimeInterface, student: Student|null, method: string, methodClass: string, payment?: Payment, transfer?: Transfer, expense?: ClassExpense}> $transactions */
         return $transactions;
     }
 

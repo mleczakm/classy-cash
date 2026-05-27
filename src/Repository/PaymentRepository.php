@@ -89,4 +89,19 @@ class PaymentRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * @return array<int, Payment>
+     */
+    public function findAfterDate(\DateTimeImmutable $date): array
+    {
+        /** @var array<int, Payment> */
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.paidAt >= :date OR p.createdAt >= :date')
+            ->setParameter('date', $date)
+            ->orderBy('p.paidAt', 'ASC')
+            ->addOrderBy('p.createdAt', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

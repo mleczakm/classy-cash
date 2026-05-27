@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\UserInterface\Http;
 
+use App\Application\Command\RecalculateCashState;
 use App\Entity\User;
 use App\Entity\ClassCouncil\ClassRole;
 use App\Entity\ClassCouncil\ClassRoom;
@@ -28,6 +29,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Uid\Ulid;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 #[Route('/')]
 #[IsGranted('ROLE_USER')]
@@ -43,6 +45,7 @@ final class TreasurerController extends AbstractController
         private readonly TransferRepository $transfers,
         private readonly Settings $settings,
         private readonly EntityManagerInterface $em,
+        private readonly MessageBusInterface $commandBus,
     ) {}
 
     #[Route('/treasurer/dashboard', name: 'treasurer_dashboard', methods: ['GET'])]
@@ -122,6 +125,8 @@ final class TreasurerController extends AbstractController
                         $studentPayment->markPaid();
 
                         $this->em->flush();
+
+                        $this->commandBus->dispatch(new RecalculateCashState(payment: $payment));
 
                         $this->addFlash('success', 'Przelew został przypisany pomyślnie');
                         return $this->redirectToRoute('treasurer_payments');
@@ -306,6 +311,8 @@ final class TreasurerController extends AbstractController
                             $studentPayment->markPaid();
                             $this->em->flush();
 
+                            $this->commandBus->dispatch(new RecalculateCashState(payment: $payment));
+
                             $this->addFlash('success', 'Wpłata została zaksięgowana');
                             return $this->redirectToRoute('treasurer_manual_transactions');
                         }
@@ -321,6 +328,8 @@ final class TreasurerController extends AbstractController
                     $this->em->persist($payment);
                     $this->em->flush();
 
+                    $this->commandBus->dispatch(new RecalculateCashState(payment: $payment));
+
                     $this->addFlash('success', 'Przychód został zaksięgowany');
                     return $this->redirectToRoute('treasurer_manual_transactions');
                 }
@@ -334,6 +343,8 @@ final class TreasurerController extends AbstractController
                 $expense = new ClassExpense($class, $description, $amount);
                 $this->em->persist($expense);
                 $this->em->flush();
+
+                $this->commandBus->dispatch(new RecalculateCashState(expense: $expense));
 
                 $this->addFlash('success', 'Wydatek został zaksięgowany');
                 return $this->redirectToRoute('treasurer_manual_transactions');

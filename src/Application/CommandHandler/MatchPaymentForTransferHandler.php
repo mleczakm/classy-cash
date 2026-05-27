@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace App\Application\CommandHandler;
 
-use App\Entity\Transfer;
 use App\Application\Command\MatchPaymentForTransfer;
 use App\Application\Command\Notification\TransferNotMatchedCommand;
+use App\Application\Command\RecalculateCashState;
 use App\Entity\PaymentCode;
+use App\Entity\Transfer;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Stamp\DispatchAfterCurrentBusStamp;
 use Symfony\Component\Workflow\WorkflowInterface;
 
 final readonly class MatchPaymentForTransferHandler
@@ -43,6 +46,11 @@ final readonly class MatchPaymentForTransferHandler
                 if ($this->paymentStateMachine->can($payment, 'pay')) {
                     $this->paymentStateMachine->apply($payment, 'pay');
                 }
+
+                $this->messageBus->dispatch(
+                    new Envelope(new RecalculateCashState(payment: $payment))
+                        ->with(new DispatchAfterCurrentBusStamp())
+                );
 
                 return;
             }

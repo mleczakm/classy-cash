@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\UserInterface\Http\Component;
 
+use App\Application\Command\RecalculateCashState;
 use App\Entity\ClassCouncil\Student;
 use App\Entity\ClassCouncil\StudentPayment;
 use App\Entity\Payment;
@@ -16,6 +17,7 @@ use App\Settings\Settings;
 use Brick\Money\Money;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Uid\Ulid;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
@@ -65,6 +67,7 @@ final class FastPaymentModalComponent extends AbstractController
          * @phpstan-ignore-next-line
          */
         private readonly Settings $settings,
+        private readonly MessageBusInterface $commandBus,
     ) {}
 
     /**
@@ -131,6 +134,8 @@ final class FastPaymentModalComponent extends AbstractController
         }
 
         $this->em->flush();
+
+        $this->commandBus->dispatch(new RecalculateCashState(payment: $payment));
 
         $this->paymentCode = $code->getCode();
         $this->paymentAmount = $sum;

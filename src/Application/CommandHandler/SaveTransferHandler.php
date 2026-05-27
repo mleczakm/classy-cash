@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Application\CommandHandler;
 
 use App\Application\Command\MatchPaymentForTransfer;
+use App\Application\Command\RecalculateCashState;
 use App\Application\Command\SaveTransfer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Envelope;
@@ -24,6 +25,11 @@ final readonly class SaveTransferHandler
 
         $this->commandBus->dispatch(
             new Envelope(new MatchPaymentForTransfer($command->transfer))
+                ->with(new DispatchAfterCurrentBusStamp())
+        );
+
+        $this->commandBus->dispatch(
+            new Envelope(new RecalculateCashState(transfer: $command->transfer))
                 ->with(new DispatchAfterCurrentBusStamp())
         );
     }

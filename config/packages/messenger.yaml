@@ -37,6 +37,8 @@ framework:
             'App\Application\Command\Notification\NewUser': sync
             'App\Application\Command\Notification\SendSettlementConfirmationEmail': sync
             'App\Application\Command\Notification\TransferNotMatchedCommand': sync
+            'App\Application\Command\RecalculateCashState': async
+            'App\Application\Command\RecalculateAllCashState': sync
             '*': async
 
 when@test:
@@ -50,6 +52,8 @@ when@test:
                 'App\Application\Command\Notification\NewUser': async
                 'App\Application\Command\Notification\SendSettlementConfirmationEmail': async
                 'App\Application\Command\Notification\TransferNotMatchedCommand': async
+                'App\Application\Command\RecalculateCashState': async
+                'App\Application\Command\RecalculateAllCashState': async
                 'Symfony\Component\Notifier\Message\MessageInterface': async
                 'Symfony\Component\Mailer\Messenger\SendEmailMessage': async
                 '*': async

@@ -96,4 +96,18 @@ class TransferRepository extends ServiceEntityRepository
         $this->getEntityManager()
             ->flush();
     }
+
+    /**
+     * @return array<int, Transfer>
+     */
+    public function findAfterDate(\DateTimeImmutable $date): array
+    {
+        /** @var array<int, Transfer> */
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.transferredAt >= :date')
+            ->setParameter('date', $date)
+            ->orderBy('t.transferredAt', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

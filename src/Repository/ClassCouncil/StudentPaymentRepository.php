@@ -195,4 +195,25 @@ class StudentPaymentRepository extends ServiceEntityRepository
         $this->getEntityManager()
             ->flush();
     }
+
+    /**
+     * @return array<int, StudentPayment>
+     */
+    public function findPaidAfterDate(ClassRoom $classRoom, \DateTimeImmutable $date): array
+    {
+        /** @var array<int, StudentPayment> $result */
+        $result = $this->createQueryBuilder('sp')
+            ->where('sp.classRoom = :classRoom')
+            ->andWhere('sp.status = :status')
+            ->andWhere('sp.paidAt >= :date OR sp.createdAt >= :date')
+            ->setParameter('classRoom', $classRoom->getId(), 'ulid')
+            ->setParameter('status', StudentPayment::STATUS_PAID)
+            ->setParameter('date', $date)
+            ->orderBy('sp.paidAt', 'ASC')
+            ->addOrderBy('sp.createdAt', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+        return $result;
+    }
 }

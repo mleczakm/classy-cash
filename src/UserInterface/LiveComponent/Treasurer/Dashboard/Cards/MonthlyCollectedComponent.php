@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\UserInterface\LiveComponent\Treasurer\Dashboard\Cards;
 
 use App\Entity\ClassCouncil\ClassRoom;
-use App\Repository\ClassCouncil\StudentPaymentRepository;
+use App\Repository\CashStateRegistryRepository;
 use Brick\Money\Money;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
@@ -26,7 +26,7 @@ class MonthlyCollectedComponent extends AbstractController
     public ?ClassRoom $classRoom = null;
 
     public function __construct(
-        private readonly StudentPaymentRepository $studentPayments,
+        private readonly CashStateRegistryRepository $registry,
     ) {
         $this->monthlyCollected = Money::of(0, 'PLN');
     }
@@ -54,12 +54,14 @@ class MonthlyCollectedComponent extends AbstractController
 
         $monthlyCollected = Money::of(0, 'PLN');
 
-        // Get payments from current month
+        // Get all registry entries from current month
         $currentMonth = new \DateTimeImmutable('first day of this month midnight');
-        $payments = $this->studentPayments->findPaidSince($this->classRoom, $currentMonth);
+        $allEntries = $this->registry->findAllOrdered();
 
-        foreach ($payments as $payment) {
-            $monthlyCollected = $monthlyCollected->plus($payment->getAmount());
+        foreach ($allEntries as $entry) {
+            if ($entry->getTransactionDate() >= $currentMonth && $entry->getTransactionType() === 'income') {
+                $monthlyCollected = $monthlyCollected->plus($entry->getTransactionAmount());
+            }
         }
 
         $this->monthlyCollected = $monthlyCollected;

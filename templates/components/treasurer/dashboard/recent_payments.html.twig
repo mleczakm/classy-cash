@@ -46,8 +46,8 @@
                         <td class="px-8 py-5 font-bold {% if transaction.type == 'income' %}text-[#2aa57f]{% else %}text-[#d65a4a]{% endif %}">
                             {% if transaction.type == 'income' %}+{% endif %}{{ transaction.amount|money }}
                         </td>
-                        <td class="px-8 py-5 font-mono text-slate-400 text-xs {% if itemIndex < 2 %}font-bold text-slate-600{% else %}italic{% endif %}">
-                            {% if itemIndex < 2 %}{{ this.getCurrentBalance()|money }}{% else %}---{% endif %}
+                        <td class="px-8 py-5 font-mono text-slate-400 text-xs {% if transaction.balanceAfter is not null %}font-bold text-slate-600{% else %}italic{% endif %}">
+                            {% if transaction.balanceAfter is not null %}{{ transaction.balanceAfter|money }}{% else %}---{% endif %}
                         </td>
                         <td class="px-8 py-5 text-right">
                             {% if transaction.type == 'income' %}
