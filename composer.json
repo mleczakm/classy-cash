@@ -88,6 +88,9 @@
     "sort-packages": true,
     "platform": {
       "ext-xsl": "0.8.23"
+    },
+    "audit": {
+      "abandoned": "ignore"
     }
   },
   "autoload": {
