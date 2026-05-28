@@ -44,7 +44,7 @@
                             {% endif %}
                         </td>
                         <td class="px-8 py-5 font-bold {% if transaction.amount.isNegative() %}text-[#2aa57f]{% else %}text-[#d65a4a]{% endif %}">
-                            {% if transaction.amount.isNegative() %}+{% endif %}{{ transaction.amount|abs|money }}
+                            {% if transaction.amount.isNegative() %}+{% endif %}{{ transaction.amount|money }}
                         </td>
                         <td class="px-8 py-5 font-mono text-slate-400 text-xs {% if transaction.balanceAfter is not null %}font-bold text-slate-600{% else %}italic{% endif %}">
                             {% if transaction.balanceAfter is not null %}{{ transaction.balanceAfter|money }}{% else %}---{% endif %}
