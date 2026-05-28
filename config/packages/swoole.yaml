@@ -15,7 +15,7 @@ swoole:
     services:
       reset_handler: true
     settings:
-      worker_count: ~
+      worker_count: auto
   platform:
     coroutines:
       enabled: false
