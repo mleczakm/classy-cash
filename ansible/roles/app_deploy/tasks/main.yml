@@ -58,6 +58,28 @@
     path: "/tmp/{{ app.name }}.env"
     state: absent
 
+- name: "Wait for container to be ready"
+  wait_for:
+    timeout: 30
+
+- name: "Run Doctrine schema update"
+  command: "docker exec {{ app.name }} php bin/console doctrine:schema:update --force"
+  register: schema_update_result
+
+- name: "Display schema update result"
+  debug:
+    var: schema_update_result.stdout_lines
+
+- name: "Run cash state recalculation"
+  command: "docker exec {{ app.name }} php bin/console app:recalculate-cash-state"
+  register: recalc_result
+  when: schema_update_result.rc == 0
+
+- name: "Display cash recalculation result"
+  debug:
+    var: recalc_result.stdout_lines
+  when: recalc_result is defined
+
 - name: "Verify Cytrus Domain for {{ app.domain }}"
   uri:
     url: "https://api.mikr.us/domain"
