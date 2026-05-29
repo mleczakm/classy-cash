@@ -25,21 +25,35 @@ class PaymentRepositoryTest extends KernelTestCase
         $this->paymentRepository = $container->get(PaymentRepository::class);
     }
 
-    public function testFindPendingWithSearch(): void
+    public function testFindAssignableWithSearch(): void
     {
         $this->preparePendingPayment();
+        $this->prepareExpiredPayment();
 
         // Test cases
-        $this->assertCount(1, $this->paymentRepository->findPendingWithSearch('Test User'), 'Search by name');
-        $this->assertCount(1, $this->paymentRepository->findPendingWithSearch('test@example.com'), 'Search by email');
-        $this->assertCount(1, $this->paymentRepository->findPendingWithSearch('1234'), 'Search by payment code');
-        $this->assertCount(1, $this->paymentRepository->findPendingWithSearch('150'), 'Search by amount');
+        $this->assertCount(1, $this->paymentRepository->findAssignableWithSearch('Test User'), 'Search by name');
         $this->assertCount(
             1,
-            $this->paymentRepository->findPendingWithSearch(''),
-            'Empty search should return all pending'
+            $this->paymentRepository->findAssignableWithSearch('test@example.com'),
+            'Search by email'
         );
-        $this->assertCount(0, $this->paymentRepository->findPendingWithSearch('nonexistent'), 'Search with no match');
+        $this->assertCount(1, $this->paymentRepository->findAssignableWithSearch('1234'), 'Search by payment code');
+        $this->assertCount(1, $this->paymentRepository->findAssignableWithSearch('150'), 'Search by amount');
+        $this->assertCount(
+            2,
+            $this->paymentRepository->findAssignableWithSearch(''),
+            'Empty search should return all assignable payments'
+        );
+        $this->assertCount(
+            0,
+            $this->paymentRepository->findAssignableWithSearch('nonexistent'),
+            'Search with no match'
+        );
+        $this->assertCount(
+            1,
+            $this->paymentRepository->findAssignableWithSearch('Expired User'),
+            'Search expired by name'
+        );
     }
 
     public function testCountPendingPayments(): void
@@ -71,6 +85,31 @@ class PaymentRepositoryTest extends KernelTestCase
             ->withPaymentCode($paymentCode)
             ->withAmount(Money::of(150, 'PLN')) // 150.00 PLN
             ->withStatus(Payment::STATUS_PENDING)
+            ->assemble();
+        $em->persist($payment);
+
+        $em->flush();
+    }
+
+    private function prepareExpiredPayment(): void
+    {
+        $em = self::getContainer()->get('doctrine')->getManager();
+        $user = UserAssembler::new()
+            ->withName('Expired User')
+            ->withEmail('expired@example.com')
+            ->assemble();
+        $em->persist($user);
+
+        $paymentCode = PaymentCodeAssembler::new()
+            ->withCode('5678')
+            ->assemble();
+        $em->persist($paymentCode);
+
+        $payment = PaymentAssembler::new()
+            ->withUser($user)
+            ->withPaymentCode($paymentCode)
+            ->withAmount(Money::of(200, 'PLN'))
+            ->withStatus(Payment::STATUS_EXPIRED)
             ->assemble();
         $em->persist($payment);
 

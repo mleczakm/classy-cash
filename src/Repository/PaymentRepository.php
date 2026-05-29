@@ -41,11 +41,11 @@ class PaymentRepository extends ServiceEntityRepository
     /**
      * @return Payment[]
      */
-    public function findPendingWithSearch(string $search): array
+    public function findAssignableWithSearch(string $search): array
     {
         $qb = $this->createQueryBuilder('p')
-            ->andWhere('p.status = :status')
-            ->setParameter('status', Payment::STATUS_PENDING);
+            ->andWhere('p.status IN (:statuses)')
+            ->setParameter('statuses', [Payment::STATUS_PENDING, Payment::STATUS_EXPIRED]);
 
         if ($search) {
             $qb->leftJoin('p.user', 'u')

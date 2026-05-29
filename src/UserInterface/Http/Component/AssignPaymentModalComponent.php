@@ -50,7 +50,7 @@ class AssignPaymentModalComponent extends AbstractController
      */
     public function getPayments(): array
     {
-        return $this->paymentRepository->findPendingWithSearch($this->paymentSearch);
+        return $this->paymentRepository->findAssignableWithSearch($this->paymentSearch);
     }
 
     #[LiveAction]
