@@ -43,14 +43,14 @@
                                 {{ transaction.date|format_datetime(pattern='dd.MM.yyyy') }}
                             {% endif %}
                         </td>
-                        <td class="px-8 py-5 font-bold {% if transaction.amount.isNegative() %}text-[#2aa57f]{% else %}text-[#d65a4a]{% endif %}">
-                            {% if transaction.amount.isNegative() %}+{% endif %}{{ transaction.amount|money }}
+                        <td class="px-8 py-5 font-bold {% if transaction.type == 'income' %}text-[#2aa57f]{% else %}text-[#d65a4a]{% endif %}">
+                            {% if transaction.type == 'income' %}+{% endif %}{{ transaction.amount|money }}y }}
                         </td>
                         <td class="px-8 py-5 font-mono text-slate-400 text-xs {% if transaction.balanceAfter is not null %}font-bold text-slate-600{% else %}italic{% endif %}">
                             {% if transaction.balanceAfter is not null %}{{ transaction.balanceAfter|money }}{% else %}---{% endif %}
                         </td>
                         <td class="px-8 py-5 text-right">
-                            {% if transaction.amount.isNegative() %}
+                            {% if transaction.type == 'income' %}
                                 <span class="status-badge bg-emerald-50 text-emerald-600 border border-emerald-100">Wpłata</span>
                             {% else %}
                                 <span class="status-badge bg-red-50 text-red-600 border border-red-100">Koszt</span>
