@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Infrastructure\ImapEngine;
 
+use DirectoryTree\ImapEngine\MailboxInterface;
 use App\Infrastructure\ImapEngine\AliorNotificationMailProvider;
 use App\Infrastructure\Swoole\CurrentWorkerRestarterInterface;
 use DirectoryTree\ImapEngine\MessageQueryInterface;
@@ -28,11 +29,32 @@ class AliorNotificationMailProviderTest extends TestCase
         $logger->expects($this->once())
             ->method('error');
 
-        $provider = new AliorNotificationMailProvider($testMailbox, $workerRestarter, $logger);
+        $provider = new AliorNotificationMailProvider(
+            $testMailbox,
+            $workerRestarter,
+            $logger,
+            isFetchingEmailsEnabled: true,
+        );
 
         foreach ($provider() as $message) {
             $this->fail('No messages should be yielded when an exception occurs.');
         }
+    }
+
+    public function testReturnsEmptyIterableWhenFetchingEmailsIsDisabled(): void
+    {
+        $mailbox = $this->createMock(MailboxInterface::class);
+        $mailbox->expects($this->never())
+            ->method('reconnect');
+
+        $provider = new AliorNotificationMailProvider(
+            $mailbox,
+            $this->createMock(CurrentWorkerRestarterInterface::class),
+            $this->createMock(LoggerInterface::class),
+            isFetchingEmailsEnabled: false,
+        );
+
+        self::assertSame([], iterator_to_array($provider()));
     }
 }
 

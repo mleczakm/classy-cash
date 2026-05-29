@@ -16,6 +16,7 @@ final readonly class AliorNotificationMailProvider implements IncomingNotificati
         private MailboxInterface $mailbox,
         private CurrentWorkerRestarterInterface $workerRestarter,
         private LoggerInterface $logger,
+        private bool $isFetchingEmailsEnabled,
     ) {}
 
     /**
@@ -23,6 +24,10 @@ final readonly class AliorNotificationMailProvider implements IncomingNotificati
      */
     public function __invoke(): iterable
     {
+        if (! $this->isFetchingEmailsEnabled) {
+            return [];
+        }
+
         try {
             $this->mailbox->reconnect();
 
