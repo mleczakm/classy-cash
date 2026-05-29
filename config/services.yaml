@@ -106,6 +106,12 @@ services:
   App\Infrastructure\ImapEngine\ConnectionCloserOnResetSubscriber:
     public: true
 
+  App\Infrastructure\Swoole\CurrentWorkerRestarterInterface:
+    alias: App\Infrastructure\Swoole\SwooleCurrentWorkerRestarter
+
+  App\Infrastructure\Swoole\SwooleServerProviderInterface:
+    alias: App\Infrastructure\Swoole\HttpServerSwooleServerProvider
+
   Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler:
     arguments:
       - '%env(DATABASE_URL)%'

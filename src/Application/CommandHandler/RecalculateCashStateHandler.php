@@ -141,15 +141,17 @@ final readonly class RecalculateCashStateHandler
             }
         }
 
-        // Get transfers (income)
+        // Get transfers (income) - only if linked to a payment
         $transfers = $this->transfers->findAfterDate($fromDate);
         foreach ($transfers as $transfer) {
-            $transactions[] = [
-                'type' => 'income',
-                'amount' => Money::of($transfer->amount, 'PLN'),
-                'date' => $transfer->getTransferredAt(),
-                'transfer' => $transfer,
-            ];
+            if ($transfer->getPayment() !== null) {
+                $transactions[] = [
+                    'type' => 'income',
+                    'amount' => Money::of(str_replace(',', '.', $transfer->amount), 'PLN'),
+                    'date' => $transfer->getTransferredAt(),
+                    'transfer' => $transfer,
+                ];
+            }
         }
 
         // Get expenses (outcome)
