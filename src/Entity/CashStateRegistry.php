@@ -14,7 +14,6 @@ use Symfony\Component\Uid\Ulid;
 #[ORM\Table(schema: 'classycash')]
 #[ORM\Index(columns: ['transaction_date'], name: 'idx_cash_state_transaction_date')]
 #[ORM\Index(columns: ['payment_id'], name: 'idx_cash_state_payment')]
-#[ORM\Index(columns: ['transfer_id'], name: 'idx_cash_state_transfer')]
 #[ORM\Index(columns: ['expense_id'], name: 'idx_cash_state_expense')]
 class CashStateRegistry
 {
@@ -37,9 +36,6 @@ class CashStateRegistry
         #[ORM\ManyToOne(targetEntity: Payment::class)]
         #[ORM\JoinColumn(name: 'payment_id', referencedColumnName: 'id', nullable: true)]
         private ?Payment $payment = null,
-        #[ORM\ManyToOne(targetEntity: Transfer::class)]
-        #[ORM\JoinColumn(name: 'transfer_id', referencedColumnName: 'id', nullable: true)]
-        private ?Transfer $transfer = null,
         #[ORM\ManyToOne(targetEntity: ClassExpense::class)]
         #[ORM\JoinColumn(name: 'expense_id', referencedColumnName: 'id', nullable: true)]
         private ?ClassExpense $expense = null
@@ -76,11 +72,6 @@ class CashStateRegistry
     public function getPayment(): ?Payment
     {
         return $this->payment;
-    }
-
-    public function getTransfer(): ?Transfer
-    {
-        return $this->transfer;
     }
 
     public function getExpense(): ?ClassExpense

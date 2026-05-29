@@ -9,7 +9,6 @@ use App\Entity\ClassCouncil\ClassRoom;
 use App\Entity\CashStateRegistry;
 use App\Entity\ClassCouncil\ClassExpense;
 use App\Entity\Payment;
-use App\Entity\Transfer;
 use App\Tests\Assembler\UserAssembler;
 use Brick\Money\Money;
 use PHPUnit\Framework\Attributes\Group;
@@ -28,35 +27,11 @@ class CashStateRegistryTest extends TestCase
         $registry = new CashStateRegistry($date, $balance, $amount, 'income', $payment);
 
         $this->assertSame($payment, $registry->getPayment());
-        $this->assertNull($registry->getTransfer());
         $this->assertNull($registry->getExpense());
         $this->assertSame($balance, $registry->getBalanceAfter());
         $this->assertSame($amount, $registry->getTransactionAmount());
         $this->assertSame('income', $registry->getTransactionType());
         $this->assertSame($date, $registry->getTransactionDate());
-    }
-
-    public function testCreateWithTransfer(): void
-    {
-        $transfer = new Transfer(
-            '123456789',
-            'Test Sender',
-            'Test Title',
-            '100.00',
-            new \DateTimeImmutable('2024-01-01')
-        );
-        $date = new \DateTimeImmutable('2024-01-01');
-        $balance = Money::of(150, 'PLN');
-        $amount = Money::of(100, 'PLN');
-
-        $registry = new CashStateRegistry($date, $balance, $amount, 'income', null, $transfer);
-
-        $this->assertNull($registry->getPayment());
-        $this->assertSame($transfer, $registry->getTransfer());
-        $this->assertNull($registry->getExpense());
-        $this->assertSame($balance, $registry->getBalanceAfter());
-        $this->assertSame($amount, $registry->getTransactionAmount());
-        $this->assertSame('income', $registry->getTransactionType());
     }
 
     public function testCreateWithExpense(): void
@@ -66,10 +41,9 @@ class CashStateRegistryTest extends TestCase
         $balance = Money::of(100, 'PLN');
         $amount = Money::of(50, 'PLN');
 
-        $registry = new CashStateRegistry($date, $balance, $amount, 'expense', null, null, $expense);
+        $registry = new CashStateRegistry($date, $balance, $amount, 'expense', null, $expense);
 
         $this->assertNull($registry->getPayment());
-        $this->assertNull($registry->getTransfer());
         $this->assertSame($expense, $registry->getExpense());
         $this->assertSame($balance, $registry->getBalanceAfter());
         $this->assertSame($amount, $registry->getTransactionAmount());

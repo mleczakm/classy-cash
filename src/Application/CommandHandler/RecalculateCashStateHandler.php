@@ -9,13 +9,11 @@ use App\Entity\CashStateRegistry;
 use App\Entity\ClassCouncil\ClassExpense;
 use App\Entity\ClassCouncil\ClassRoom;
 use App\Entity\Payment;
-use App\Entity\Transfer;
 use App\Repository\CashStateRegistryRepository;
 use App\Repository\ClassCouncil\ClassExpenseRepository;
 use App\Repository\ClassCouncil\ClassRoomRepository;
 use App\Repository\ClassCouncil\StudentPaymentRepository;
 use App\Repository\PaymentRepository;
-use App\Repository\TransferRepository;
 use Brick\Money\Money;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -28,7 +26,6 @@ final readonly class RecalculateCashStateHandler
         private StudentPaymentRepository $studentPayments,
         private ClassExpenseRepository $expenses,
         private PaymentRepository $payments,
-        private TransferRepository $transfers,
         private ClassRoomRepository $classRooms,
         private LoggerInterface $logger,
     ) {}
@@ -48,8 +45,6 @@ final readonly class RecalculateCashStateHandler
 
         if ($command->payment !== null) {
             $fromDate = $this->getPaymentDate($command->payment);
-        } elseif ($command->transfer !== null) {
-            $fromDate = $command->transfer->getTransferredAt();
         } elseif ($command->expense !== null) {
             $fromDate = $command->expense->getSpentAt();
         }
@@ -92,7 +87,6 @@ final readonly class RecalculateCashStateHandler
                 $transaction['amount'],
                 $transaction['type'],
                 $transaction['payment'] ?? null,
-                $transaction['transfer'] ?? null,
                 $transaction['expense'] ?? null
             );
 
@@ -104,7 +98,7 @@ final readonly class RecalculateCashStateHandler
     }
 
     /**
-     * @return array<array{type: string, amount: Money, date: \DateTimeImmutable, payment?: Payment, transfer?: Transfer, expense?: ClassExpense}>
+     * @return array<array{type: string, amount: Money, date: \DateTimeImmutable, payment?: Payment, expense?: ClassExpense}>
      */
     private function getAllTransactions(ClassRoom $class, \DateTimeImmutable $fromDate): array
     {
@@ -137,19 +131,6 @@ final readonly class RecalculateCashStateHandler
                     'amount' => $payment->getAmount(),
                     'date' => $date,
                     'payment' => $payment,
-                ];
-            }
-        }
-
-        // Get transfers (income) - only if linked to a payment
-        $transfers = $this->transfers->findAfterDate($fromDate);
-        foreach ($transfers as $transfer) {
-            if ($transfer->getPayment() !== null) {
-                $transactions[] = [
-                    'type' => 'income',
-                    'amount' => Money::of(str_replace(',', '.', $transfer->amount), 'PLN'),
-                    'date' => $transfer->getTransferredAt(),
-                    'transfer' => $transfer,
                 ];
             }
         }

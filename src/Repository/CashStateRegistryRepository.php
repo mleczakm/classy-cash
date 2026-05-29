@@ -7,7 +7,6 @@ namespace App\Repository;
 use App\Entity\CashStateRegistry;
 use App\Entity\ClassCouncil\ClassExpense;
 use App\Entity\Payment;
-use App\Entity\Transfer;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -28,16 +27,6 @@ class CashStateRegistryRepository extends ServiceEntityRepository
     {
         return $this->findBy([
             'payment' => $payment,
-        ]);
-    }
-
-    /**
-     * @return CashStateRegistry[]
-     */
-    public function findByTransfer(Transfer $transfer): array
-    {
-        return $this->findBy([
-            'transfer' => $transfer,
         ]);
     }
 
@@ -108,6 +97,19 @@ class CashStateRegistryRepository extends ServiceEntityRepository
             ->orderBy('csr.transactionDate', 'DESC')
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * Find the most recent registry entry
+     */
+    public function findLatest(): ?CashStateRegistry
+    {
+        /** @var CashStateRegistry|null */
+        return $this->createQueryBuilder('csr')
+            ->orderBy('csr.transactionDate', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     /**
