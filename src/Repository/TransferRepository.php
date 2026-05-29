@@ -98,6 +98,37 @@ class TransferRepository extends ServiceEntityRepository
     }
 
     /**
+     * @return Transfer[]
+     */
+    public function findHistoricallyMatchedBySenderOrAccount(
+        string $accountNumber,
+        string $sender,
+        ?int $excludeTransferId = null,
+    ): array {
+        $qb = $this->createQueryBuilder('t')
+            ->innerJoin('t.payment', 'p')
+            ->leftJoin('p.studentPayments', 'sp')
+            ->leftJoin('sp.student', 's')
+            ->addSelect('p', 'sp', 's')
+            ->andWhere('t.payment IS NOT NULL')
+            ->andWhere('t.accountNumber = :accountNumber OR t.sender = :sender')
+            ->setParameter('accountNumber', $accountNumber)
+            ->setParameter('sender', $sender)
+            ->orderBy('t.transferredAt', 'DESC');
+
+        if ($excludeTransferId !== null) {
+            $qb->andWhere('t.id != :excludeTransferId')
+                ->setParameter('excludeTransferId', $excludeTransferId);
+        }
+
+        /** @var Transfer[] $result */
+        $result = $qb->getQuery()
+            ->getResult();
+
+        return $result;
+    }
+
+    /**
      * @return array<int, Transfer>
      */
     public function findAfterDate(\DateTimeImmutable $date): array

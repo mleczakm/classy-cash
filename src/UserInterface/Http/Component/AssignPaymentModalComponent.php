@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\UserInterface\Http\Component;
 
+use App\Application\Service\TransferPaymentMatchHint;
+use App\Application\Service\TransferPaymentMatcher;
 use App\Entity\Payment;
 use App\Entity\Transfer;
 use App\Repository\ClassCouncil\StudentPaymentRepository;
@@ -36,8 +38,16 @@ class AssignPaymentModalComponent extends AbstractController
     #[LiveProp(writable: true)]
     public ?string $selectedPaymentId = null;
 
+    /**
+     * @var array{payments: Payment[], hints: array<string, TransferPaymentMatchHint>}|null
+     */
+    private ?array $paymentEnrichment = null;
+
+    private ?string $cachedPaymentSearch = null;
+
     public function __construct(
         private readonly PaymentRepository $paymentRepository,
+        private readonly TransferPaymentMatcher $transferPaymentMatcher,
         private readonly EntityManagerInterface $entityManager,
         private readonly WorkflowInterface $paymentStateMachine,
         private readonly StudentPaymentRepository $studentPayments,
@@ -50,7 +60,47 @@ class AssignPaymentModalComponent extends AbstractController
      */
     public function getPayments(): array
     {
-        return $this->paymentRepository->findAssignableWithSearch($this->paymentSearch);
+        return $this->getPaymentEnrichment()['payments'];
+    }
+
+    /**
+     * @return array<string, TransferPaymentMatchHint>
+     */
+    public function getMatchHints(): array
+    {
+        return $this->getPaymentEnrichment()['hints'];
+    }
+
+    public function getTopHistoricalHint(): ?TransferPaymentMatchHint
+    {
+        $hints = $this->getMatchHints();
+        if ($hints === []) {
+            return null;
+        }
+
+        usort(
+            $hints,
+            static fn(TransferPaymentMatchHint $left, TransferPaymentMatchHint $right): int => $right->score <=> $left->score
+        );
+
+        return $hints[0];
+    }
+
+    /**
+     * @return array{payments: Payment[], hints: array<string, TransferPaymentMatchHint>}
+     */
+    private function getPaymentEnrichment(): array
+    {
+        if ($this->paymentEnrichment === null || $this->cachedPaymentSearch !== $this->paymentSearch) {
+            $payments = $this->paymentRepository->findAssignableWithSearch($this->paymentSearch);
+            $this->paymentEnrichment = $this->transferPaymentMatcher->enrichAssignablePayments(
+                $this->transfer,
+                $payments
+            );
+            $this->cachedPaymentSearch = $this->paymentSearch;
+        }
+
+        return $this->paymentEnrichment;
     }
 
     #[LiveAction]
@@ -105,5 +155,7 @@ class AssignPaymentModalComponent extends AbstractController
         $this->modalOpened = false;
         $this->paymentSearch = '';
         $this->selectedPaymentId = null;
+        $this->paymentEnrichment = null;
+        $this->cachedPaymentSearch = null;
     }
 }

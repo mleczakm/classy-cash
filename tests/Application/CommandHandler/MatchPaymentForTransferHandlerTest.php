@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Application\CommandHandler;
 
+use App\Entity\ClassCouncil\ClassRoom;
+use App\Entity\ClassCouncil\Student;
+use App\Entity\ClassCouncil\StudentPayment;
 use App\Entity\Transfer;
 use App\Application\Command\MatchPaymentForTransfer;
 use App\Application\Command\Notification\TransferNotMatchedCommand;
@@ -463,6 +466,82 @@ class MatchPaymentForTransferHandlerTest extends KernelTestCase
         $this->bus()
             ->dispatched()
             ->assertContains(TransferNotMatchedCommand::class);
+    }
+
+    #[Test]
+    public function matchesIncomingTransferByHistoricalStudentDataWhenCodeIsMissing(): void
+    {
+        $parent = UserAssembler::new()
+            ->withName('Anna Kowalska')
+            ->withEmail('anna@example.com')
+            ->assemble();
+        $this->entityManager->persist($parent);
+
+        $classRoom = new ClassRoom('4A');
+        $this->entityManager->persist($classRoom);
+
+        $student = new Student($classRoom, 'Jan', 'Kowalski');
+        $student->addParent($parent);
+        $this->entityManager->persist($student);
+
+        $historicalPayment = PaymentAssembler::new()
+            ->withUser($parent)
+            ->withAmount(Money::of('100.00', 'PLN'))
+            ->withStatus(Payment::STATUS_PAID)
+            ->assemble();
+        $this->entityManager->persist($historicalPayment);
+
+        $historicalStudentPayment = new StudentPayment($student, 'Wycieczka', Money::of('100.00', 'PLN'));
+        $historicalStudentPayment->setPayment($historicalPayment);
+        $historicalStudentPayment->setStatus(StudentPayment::STATUS_PAID);
+        $this->entityManager->persist($historicalStudentPayment);
+
+        $historicalTransfer = TransferAssembler::new()
+            ->withAccountNumber('PL61109010140000071219812874')
+            ->withSender('Anna Kowalska')
+            ->withTitle('Wycieczka')
+            ->withAmount('100.00')
+            ->assemble();
+        $historicalTransfer->setPayment($historicalPayment);
+        $this->entityManager->persist($historicalTransfer);
+
+        $pendingPayment = PaymentAssembler::new()
+            ->withUser($parent)
+            ->withAmount(Money::of('100.00', 'PLN'))
+            ->withStatus(Payment::STATUS_PENDING)
+            ->assemble();
+        $this->entityManager->persist($pendingPayment);
+
+        $pendingStudentPayment = new StudentPayment($student, 'Obiad', Money::of('100.00', 'PLN'));
+        $pendingStudentPayment->setPayment($pendingPayment);
+        $this->entityManager->persist($pendingStudentPayment);
+
+        $transfer = TransferAssembler::new()
+            ->withAccountNumber('PL61109010140000071219812874')
+            ->withSender('Anna Kowalska')
+            ->withTitle('Brak kodu w tytule')
+            ->withAmount('100.00')
+            ->assemble();
+        $this->entityManager->persist($transfer);
+        $this->entityManager->flush();
+
+        $command = new MatchPaymentForTransfer($transfer);
+        $this->messageBus->dispatch($command);
+        $this->transport('async')
+            ->process();
+
+        $this->entityManager = self::getContainer()->get(EntityManagerInterface::class);
+        $pendingPayment = $this->entityManager->find(
+            Payment::class,
+            $pendingPayment->getId()
+        ) ?: throw new \RuntimeException('Payment not found');
+        $transfer = $this->entityManager->find(Transfer::class, $transfer->getId()) ?: throw new \RuntimeException(
+            'Transfer not found'
+        );
+
+        $this->assertTrue($pendingPayment->getTransfers()->contains($transfer));
+        $this->assertSame($pendingPayment, $transfer->getPayment());
+        $this->assertEquals(Payment::STATUS_PAID, $pendingPayment->getStatus());
     }
 
     protected function setUp(): void

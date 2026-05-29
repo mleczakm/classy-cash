@@ -7,7 +7,7 @@ namespace App\Application\CommandHandler;
 use App\Application\Command\MatchPaymentForTransfer;
 use App\Application\Command\Notification\TransferNotMatchedCommand;
 use App\Application\Command\RecalculateCashState;
-use App\Entity\PaymentCode;
+use App\Application\Service\TransferPaymentMatcher;
 use App\Entity\Transfer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Envelope;
@@ -19,6 +19,7 @@ final readonly class MatchPaymentForTransferHandler
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
+        private TransferPaymentMatcher $transferPaymentMatcher,
         private WorkflowInterface $paymentStateMachine,
         private MessageBusInterface $messageBus,
     ) {}
@@ -31,77 +32,24 @@ final readonly class MatchPaymentForTransferHandler
             return;
         }
 
-        $title = $transfer->title;
+        $payment = $this->transferPaymentMatcher->matchByPaymentCode($transfer)
+            ?? $this->transferPaymentMatcher->matchByHistoricalData($transfer);
 
-        foreach ($this->tokenizeTitle($title) as $word) {
-            $paymentCode = $this->entityManager->getRepository(PaymentCode::class)
-                ->findOneBy([
-                    'code' => $word,
-                ]);
+        if ($payment === null) {
+            $this->messageBus->dispatch(new TransferNotMatchedCommand($transfer));
 
-            if ($paymentCode) {
-                $payment = $paymentCode->getPayment();
-                $payment->addTransfer($transfer);
-
-                if ($this->paymentStateMachine->can($payment, 'pay')) {
-                    $this->paymentStateMachine->apply($payment, 'pay');
-                }
-
-                $this->messageBus->dispatch(
-                    new Envelope(new RecalculateCashState(payment: $payment))
-                        ->with(new DispatchAfterCurrentBusStamp())
-                );
-
-                return;
-            }
+            return;
         }
 
-        $this->messageBus->dispatch(new TransferNotMatchedCommand($transfer));
-    }
+        $payment->addTransfer($transfer);
 
-    /**
-     * @return \Generator<int, string>
-     */
-    private function tokenizeTitle(string $title): \Generator
-    {
-        $tokens = array_values(array_filter(
-            explode(' ', preg_replace('/[^A-Za-z0-9]/', ' ', mb_strtoupper($title)) ?? ''),
-            fn(string $word): bool => $word !== ''
-        ));
-
-        $emitted = [];
-
-        foreach ($tokens as $token) {
-            yield $emitted[] = $token;
+        if ($this->paymentStateMachine->can($payment, 'pay')) {
+            $this->paymentStateMachine->apply($payment, 'pay');
         }
 
-        $count = count($tokens);
-
-        for ($i = 0; $i < $count - 1; $i++) {
-            yield $emitted[] = $tokens[$i] . $tokens[$i + 1];
-        }
-
-        foreach ($emitted as $token) {
-            $substituted = str_replace('0', 'O', $token);
-
-            if ($substituted !== $token) {
-                yield $substituted;
-            }
-
-            $substituted = str_replace('O', '0', $token);
-
-            if ($substituted !== $token) {
-                yield $substituted;
-            }
-
-            $substituted = strtr($token, [
-                '0' => 'O',
-                'O' => '0',
-            ]);
-
-            if ($substituted !== $token) {
-                yield $substituted;
-            }
-        }
+        $this->messageBus->dispatch(
+            new Envelope(new RecalculateCashState(payment: $payment))
+                ->with(new DispatchAfterCurrentBusStamp())
+        );
     }
 }
