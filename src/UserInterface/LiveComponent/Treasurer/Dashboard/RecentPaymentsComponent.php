@@ -67,7 +67,8 @@ class RecentPaymentsComponent extends AbstractController
      */
     public function getItems(): array
     {
-        $registryEntries = $this->registry->findAllOrderedDesc();
+        $limit = 10;
+        $registryEntries = $this->registry->findPaginated($this->page, $limit);
 
         $transactions = [];
         foreach ($registryEntries as $entry) {
@@ -77,19 +78,11 @@ class RecentPaymentsComponent extends AbstractController
             }
         }
 
-        // Apply pagination
-        $limit = 10;
-        $offset = ($this->page - 1) * $limit;
-
-        /** @var list<array{type: string, description: string, amount: Money, date: \DateTimeInterface, student: Student|null, method: string, methodClass: string, balanceAfter: Money|null}> $items */
-        $items = array_slice($transactions, $offset, $limit);
         $this->logger->info(
-            sprintf('RecentPaymentsComponent::getItems() page=%d, offset=%d, count=%d', $this->page, $offset, count(
-                $items
-            ))
+            sprintf('RecentPaymentsComponent::getItems() page=%d, count=%d', $this->page, count($transactions))
         );
 
-        return $items;
+        return $transactions;
     }
 
     /**

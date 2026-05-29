@@ -16,15 +16,15 @@
                 </tr>
             </thead>
             <tbody id="operations-body" class="divide-y divide-slate-50 text-sm">
-                {# 1. Trick: Keep previous results by "ignoring" them #}
+                {# 🐯- Last result from previous page #}
                 {% if page > 1 %}
-                    <tr id="operation-{{ (page - 1) * 10 }}" data-live-ignore style="display: none;"></tr>
+                    <tr id="operation--{{ page - 1 }}-10" style="display: none;"></tr>
                 {% endif %}
 
                 {% set items = this.getItems() %}
                 {% for transaction in items %}
-                    {% set itemIndex = loop.index0 + ((page - 1) * 10) %}
-                    <tr id="operation-{{ itemIndex }}" 
+                    {# 🦊 - Current page #}
+                    <tr id="operation--{{ page }}-{{ loop.index }}"
                         data-live-ignore
                         class="hover:bg-slate-50/50 transition-colors">
                         <td class="px-8 py-5 text-wrap">
@@ -44,7 +44,7 @@
                             {% endif %}
                         </td>
                         <td class="px-8 py-5 font-bold {% if transaction.type == 'income' %}text-[#2aa57f]{% else %}text-[#d65a4a]{% endif %}">
-                            {% if transaction.type == 'income' %}+{% endif %}{{ transaction.amount|money }}y }}
+                            {% if transaction.type == 'income' %}+{% endif %}{{ transaction.amount|money }}
                         </td>
                         <td class="px-8 py-5 font-mono text-slate-400 text-xs {% if transaction.balanceAfter is not null %}font-bold text-slate-600{% else %}italic{% endif %}">
                             {% if transaction.balanceAfter is not null %}{{ transaction.balanceAfter|money }}{% else %}---{% endif %}
@@ -59,26 +59,31 @@
                     </tr>
                 {% endfor %}
 
-                {# 2. Render placeholders for the NEXT page #}
+                {# 🐼 - Next page #}
                 {% if this.hasMore %}
-                    {# The first placeholder acts as the "Intersection" trigger #}
-                    <tr id="operation-{{ page * 10 }}"
-                        data-appear-target="loader"
-                        data-action="appear->live#action"
-                        data-live-action-param="debounce(750)|more">
-                        <td colspan="5" class="p-12 text-center bg-slate-50/20">
-                            <div class="flex flex-col items-center gap-3">
-                                <svg class="animate-spin w-6 h-6 text-[#e8b441]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
-                                    <circle cx="12" cy="12" r="10" stroke="currentColor" opacity="0.2"></circle>
-                                    <path d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" fill="currentColor"></path>
-                                </svg>
-                                <span class="text-[11px] font-bold text-[#6b7796] uppercase tracking-[0.1em]">Pobieranie starszych operacji...</span>
-                            </div>
-                        </td>
-                    </tr>
-                    {# Additional placeholders to maintain list structure during loading #}
-                    {% for i in 1..9 %}
-                        <tr id="operation-{{ (page * 10) + i }}" style="display: none;" data-live-ignore></tr>
+                    {% for i in 1..10 %}
+                        <tr id="operation--{{ page + 1 }}-{{ i }}"
+                            class="hover:bg-slate-50/50 transition-colors"
+                            {# 🦁 - The trigger #}
+                            {% if loop.first %}
+                                data-appear-target="loader"
+                                data-action="appear->live#action"
+                                data-live-action-param="debounce(750)|more"
+                            {% endif %}>
+                            {% if loop.first %}
+                                <td colspan="5" class="p-12 text-center bg-slate-50/20">
+                                    <div class="flex flex-col items-center gap-3">
+                                        <svg class="animate-spin w-6 h-6 text-[#e8b441]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                            <circle cx="12" cy="12" r="10" stroke="currentColor" opacity="0.2"></circle>
+                                            <path d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" fill="currentColor"></path>
+                                        </svg>
+                                        <span class="text-[11px] font-bold text-[#6b7796] uppercase tracking-[0.1em]">Pobieranie starszych operacji...</span>
+                                    </div>
+                                </td>
+                            {% else %}
+                                <td colspan="5" style="display: none;"></td>
+                            {% endif %}
+                        </tr>
                     {% endfor %}
                 {% else %}
                     {% if items|length == 0 and page == 1 %}

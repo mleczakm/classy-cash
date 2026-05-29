@@ -113,6 +113,25 @@ class CashStateRegistryRepository extends ServiceEntityRepository
     }
 
     /**
+     * Find registry entries for pagination
+     *
+     * @param int $page Page number (1-based)
+     * @param int $limit Items per page
+     * @return CashStateRegistry[]
+     */
+    public function findPaginated(int $page, int $limit): array
+    {
+        $offset = ($page - 1) * $limit;
+        /** @var CashStateRegistry[] */
+        return $this->createQueryBuilder('csr')
+            ->orderBy('csr.transactionDate', 'DESC')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * Delete all registry entries after a given date
      */
     public function deleteAfterDate(\DateTimeImmutable $date): int
