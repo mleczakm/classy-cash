@@ -11,6 +11,27 @@ form:
     success:
       title: Wysłano link do zalogowania
       message: "Na podany adres e-mail wysłano link do zalogowania. Sprawdź swoją skrzynkę pocztową!"
+  register:
+    title: "Utwórz konto"
+    email: "Email"
+    submit: "Zarejestruj się"
+    already_have_account: "Masz już konto?"
+    login: "Zaloguj się"
+    name: "Imię"
+    first_name: "Imię"
+    last_name: "Nazwisko"
+    disabled: "Rejestracja rodziców jest obecnie wyłączona. Skontaktuj się ze skarbnikiem klasy."
+    success:
+      title: "Rejestracja zakończona pomyślnie!"
+      message: "Dziękujemy za rejestrację. Na podany adres e-mail wysłaliśmy link do logowania."
+    dont_have_account: "Nie masz jeszcze konta?"
+    register: "Zarejestruj się"
+    verify_mail: >-
+      Jeśli posiadasz u nas konto, na podany email wysłaliśmy link do zalogowania.
+      <br/>
+      <br/>
+      Proszę sprawdź swoją skrzynkę pocztową!
+    mail_sent_header: Witamy!
 
 brand:
   name: Classy Cash
@@ -21,28 +42,6 @@ brand:
     blik: Zautomatyzowane płatności BLIK
     reporting: Przejrzyste raportowanie
     email_confirmations: Automatyczne potwierdzenia z e-maila
-
-  register:
-    title: "Utwórz konto"
-    email: "Email"
-    submit: "Zarejestruj się"
-    already_have_account: "Masz już konto?"
-    login: "Zaloguj się"
-    name: "Imię"
-    success:
-      title: "Rejestracja zakończona pomyślnie!"
-      message: "Dziękujemy za rejestrację. Na podany adres e-mail wysłaliśmy link do logowania."
-
-    dont_have_account: "Nie masz jeszcze konta?"
-    register: "Zarejestruj się"
-    
-    verify_mail: >-
-      Jeśli posiadasz u nas konto, na podany email wysłaliśmy link do zalogowania.
-      <br/>
-      <br/>
-      Proszę sprawdź swoją skrzynkę pocztową!
-    mail_sent_header: Witamy!
-
 
 page:
   default:
@@ -552,6 +551,29 @@ admin_users:
     edit: Edytuj
 
 admin:
+  settings:
+    title: 'Ustawienia aplikacji'
+    description: 'Skonfiguruj dane klasy, płatności i dostęp rodziców.'
+    app_name:
+      label: 'Nazwa aplikacji'
+      help: 'Wyświetlana w e-mailach i interfejsie.'
+    email_from:
+      label: 'Adres nadawcy e-mail'
+      help: 'Adres używany do wysyłki powiadomień systemowych.'
+    blik_phone:
+      label: 'Numer telefonu BLIK'
+      help: 'Numer telefonu do płatności BLIK.'
+    transfer_account:
+      label: 'Numer konta do przelewów'
+      help: 'Numer konta bankowego do tradycyjnych przelewów.'
+    school_name:
+      label: 'Nazwa szkoły'
+      help: 'Nazwa szkoły wyświetlana w aplikacji.'
+    parent_registration_enabled:
+      label: 'Zezwól na rejestrację rodziców'
+      help: 'Gdy włączone, rodzice mogą zakładać konta przez publiczny formularz. Wyłącz po zakończeniu okresu rejestracji.'
+    save_button: 'Zapisz ustawienia'
+    back_to_app: '← Wróć do aplikacji'
   badges:
     paid: 'Opłacone'
     unpaid: 'Nieopłacone'

@@ -11,7 +11,7 @@
                     <circle cx="12" cy="3" r="1" fill="currentColor"/>
                 </svg>
             </div>
-            <span class="text-xl font-bold text-foreground">{{ tenant_name() }}</span>
+            <span class="text-xl font-bold text-foreground">{{ settings.getName() }}</span>
         </a>
         <nav class="flex items-center gap-6">
             {% if app.user %}
@@ -22,7 +22,7 @@
                     <a href="{{ path('treasurer_contributions') }}" class="text-sm font-medium text-foreground hover:text-primary transition-colors">Składki</a>
                 {% endif %}
                 {% if is_granted('ROLE_ADMIN') %}
-                    <a href="{{ path('admin_settings') }}" class="text-sm font-medium text-foreground hover:text-primary transition-colors">Ustawienia</a>
+                    <a href="{{ path('treasurer_settings') }}" class="text-sm font-medium text-foreground hover:text-primary transition-colors">Ustawienia</a>
                 {% endif %}
             {% endif %}
         </nav>

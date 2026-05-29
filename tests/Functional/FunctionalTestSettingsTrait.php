@@ -16,6 +16,7 @@ trait FunctionalTestSettingsTrait
             'email_from' => 'noreply@example.com',
             'blik_phone' => '+48123456789',
             'transfer_account' => '12 3456 7890 1234 5678 9012 3456',
+            'parent_registration_enabled' => true,
         ];
 
         foreach ($settings as $key => $value) {

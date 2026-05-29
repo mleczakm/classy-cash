@@ -2,15 +2,10 @@ novaway_feature_flag:
   default_manager: default
   managers:
     default:
-      factory: 'novaway_feature_flag.factory.array'
+      factory: App\Infrastructure\FeatureFlag\SettingsBackedStorageFactory
       options:
         features:
-          cart: false
-
-when@test:
-  novaway_feature_flag:
-    managers:
-      default:
-        options:
-          features:
-            manual_bookings: true
+          parent_registration:
+            setting_key: parent_registration_enabled
+            default: true
+            description: Allow parents to register via the public registration form

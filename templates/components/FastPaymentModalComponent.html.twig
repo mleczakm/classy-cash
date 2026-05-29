@@ -62,7 +62,7 @@
                                 Numer telefonu odbiorcy
                             </p>
                             <div class="text-xl font-bold text-[#1a2a52] flex items-center justify-between bg-white border border-slate-200 p-5 rounded-2xl shadow-sm group-hover:border-[#1a2a52] transition-colors">
-                                <span class="font-mono tracking-tight">{{ tenant_phone() ?? '791 234 567' }}</span>
+                                <span class="font-mono tracking-tight">{{ settings.getOptional('blik_phone', '791 234 567') }}</span>
                                 <button class="text-[10px] font-bold bg-slate-100 px-4 py-2 rounded-xl hover:bg-[#1a2a52] hover:text-white transition-all active:scale-95">Kopiuj</button>
                             </div>
                         </div>
@@ -98,7 +98,7 @@
                         
                         <div class="text-center pt-2">
                              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Alternatywnie</p>
-                             <p class="text-[10px] font-mono text-slate-400 break-all px-4">Konto: {{ tenant_account() ?? '46 2490 0005 0000 4000 1897 5420' }}</p>
+                             <p class="text-[10px] font-mono text-slate-400 break-all px-4">Konto: {{ settings.getOptional('transfer_account', '46 2490 0005 0000 4000 1897 5420') }}</p>
                         </div>
                     </div>
                 </div>

@@ -6,7 +6,9 @@ namespace App\UserInterface\Http\Component;
 
 use App\Application\Command\SendLoginNotification;
 use App\Entity\User;
+use App\FeatureFlag\FeatureName;
 use Doctrine\ORM\EntityManagerInterface;
+use Novaway\Bundle\FeatureFlagBundle\Manager\FeatureManager;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -25,6 +27,10 @@ class RegisterUser extends AbstractController
     use DefaultActionTrait;
     use ComponentWithFormTrait;
 
+    public ?string $firstName = null;
+
+    public ?string $lastName = null;
+
     private ?User $user = null;
 
     private bool $isSubmitted = false;
@@ -34,6 +40,7 @@ class RegisterUser extends AbstractController
     public function __construct(
         private EntityManagerInterface $entityManager,
         private MessageBusInterface $messageBus,
+        private FeatureManager $featureManager,
     ) {}
 
     /**
@@ -45,8 +52,22 @@ class RegisterUser extends AbstractController
 
         /** @var FormInterface<User> $form */
         $form = $this->createFormBuilder($this->user)
-            ->add('name', TextType::class, [
-                'label' => 'form.register.name',
+            ->add('firstName', TextType::class, [
+                'mapped' => false,
+                'label' => 'form.register.first_name',
+                'data' => $this->firstName,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                    new Assert\Length([
+                        'min' => 2,
+                        'max' => 100,
+                    ]),
+                ],
+            ])
+            ->add('lastName', TextType::class, [
+                'mapped' => false,
+                'label' => 'form.register.last_name',
+                'data' => $this->lastName,
                 'constraints' => [
                     new Assert\NotBlank(),
                     new Assert\Length([
@@ -70,12 +91,29 @@ class RegisterUser extends AbstractController
     #[LiveAction]
     public function save(): void
     {
+        if ($this->featureManager->isDisabled(FeatureName::PARENT_REGISTRATION)) {
+            $this->isSubmitted = true;
+            $this->isSuccessful = false;
+
+            return;
+        }
+
         $this->submitForm();
 
         if ($this->getForm()->isValid()) {
             /** @var User $user */
             $user = $this->getForm()
                 ->getData();
+
+            $firstNameData = $this->getForm()
+                ->get('firstName')
+                ->getData();
+            $lastNameData = $this->getForm()
+                ->get('lastName')
+                ->getData();
+            $firstName = trim(is_string($firstNameData) ? $firstNameData : '');
+            $lastName = trim(is_string($lastNameData) ? $lastNameData : '');
+            $user->setName($firstName . ' ' . $lastName);
             $user->setRoles(['ROLE_USER']);
 
             $this->entityManager->persist($user);
@@ -99,5 +137,10 @@ class RegisterUser extends AbstractController
     public function isSuccessful(): bool
     {
         return $this->isSuccessful;
+    }
+
+    public function isRegistrationEnabled(): bool
+    {
+        return $this->featureManager->isEnabled(FeatureName::PARENT_REGISTRATION);
     }
 }

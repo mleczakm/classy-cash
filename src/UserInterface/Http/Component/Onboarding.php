@@ -119,6 +119,7 @@ final class Onboarding extends AbstractController
         $this->settings->set('blik_phone', $dto->blikPhone ?? '');
         $this->settings->set('transfer_account', $dto->accountNumber ?? '');
         $this->settings->set('school_name', $dto->schoolName ?? '');
+        $this->settings->set('parent_registration_enabled', true);
 
         if ($dto->automationEmail !== null && $dto->automationEmail !== '') {
             $this->settings->set('automation_email', $dto->automationEmail);

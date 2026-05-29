@@ -1,4 +1,6 @@
 twig:
+    globals:
+        settings: '@App\Settings\Settings'
     file_name_pattern: '*.twig'
     form_themes:
 #      - '@Flowbite/form/default.html.twig'

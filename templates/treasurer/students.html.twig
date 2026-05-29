@@ -40,7 +40,10 @@
                                 Podpięte konta rodziców ({{ student.parents|length }})
                             </p>
                             {% for parent in student.parents %}
-                                <p class="text-xs font-medium text-[#1a2a52]">{{ parent.email }}</p>
+                                <p class="text-xs font-medium text-[#1a2a52]">
+                                    {{ parent.firstName }} {{ parent.lastName }}
+                                    <span class="text-slate-400 font-normal">({{ parent.email }})</span>
+                                </p>
                             {% endfor %}
                         </div>
                     </div>

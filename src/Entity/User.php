@@ -158,6 +158,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->name;
     }
 
+    public function getFirstName(): string
+    {
+        $parts = preg_split('/\s+/', trim($this->name), 2);
+
+        return $parts[0] ?? '';
+    }
+
+    public function getLastName(): string
+    {
+        $parts = preg_split('/\s+/', trim($this->name), 2);
+
+        return $parts[1] ?? '';
+    }
+
     public function setName(string $name): static
     {
         $this->name = $name;

@@ -20,6 +20,8 @@ use App\Repository\ClassCouncil\StudentRepository;
 use App\Repository\ContributionRepository;
 use App\Repository\TransferRepository;
 use App\Repository\UserRepository;
+use App\Application\Service\SettingsDtoMapper;
+use App\Form\Type\SettingsType;
 use App\Settings\Settings;
 use Brick\Money\Money;
 use Doctrine\ORM\EntityManagerInterface;
@@ -217,6 +219,33 @@ final class TreasurerController extends AbstractController
             'classRoom' => $class,
             'contributions' => $activeContributions,
             'students' => $students,
+        ]);
+    }
+
+    #[Route('/treasurer/settings', name: 'treasurer_settings', methods: ['GET', 'POST'])]
+    public function settings(Request $request, SettingsDtoMapper $settingsDtoMapper): Response
+    {
+        $class = $this->classRooms->findOneBy([]);
+        if (! $class) {
+            return $this->redirectToRoute('onboarding');
+        }
+
+        $this->assertTreasurer($class);
+
+        $dto = $settingsDtoMapper->create();
+        $form = $this->createForm(SettingsType::class, $dto);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $settingsDtoMapper->save($dto);
+            $this->addFlash('success', 'Ustawienia zostały zapisane.');
+
+            return $this->redirectToRoute('treasurer_settings');
+        }
+
+        return $this->render('treasurer/settings.html.twig', [
+            'classRoom' => $class,
+            'form' => $form,
         ]);
     }
 
