@@ -25,6 +25,8 @@ final readonly class AliorNotificationMailProvider implements IncomingNotificati
     public function __invoke(): iterable
     {
         if (! $this->isFetchingEmailsEnabled) {
+            $this->logger->info('Fetching emails is disabled due to missing credentials');
+
             return [];
         }
 
