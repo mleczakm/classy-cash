@@ -37,7 +37,7 @@ framework:
             'App\Application\Command\Notification\NewUser': sync
             'App\Application\Command\Notification\SendSettlementConfirmationEmail': sync
             'App\Application\Command\Notification\TransferNotMatchedCommand': sync
-            'App\Application\Command\RecalculateCashState': async
+            'App\Application\Command\RecalculateCashState': sync
             'App\Application\Command\RecalculateAllCashState': sync
             '*': async
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Application\CommandHandler;
 
+use App\Entity\ClassCouncil\ClassExpense;
 use App\Entity\Payment;
 use App\Application\Command\RecalculateCashState;
 use App\Application\CommandHandler\RecalculateCashStateHandler;
@@ -53,5 +54,35 @@ class RecalculateCashStateHandlerTest extends FunctionalTestCase
 
         $allEntries = $registryRepository->findAllOrdered();
         $this->assertNotEmpty($allEntries, 'Registry should be populated after handler execution');
+    }
+
+    public function testExpenseIsAlwaysIncludedWhenRecalculatingForSpecificExpense(): void
+    {
+        $class = $this->createClassRoom('Test Class');
+        $user = $this->createUser('test@example.com', 'password');
+        $student = $this->createTestStudent($class);
+        $studentPayment = $this->createStudentPayment($student, 'Test Payment', Money::of(100, 'PLN'));
+
+        $payment = new Payment($user, Money::of(100, 'PLN'));
+        $studentPayment->setPayment($payment);
+        $studentPayment->markPaid();
+        $this->entityManager->persist($payment);
+        $this->entityManager->flush();
+
+        // Create an expense
+        $expense = new ClassExpense($class, 'Test Expense', Money::of(50, 'PLN'));
+        $this->entityManager->persist($expense);
+        $this->entityManager->flush();
+
+        /** @var RecalculateCashStateHandler $handler */
+        $handler = $this->getService(RecalculateCashStateHandler::class);
+        $handler->__invoke(new RecalculateCashState(expense: $expense));
+
+        /** @var CashStateRegistryRepository $registryRepository */
+        $registryRepository = $this->getService(CashStateRegistryRepository::class);
+
+        $expenseEntries = $registryRepository->findByExpense($expense);
+        $this->assertCount(1, $expenseEntries, 'Expense should have exactly one registry entry');
+        $this->assertSame('expense', $expenseEntries[0]->getTransactionType());
     }
 }

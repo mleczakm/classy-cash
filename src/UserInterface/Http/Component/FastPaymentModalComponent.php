@@ -13,6 +13,7 @@ use App\Entity\User;
 use App\Repository\ClassCouncil\ClassRoomRepository;
 use App\Repository\ClassCouncil\StudentPaymentRepository;
 use App\Repository\ClassCouncil\StudentRepository;
+use App\Repository\PaymentRepository;
 use App\Settings\Settings;
 use Brick\Money\Money;
 use Doctrine\ORM\EntityManagerInterface;
@@ -58,10 +59,16 @@ final class FastPaymentModalComponent extends AbstractController
      */
     public array $generated = [];
 
+    #[LiveProp]
+    public ?Ulid $paymentId = null;
+
+    public bool $isPaid = false;
+
     public function __construct(
         private readonly ClassRoomRepository $classRooms,
         private readonly StudentRepository $students,
         private readonly StudentPaymentRepository $studentPayments,
+        private readonly PaymentRepository $payments,
         private readonly EntityManagerInterface $em,
         /**
          * @phpstan-ignore-next-line
@@ -137,8 +144,10 @@ final class FastPaymentModalComponent extends AbstractController
 
         $this->commandBus->dispatch(new RecalculateCashState(payment: $payment));
 
+        $this->paymentId = $payment->getId();
         $this->paymentCode = $code->getCode();
         $this->paymentAmount = $sum;
+        $this->isPaid = false;
         $this->modalOpened = true;
     }
 
@@ -146,5 +155,22 @@ final class FastPaymentModalComponent extends AbstractController
     public function closeModal(): void
     {
         $this->modalOpened = false;
+    }
+
+    #[LiveAction]
+    public function checkPaymentStatus(): void
+    {
+        if ($this->paymentId === null) {
+            return;
+        }
+
+        $payment = $this->payments->find($this->paymentId);
+        if ($payment === null) {
+            return;
+        }
+
+        // Refresh the payment from database to get latest status
+        $this->em->refresh($payment);
+        $this->isPaid = $payment->getStatus() === Payment::STATUS_PAID;
     }
 }

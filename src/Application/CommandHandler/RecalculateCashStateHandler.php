@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\CommandHandler;
 
+use Symfony\Component\Uid\Ulid;
 use App\Application\Command\RecalculateCashState;
 use App\Entity\CashStateRegistry;
 use App\Entity\ClassCouncil\ClassExpense;
@@ -66,7 +67,8 @@ final readonly class RecalculateCashStateHandler
         $this->logger->info('Deleted ' . $deletedCount . ' registry entries after ' . $fromDate->format('Y-m-d H:i:s'));
 
         // Get all transactions from the from date onwards
-        $transactions = $this->getAllTransactions($class, $fromDate);
+        $expenseId = $command->expense?->getId();
+        $transactions = $this->getAllTransactions($class, $fromDate, $expenseId);
 
         // Sort transactions by date
         usort($transactions, fn($a, $b) => $a['date'] <=> $b['date']);
@@ -100,7 +102,7 @@ final readonly class RecalculateCashStateHandler
     /**
      * @return array<array{type: string, amount: Money, date: \DateTimeImmutable, payment?: Payment, expense?: ClassExpense}>
      */
-    private function getAllTransactions(ClassRoom $class, \DateTimeImmutable $fromDate): array
+    private function getAllTransactions(ClassRoom $class, \DateTimeImmutable $fromDate, ?Ulid $expenseId = null): array
     {
         $transactions = [];
 
@@ -138,7 +140,15 @@ final readonly class RecalculateCashStateHandler
         // Get expenses (outcome)
         $expenses = $this->expenses->findByClass($class);
         foreach ($expenses as $expense) {
-            if ($expense->getSpentAt() >= $fromDate) {
+            // Always include the expense being recalculated
+            if ($expenseId !== null && $expense->getId() === $expenseId) {
+                $transactions[] = [
+                    'type' => 'expense',
+                    'amount' => $expense->getAmount(),
+                    'date' => $expense->getSpentAt(),
+                    'expense' => $expense,
+                ];
+            } elseif ($expense->getSpentAt() >= $fromDate) {
                 $transactions[] = [
                     'type' => 'expense',
                     'amount' => $expense->getAmount(),
