@@ -41,7 +41,7 @@
     "symfony/dotenv": "7.4.*",
     "symfony/event-dispatcher": "7.4.*",
     "symfony/expression-language": "7.4.*",
-    "symfony/flex": "^2.10.0",
+    "symfony/flex": "^2.11.0",
     "symfony/form": "7.4.*",
     "symfony/framework-bundle": "7.4.*",
     "symfony/http-client": "7.4.*",
@@ -75,7 +75,7 @@
     "twig/extra-bundle": "^3.24.0",
     "twig/inky-extra": "^3.26",
     "twig/intl-extra": "^3.26.0",
-    "twig/twig": "^3.27.0"
+    "twig/twig": "^3.27.1"
   },
   "config": {
     "allow-plugins": {
