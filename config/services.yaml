@@ -89,7 +89,9 @@ services:
     alias: symfony_health_check.doctrine_orm_check
 
   # Monolog → Sentry: use the bundle HubInterface (with bindClient), do not override it.
-  BGalati\MonologSentryHandler\SentryHandler: ~
+  BGalati\MonologSentryHandler\SentryHandler:
+    arguments:
+      $hub: '@Sentry\State\HubInterface'
   Sentry\Integration\RequestIntegration:
   Sentry\Integration\EnvironmentIntegration:
   Sentry\Integration\FrameContextifierIntegration:
