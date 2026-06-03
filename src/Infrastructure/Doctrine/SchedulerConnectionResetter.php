@@ -9,7 +9,7 @@ use Doctrine\DBAL\Exception;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Scheduler\Event\PreRunEvent;
 
-final readonly class SchedulerConnectionResetter
+final readonly class SchedulerConnectionResetter implements ConnectionEnsurerInterface
 {
     public function __construct(
         private Connection $connection
@@ -19,10 +19,10 @@ final readonly class SchedulerConnectionResetter
     public function onPreRun(PreRunEvent $event): void
     {
         // Ensure fresh connection before each scheduler run
-        $this->ensureConnected();
+        $this->ensureConnection();
     }
 
-    private function ensureConnected(): void
+    public function ensureConnection(): void
     {
         $maxRetries = 3;
         $retryDelay = 1000; // milliseconds

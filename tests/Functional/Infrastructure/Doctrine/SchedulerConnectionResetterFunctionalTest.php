@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Infrastructure\Doctrine;
 
 use App\Infrastructure\Doctrine\SchedulerConnectionResetter;
+use App\Infrastructure\Symfony\Scheduler;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -68,6 +69,46 @@ final class SchedulerConnectionResetterFunctionalTest extends KernelTestCase
         // Call the resetter multiple times
         for ($i = 0; $i < 5; $i++) {
             $this->resetter->onPreRun($event);
+            $this->assertTrue($this->connection->isConnected());
+            $result = $this->connection->executeQuery('SELECT 1');
+            $this->assertEquals(1, $result->fetchOne());
+        }
+    }
+
+    public function testSchedulerRunAfterConnectionReset(): void
+    {
+        // Simulate the Swoole tick lifecycle: close connection, then run scheduler
+        $this->connection->close();
+        $this->assertFalse($this->connection->isConnected());
+
+        // Get the scheduler from container
+        $scheduler = self::getContainer()->get(Scheduler::class);
+
+        // Run the scheduler - this should call ensureConnection() internally
+        // before accessing the checkpoint cache
+        $scheduler->run();
+
+        // Verify connection is reconnected and can execute queries
+        $this->assertTrue($this->connection->isConnected());
+        $result = $this->connection->executeQuery('SELECT 1');
+        $this->assertEquals(1, $result->fetchOne());
+    }
+
+    public function testSchedulerRunMultipleTicksWithConnectionReset(): void
+    {
+        // Simulate multiple Swoole tick cycles
+        for ($i = 0; $i < 3; $i++) {
+            // Close connection (simulating services_resetter->reset())
+            $this->connection->close();
+            $this->assertFalse($this->connection->isConnected());
+
+            // Get the scheduler from container
+            $scheduler = self::getContainer()->get(Scheduler::class);
+
+            // Run the scheduler - should reconnect before checkpoint cache access
+            $scheduler->run();
+
+            // Verify connection is reconnected
             $this->assertTrue($this->connection->isConnected());
             $result = $this->connection->executeQuery('SELECT 1');
             $this->assertEquals(1, $result->fetchOne());
