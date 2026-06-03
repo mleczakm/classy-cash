@@ -29,11 +29,8 @@ final readonly class SchedulerConnectionResetter implements ConnectionEnsurerInt
 
         for ($i = 0; $i < $maxRetries; $i++) {
             try {
-                if (! $this->connection->isConnected()) {
-                    $this->connection->connect();
-                }
-
                 // Ping the connection to ensure it's still alive
+                // This will auto-connect if needed
                 $this->connection->executeQuery('SELECT 1');
                 return;
             } catch (Exception $e) {
