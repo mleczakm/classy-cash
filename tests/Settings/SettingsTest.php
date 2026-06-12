@@ -49,4 +49,32 @@ final class SettingsTest extends FunctionalTestCase
 
         self::assertTrue($featureManager->isEnabled(FeatureName::PARENT_REGISTRATION));
     }
+
+    public function testGetLastSuccessfulTransferImportDateReturnsNullWhenNotSet(): void
+    {
+        $em = $this->getEntityManager();
+        $this->setupDefaultSettings($em);
+
+        /** @var Settings $settings */
+        $settings = self::getContainer()->get(Settings::class);
+
+        self::assertNull($settings->getLastSuccessfulTransferImportDate());
+    }
+
+    public function testGetLastSuccessfulTransferImportDateReturnsDateTimeWhenSet(): void
+    {
+        $em = $this->getEntityManager();
+        $this->setupDefaultSettings($em);
+
+        /** @var Settings $settings */
+        $settings = self::getContainer()->get(Settings::class);
+
+        $testDate = new \DateTimeImmutable('2024-01-15 10:30:00');
+        $settings->set('last_successful_transfer_import_date', $testDate->format(\DateTimeInterface::ATOM));
+
+        $retrievedDate = $settings->getLastSuccessfulTransferImportDate();
+
+        self::assertNotNull($retrievedDate);
+        self::assertEquals($testDate, $retrievedDate);
+    }
 }
