@@ -34,6 +34,13 @@ services:
     resource: '../src/Application/CommandHandler/'
     tags: [ 'messenger.message_handler' ]
 
+  App\Application\CommandHandler\IncomingNotificationMailQueryWithLastImportDateUpdate:
+    decorates: App\Infrastructure\ImapEngine\AliorNotificationMailProvider
+    arguments:
+      $inner: '@.inner'
+
+  App\Application\CommandHandler\IncomingNotificationMailQuery: '@App\Application\CommandHandler\IncomingNotificationMailQueryWithLastImportDateUpdate'
+
   App\Application\CommandHandler\SendLoginNotificationHandler:
     arguments:
       $loginLinkHandler: '@security.authenticator.login_link_handler.main'

@@ -85,9 +85,12 @@ final class TreasurerController extends AbstractController
             'transferredAt' => 'DESC',
         ]);
 
+        $lastSuccessfulImportDate = $this->settings->getLastSuccessfulTransferImportDate();
+
         return $this->render('treasurer/payments.html.twig', [
             'classRoom' => $class,
             'transfers' => $transfers,
+            'lastSuccessfulImportDate' => $lastSuccessfulImportDate,
         ]);
     }
 

@@ -7,6 +7,9 @@
     <header class="mb-10">
         <h1 class="text-3xl font-serif-brand font-bold text-[#1a2a52]">Lista Operacji Bankowych</h1>
         <p class="text-[#6b7796]">Przegląd zaksięgowanych przelewów i obsługa błędnych tytułów.</p>
+        {% if lastSuccessfulImportDate %}
+            <p class="text-xs text-slate-500 mt-2">Ostatni udany import: {{ lastSuccessfulImportDate|date('d.m.Y H:i') }}</p>
+        {% endif %}
     </header>
 
     <div class="card-elegant !p-0 overflow-hidden border border-slate-200">

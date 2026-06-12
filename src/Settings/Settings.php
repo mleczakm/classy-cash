@@ -92,4 +92,18 @@ final readonly class Settings
 
         return $value;
     }
+
+    public function getLastSuccessfulTransferImportDate(): ?\DateTimeImmutable
+    {
+        $value = $this->getOptional('last_successful_transfer_import_date');
+        if ($value === null) {
+            return null;
+        }
+
+        if (! is_string($value)) {
+            throw new \LogicException('Setting "last_successful_transfer_import_date" must be a string.');
+        }
+
+        return new \DateTimeImmutable($value);
+    }
 }
