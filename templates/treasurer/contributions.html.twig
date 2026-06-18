@@ -128,5 +128,16 @@
         checkboxes.forEach(cb => cb.checked = !isUnchecking);
         btn.innerText = isUnchecking ? 'Zaznacz wszystkich' : 'Odznacz wszystkich';
     }
+
+    // Listen for live component action completion
+    document.addEventListener('live:action-success', (event) => {
+        if (event.detail.action === 'markAsPaid') {
+            window.location.reload();
+        }
+    });
+
+    document.addEventListener('live:paymentMarkedAsPaid', () => {
+        window.location.reload();
+    });
 </script>
 {% endblock %}

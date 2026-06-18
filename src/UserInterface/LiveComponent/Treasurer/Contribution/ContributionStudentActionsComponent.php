@@ -13,12 +13,14 @@ use App\Entity\PaymentCode;
 use App\Entity\User;
 use App\Entity\ClassCouncil\ClassRole;
 use App\Repository\ClassCouncil\ClassMembershipRepository;
+use App\Repository\ContributionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
+use Symfony\UX\LiveComponent\ComponentToolsTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
 #[AsLiveComponent(
@@ -28,6 +30,7 @@ use Symfony\UX\LiveComponent\DefaultActionTrait;
 class ContributionStudentActionsComponent extends AbstractController
 {
     use DefaultActionTrait;
+    use ComponentToolsTrait;
 
     #[LiveProp]
     public ?StudentPayment $studentPayment = null;
@@ -42,6 +45,10 @@ class ContributionStudentActionsComponent extends AbstractController
         private readonly EntityManagerInterface $entityManager,
         private readonly ClassMembershipRepository $memberships,
         private readonly MessageBusInterface $commandBus,
+        /**
+         * @phpstan-ignore-next-line
+         */
+        private readonly ContributionRepository $contributions,
     ) {}
 
     #[LiveAction]
@@ -65,6 +72,34 @@ class ContributionStudentActionsComponent extends AbstractController
         $this->commandBus->dispatch(new RecalculateCashState(payment: $payment));
 
         $this->addFlash('success', 'Płatność została utworzona');
+    }
+
+    #[LiveAction]
+    public function markAsPaid(): void
+    {
+        $this->assertTreasurer();
+
+        if (! $this->studentPayment || ! $this->studentPayment->getPayment()) {
+            return;
+        }
+
+        if ($this->studentPayment->getStatus() === StudentPayment::STATUS_PAID) {
+            return;
+        }
+
+        $this->studentPayment->markPaid();
+
+        // Update contribution counters using the passed contribution
+        $this->contribution->setPaidCount($this->contribution->getPaidCount() + 1);
+        $this->contribution->setTotalPaid(
+            $this->contribution->getTotalPaid()
+                ->plus($this->studentPayment->getAmount())
+        );
+
+        $this->entityManager->flush();
+
+        $this->addFlash('success', 'Płatność została oznaczona jako opłacona');
+        $this->emit('paymentMarkedAsPaid');
     }
 
     #[LiveAction]
