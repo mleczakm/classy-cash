@@ -41,6 +41,37 @@ final readonly class RecalculateCashStateHandler
             return;
         }
 
+        // If recalculating for a specific payment, check if registry entry already exists
+        if ($command->payment !== null) {
+            $existingEntry = $this->registryRepository->findOneByPayment($command->payment);
+            if ($existingEntry !== null) {
+                $this->logger->info(
+                    'Registry entry already exists for payment ' . $command->payment->getId() . ', skipping recalculation'
+                );
+                return;
+            }
+        }
+
+        // If recalculating for a specific expense, check if registry entry already exists
+        if ($command->expense !== null) {
+            $existingEntry = $this->registryRepository->findOneByExpense($command->expense);
+            if ($existingEntry !== null) {
+                $this->logger->info(
+                    'Registry entry already exists for expense ' . $command->expense->getId() . ', skipping recalculation'
+                );
+                return;
+            }
+        }
+
+        // For full recalculation (no specific payment/expense), clean up existing duplicates
+        if ($command->payment === null && $command->expense === null) {
+            $this->logger->info('Performing full recalculation to clean up any existing duplicates');
+            $removedCount = $this->registryRepository->removeDuplicates();
+            if ($removedCount > 0) {
+                $this->logger->info('Removed ' . $removedCount . ' duplicate registry entries');
+            }
+        }
+
         // Determine the starting point for recalculation
         $fromDate = $command->fromDate;
 
@@ -83,16 +114,27 @@ final readonly class RecalculateCashStateHandler
                 $currentBalance = $currentBalance->minus($transaction['amount']);
             }
 
-            $registry = new CashStateRegistry(
-                $transaction['date'],
-                $currentBalance,
-                $transaction['amount'],
-                $transaction['type'],
-                $transaction['payment'] ?? null,
-                $transaction['expense'] ?? null
-            );
+            // Check if registry entry already exists for this payment/expense to prevent duplicates
+            $existingEntry = null;
+            if (isset($transaction['payment'])) {
+                $existingEntry = $this->registryRepository->findOneByPayment($transaction['payment']);
+            } elseif (isset($transaction['expense'])) {
+                $existingEntry = $this->registryRepository->findOneByExpense($transaction['expense']);
+            }
 
-            $this->entityManager->persist($registry);
+            // Only create new entry if one doesn't already exist
+            if ($existingEntry === null) {
+                $registry = new CashStateRegistry(
+                    $transaction['date'],
+                    $currentBalance,
+                    $transaction['amount'],
+                    $transaction['type'],
+                    $transaction['payment'] ?? null,
+                    $transaction['expense'] ?? null
+                );
+
+                $this->entityManager->persist($registry);
+            }
         }
 
         $this->entityManager->flush();

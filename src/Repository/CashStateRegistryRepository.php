@@ -144,4 +144,118 @@ class CashStateRegistryRepository extends ServiceEntityRepository
             ->getQuery()
             ->execute();
     }
+
+    /**
+     * Find a registry entry by payment
+     */
+    public function findOneByPayment(Payment $payment): ?CashStateRegistry
+    {
+        return $this->findOneBy([
+            'payment' => $payment,
+        ]);
+    }
+
+    /**
+     * Find a registry entry by expense
+     */
+    public function findOneByExpense(ClassExpense $expense): ?CashStateRegistry
+    {
+        return $this->findOneBy([
+            'expense' => $expense,
+        ]);
+    }
+
+    /**
+     * Find all duplicate registry entries (multiple entries for the same payment or expense)
+     *
+     * @return array<array{type: string, entity_id: string, count: int}>
+     */
+    public function findDuplicates(): array
+    {
+        $conn = $this->getEntityManager()
+            ->getConnection();
+
+        // Find duplicate payment entries
+        $sql = 'SELECT payment_id, COUNT(*) as count
+                FROM classycash.cash_state_registry
+                WHERE payment_id IS NOT NULL
+                GROUP BY payment_id
+                HAVING COUNT(*) > 1';
+
+        $duplicatePayments = $conn->executeQuery($sql)
+            ->fetchAllAssociative();
+
+        // Find duplicate expense entries
+        $sql = 'SELECT expense_id, COUNT(*) as count
+                FROM classycash.cash_state_registry
+                WHERE expense_id IS NOT NULL
+                GROUP BY expense_id
+                HAVING COUNT(*) > 1';
+
+        $duplicateExpenses = $conn->executeQuery($sql)
+            ->fetchAllAssociative();
+
+        $duplicates = [];
+        foreach ($duplicatePayments as $dup) {
+            $paymentId = $dup['payment_id'];
+            $count = $dup['count'];
+            $duplicates[] = [
+                'type' => 'payment',
+                'entity_id' => is_string($paymentId) ? $paymentId : (string) $paymentId,
+                'count' => is_int($count) ? $count : (int) $count,
+            ];
+        }
+
+        foreach ($duplicateExpenses as $dup) {
+            $expenseId = $dup['expense_id'];
+            $count = $dup['count'];
+            $duplicates[] = [
+                'type' => 'expense',
+                'entity_id' => is_string($expenseId) ? $expenseId : (string) $expenseId,
+                'count' => is_int($count) ? $count : (int) $count,
+            ];
+        }
+
+        return $duplicates;
+    }
+
+    /**
+     * Remove duplicate registry entries, keeping only the most recent one for each payment/expense
+     *
+     * @return int Number of duplicate entries removed
+     */
+    public function removeDuplicates(): int
+    {
+        $duplicates = $this->findDuplicates();
+        $removedCount = 0;
+
+        foreach ($duplicates as $duplicate) {
+            if ($duplicate['type'] === 'payment') {
+                $entries = $this->findBy([
+                    'payment' => $duplicate['entity_id'],
+                ]);
+            } else {
+                $entries = $this->findBy([
+                    'expense' => $duplicate['entity_id'],
+                ]);
+            }
+
+            // Sort by creation date (newest first)
+            usort($entries, fn($a, $b) => $b->getCreatedAt() <=> $a->getCreatedAt());
+
+            // Keep the first (newest) entry, remove the rest
+            for ($i = 1; $i < count($entries); $i++) {
+                $this->getEntityManager()
+                    ->remove($entries[$i]);
+                $removedCount++;
+            }
+        }
+
+        if ($removedCount > 0) {
+            $this->getEntityManager()
+                ->flush();
+        }
+
+        return $removedCount;
+    }
 }
