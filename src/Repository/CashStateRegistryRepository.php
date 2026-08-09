@@ -197,26 +197,44 @@ class CashStateRegistryRepository extends ServiceEntityRepository
 
         $duplicates = [];
         foreach ($duplicatePayments as $dup) {
-            $paymentId = $dup['payment_id'];
-            $count = $dup['count'];
             $duplicates[] = [
                 'type' => 'payment',
-                'entity_id' => is_string($paymentId) ? $paymentId : (string) $paymentId,
-                'count' => is_int($count) ? $count : (int) $count,
+                'entity_id' => self::normalizeEntityId($dup['payment_id']),
+                'count' => self::normalizeCount($dup['count']),
             ];
         }
 
         foreach ($duplicateExpenses as $dup) {
-            $expenseId = $dup['expense_id'];
-            $count = $dup['count'];
             $duplicates[] = [
                 'type' => 'expense',
-                'entity_id' => is_string($expenseId) ? $expenseId : (string) $expenseId,
-                'count' => is_int($count) ? $count : (int) $count,
+                'entity_id' => self::normalizeEntityId($dup['expense_id']),
+                'count' => self::normalizeCount($dup['count']),
             ];
         }
 
         return $duplicates;
+    }
+
+    private static function normalizeEntityId(mixed $value): string
+    {
+        return match (true) {
+            is_string($value) => $value,
+            is_int($value) => (string) $value,
+            default => throw new \UnexpectedValueException(
+                sprintf('Unexpected entity id type: %s', get_debug_type($value))
+            ),
+        };
+    }
+
+    private static function normalizeCount(mixed $value): int
+    {
+        return match (true) {
+            is_int($value) => $value,
+            is_string($value), is_float($value) => (int) $value,
+            default => throw new \UnexpectedValueException(
+                sprintf('Unexpected count type: %s', get_debug_type($value))
+            ),
+        };
     }
 
     /**
