@@ -112,6 +112,8 @@ final class FastPaymentModalComponent extends AbstractController
             ->getResult();
 
         if ($myStudents === []) {
+            $this->modalOpened = true;
+
             return; // nothing to pay for
         }
 
@@ -120,6 +122,8 @@ final class FastPaymentModalComponent extends AbstractController
         $unpaid = array_filter($all, fn($sp) => $sp->getStatus() !== StudentPayment::STATUS_PAID);
 
         if ($unpaid === []) {
+            $this->modalOpened = true;
+
             return; // nothing to pay
         }
 
