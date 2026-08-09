@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3bb206066f03036e5e773c1c2decba21",
+    "content-hash": "a1f72bad210d66f46ae1bc8fb123e6f7",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -3005,6 +3005,61 @@
                 }
             ],
             "time": "2025-12-13T18:00:33+00:00"
+        },
+        {
+            "name": "mleczakm/zip-bomb-honeypot",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mleczakm/zip-bomb-honeypot.git",
+                "reference": "f92b7361623ac6131f62bb0917b9e7b18cf9f300"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mleczakm/zip-bomb-honeypot/zipball/f92b7361623ac6131f62bb0917b9e7b18cf9f300",
+                "reference": "f92b7361623ac6131f62bb0917b9e7b18cf9f300",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.4",
+                "symfony/event-dispatcher": "^6.4 || ^7.0",
+                "symfony/http-foundation": "^6.4 || ^7.0",
+                "symfony/http-kernel": "^6.4 || ^7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^11.0 || ^12.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Mleczakm\\ZipBombHoneypot\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Mleczakm\\ZipBombHoneypot\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "phpunit"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michał Mleczko",
+                    "email": "do@mleczki.pl"
+                }
+            ],
+            "description": "Symfony event subscriber that traps vulnerability scanners probing for common exploit paths (.env, wp-admin, PHP shells, ...) by serving a small, highly compressible zip bomb instead of a 404.",
+            "support": {
+                "source": "https://github.com/mleczakm/zip-bomb-honeypot/tree/v1.0.0",
+                "issues": "https://github.com/mleczakm/zip-bomb-honeypot/issues"
+            },
+            "time": "2026-08-09T07:30:58+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -11869,16 +11924,16 @@
         },
         {
             "name": "upscale/ext-swoole",
-            "version": "v6.2.2",
+            "version": "v6.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/upscalesoftware/ext-swoole.git",
-                "reference": "e5039aa326c788f2ce8b3eb152650e994f29a960"
+                "reference": "aee1a9efcdea0427d441d8c1f48553a0fde69358"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/upscalesoftware/ext-swoole/zipball/e5039aa326c788f2ce8b3eb152650e994f29a960",
-                "reference": "e5039aa326c788f2ce8b3eb152650e994f29a960",
+                "url": "https://api.github.com/repos/upscalesoftware/ext-swoole/zipball/aee1a9efcdea0427d441d8c1f48553a0fde69358",
+                "reference": "aee1a9efcdea0427d441d8c1f48553a0fde69358",
                 "shasum": ""
             },
             "require": {
@@ -11903,9 +11958,9 @@
             ],
             "support": {
                 "issues": "https://github.com/upscalesoftware/ext-swoole/issues",
-                "source": "https://github.com/upscalesoftware/ext-swoole/tree/v6.2.2"
+                "source": "https://github.com/upscalesoftware/ext-swoole/tree/v6.2.0"
             },
-            "time": "2026-07-01T00:50:02+00:00"
+            "time": "2026-03-01T00:28:17+00:00"
         },
         {
             "name": "webmozart/assert",
