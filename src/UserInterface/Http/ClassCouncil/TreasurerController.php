@@ -581,8 +581,8 @@ final class TreasurerController extends AbstractController
         }
 
         if ($request->isMethod('POST')) {
-            if (! $this->isCsrfTokenValid('submit', $request->request->get('_token'))) {
-                throw $this->createAccessDeniedException('Invalid CSRF token.');
+            if (! $this->isCsrfTokenValid('submit', (string) $request->request->get('_token'))) {
+                throw $this->createAccessDeniedException('Nieprawidłowy token CSRF.');
             }
 
             $label = trim((string) $request->request->get('label', ''));
