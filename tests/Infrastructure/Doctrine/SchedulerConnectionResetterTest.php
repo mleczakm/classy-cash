@@ -15,149 +15,114 @@ use Symfony\Component\Scheduler\Event\PreRunEvent;
 #[Group('unit')]
 class SchedulerConnectionResetterTest extends TestCase
 {
-    public function testEnsureConnectionConnectsWhenNotConnected(): void
+    public function testEnsureConnectionPingsConnection(): void
     {
         $connection = $this->createMock(Connection::class);
+        $connection->method('isTransactionActive')
+            ->willReturn(false);
         $connection->expects($this->once())
             ->method('executeQuery')
             ->with('SELECT 1')
             ->willReturn($this->createMock(Result::class));
 
-        $resetter = new SchedulerConnectionResetter($connection);
-        $resetter->ensureConnection();
+        new SchedulerConnectionResetter($connection)
+            ->ensureConnection();
     }
 
-    public function testOnPreRunEnsuresConnectionIsConnected(): void
+    public function testOnPreRunEnsuresConnection(): void
     {
         $connection = $this->createMock(Connection::class);
+        $connection->method('isTransactionActive')
+            ->willReturn(false);
         $connection->expects($this->once())
             ->method('executeQuery')
             ->with('SELECT 1')
             ->willReturn($this->createMock(Result::class));
 
-        $resetter = new SchedulerConnectionResetter($connection);
-        $event = $this->createMock(PreRunEvent::class);
-
-        $resetter->onPreRun($event);
+        new SchedulerConnectionResetter($connection)
+            ->onPreRun($this->createMock(PreRunEvent::class));
     }
 
-    public function testEnsureConnectionPingsExistingConnection(): void
+    public function testEnsureConnectionRollsBackDanglingTransaction(): void
     {
         $connection = $this->createMock(Connection::class);
+        $connection->method('isTransactionActive')
+            ->willReturn(true);
+        $connection->expects($this->once())
+            ->method('rollBack');
         $connection->expects($this->once())
             ->method('executeQuery')
             ->with('SELECT 1')
             ->willReturn($this->createMock(Result::class));
 
-        $resetter = new SchedulerConnectionResetter($connection);
-        $resetter->ensureConnection();
+        new SchedulerConnectionResetter($connection)
+            ->ensureConnection();
     }
 
-    public function testOnPreRunPingsExistingConnection(): void
+    public function testEnsureConnectionClosesConnectionWhenRollbackFails(): void
     {
         $connection = $this->createMock(Connection::class);
+        $connection->method('isTransactionActive')
+            ->willReturn(true);
+        $connection->method('rollBack')
+            ->willThrowException(new \RuntimeException('rollback failed'));
+        $connection->method('isConnected')
+            ->willReturn(true);
         $connection->expects($this->once())
-            ->method('executeQuery')
-            ->with('SELECT 1')
+            ->method('close');
+        $connection->method('executeQuery')
             ->willReturn($this->createMock(Result::class));
 
-        $resetter = new SchedulerConnectionResetter($connection);
-        $event = $this->createMock(PreRunEvent::class);
-
-        $resetter->onPreRun($event);
+        new SchedulerConnectionResetter($connection)
+            ->ensureConnection();
     }
 
     public function testEnsureConnectionRetriesOnConnectionFailure(): void
     {
         $connection = $this->createMock(Connection::class);
-        $connection->expects($this->exactly(2))
-            ->method('isConnected')
-            ->willReturnOnConsecutiveCalls(true, true);
+        $connection->method('isTransactionActive')
+            ->willReturn(false);
+        $connection->method('isConnected')
+            ->willReturn(true);
+
+        $attempts = 0;
         $connection->expects($this->exactly(3))
             ->method('executeQuery')
             ->with('SELECT 1')
-            ->will($this->onConsecutiveCalls(
-                $this->throwException(new Exception('no connection to the server')),
-                $this->throwException(new Exception('no connection to the server')),
-                $this->createMock(Result::class)
-            ));
+            ->willReturnCallback(function () use (&$attempts): Result {
+                if (++$attempts < 3) {
+                    throw new Exception('no connection to the server');
+                }
+
+                return $this->createMock(Result::class);
+            });
         $connection->expects($this->exactly(2))
             ->method('close');
 
-        $resetter = new SchedulerConnectionResetter($connection);
-        $resetter->ensureConnection();
+        new SchedulerConnectionResetter($connection)
+            ->ensureConnection();
     }
 
-    public function testOnPreRunRetriesOnConnectionFailure(): void
+    public function testEnsureConnectionThrowsAfterMaxRetries(): void
     {
         $connection = $this->createMock(Connection::class);
-        $connection->expects($this->exactly(2))
-            ->method('isConnected')
-            ->willReturnOnConsecutiveCalls(true, true);
+        $connection->method('isTransactionActive')
+            ->willReturn(false);
+        $connection->method('isConnected')
+            ->willReturn(true);
         $connection->expects($this->exactly(3))
             ->method('executeQuery')
             ->with('SELECT 1')
-            ->will($this->onConsecutiveCalls(
-                $this->throwException(new Exception('no connection to the server')),
-                $this->throwException(new Exception('no connection to the server')),
-                $this->createMock(Result::class)
-            ));
+            ->willReturnCallback(function (): Result {
+                throw new Exception('no connection to the server');
+            });
         $connection->expects($this->exactly(2))
             ->method('close');
 
-        $resetter = new SchedulerConnectionResetter($connection);
-        $event = $this->createMock(PreRunEvent::class);
-
-        $resetter->onPreRun($event);
-    }
-
-    public function testEnsureConnectionThrowsExceptionAfterMaxRetries(): void
-    {
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('no connection to the server');
 
-        $connection = $this->createMock(Connection::class);
-        $connection->expects($this->exactly(2))
-            ->method('isConnected')
-            ->willReturnOnConsecutiveCalls(true, true);
-        $connection->expects($this->exactly(3))
-            ->method('executeQuery')
-            ->with('SELECT 1')
-            ->will($this->onConsecutiveCalls(
-                $this->throwException(new Exception('no connection to the server')),
-                $this->throwException(new Exception('no connection to the server')),
-                $this->throwException(new Exception('no connection to the server'))
-            ));
-        $connection->expects($this->exactly(2))
-            ->method('close');
-
-        $resetter = new SchedulerConnectionResetter($connection);
-        $resetter->ensureConnection();
-    }
-
-    public function testOnPreRunThrowsExceptionAfterMaxRetries(): void
-    {
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage('no connection to the server');
-
-        $connection = $this->createMock(Connection::class);
-        $connection->expects($this->exactly(2))
-            ->method('isConnected')
-            ->willReturnOnConsecutiveCalls(true, true);
-        $connection->expects($this->exactly(3))
-            ->method('executeQuery')
-            ->with('SELECT 1')
-            ->will($this->onConsecutiveCalls(
-                $this->throwException(new Exception('no connection to the server')),
-                $this->throwException(new Exception('no connection to the server')),
-                $this->throwException(new Exception('no connection to the server'))
-            ));
-        $connection->expects($this->exactly(2))
-            ->method('close');
-
-        $resetter = new SchedulerConnectionResetter($connection);
-        $event = $this->createMock(PreRunEvent::class);
-
-        $resetter->onPreRun($event);
+        new SchedulerConnectionResetter($connection)
+            ->ensureConnection();
     }
 }

@@ -1,5 +1,7 @@
 ![Classy Cash - Nowoczesne zarządzanie finansami dla skrbnika klasowego](assets/images/classy-cash-banner.png)
 
+[![Build and QA](https://github.com/mleczakm/classy-cash/actions/workflows/build-and-qa.yml/badge.svg)](https://github.com/mleczakm/classy-cash/actions/workflows/build-and-qa.yml)
+![Test coverage](https://raw.githubusercontent.com/mleczakm/classy-cash/coverage-master/docs/coverage.svg)
 
 **Classy Cash** to nowoczesna aplikacja webowa stworzona z myślą o skarbnikach szkolnych. Jej zadaniem jest automatyzacja zbierania składek, monitorowanie wpłat oraz ułatwienie rozliczeń z rodzicami i uczniami.
 

@@ -25,6 +25,10 @@ framework:
             messenger.bus.default:
                 middleware:
                     - messenger.middleware.router_context
+                    # A handler running inside an async message / Swoole task worker cannot
+                    # dispatch onto async again (nested Server->task() throws); this reroutes
+                    # such dispatches to sync so they run inline instead of being lost.
+                    - App\Infrastructure\Messenger\PreventAsyncDispatchInTaskWorkerMiddleware
                     - messenger.middleware.doctrine_close_connection
                     - messenger.middleware.doctrine_transaction
                     - messenger.middleware.validation

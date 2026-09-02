@@ -2,6 +2,8 @@ swoole:
   http_server:
     static: advanced
     exception_handler:
+      # coroutines mode always fetches "swoole_bundle.error_handler.symfony_error_handler",
+      # which only gets registered when the exception handler type is "symfony".
       type: symfony
     services:
       trust_all_proxies_handler: true
@@ -11,6 +13,8 @@ swoole:
     settings:
       worker_count: 4
       log_file: '/proc/self/fd/2'
+      # Default 2 MiB is too small for heavy pages rendering many LiveComponents.
+      buffer_output_size: 8388608
   task_worker:
     services:
       reset_handler: true
@@ -18,13 +22,57 @@ swoole:
       worker_count: 4
   platform:
     coroutines:
+      # Off by default. The bundle reads this flag at container-build time, so it must be a
+      # literal (an %env()% / %param% placeholder is a truthy string here) - turn coroutines
+      # on for a single environment by overriding it in config/packages/<env>/swoole.yaml
+      # once the stateful-service pinning below has been validated there under real traffic
+      # (a mis-pinned mutable service leaks one user's state into another concurrent request).
+      # Keep it off in test: PHPUnit's WebTestCase never runs inside the real Swoole HTTP
+      # server, and the bundle's kernel-cloning under coroutines breaks KernelTestCase teardown.
       enabled: false
+      # This app's traffic never needs anywhere near the bundle's default ceiling of
+      # max_coroutines live instances per pooled service; bounding it caps RSS growth.
+      max_concurrency: 50
+      stateful_services:
+        # Symfony's form registry keeps a mutable resolution stack; without a
+        # coroutine-local instance, concurrent form rendering can falsely report a
+        # circular FormType reference.
+        - form.registry
+        # Both token storages hold the current user. Left shared, two coroutines resolving
+        # getUser() at once can cross wires - one request acting as another's user.
+        - security.token_storage
+        - security.untracked_token_storage
+        # DirectoryTree's Mailbox owns a mutable IMAP stream; per-coroutine instances stop
+        # a reconnect in one import from closing another import's in-flight stream.
+        - DirectoryTree\ImapEngine\MailboxInterface
+        # CurlHttpClient holds a native curl multi-handle Swoole refuses to share across
+        # coroutines ("This cURL handle is currently executing in coroutine#N"). The class
+        # is pinned in services.yaml so the proxifier can see it.
+        - http_client.transport
+      # Cap pooled Doctrine connections per process so scheduler polling + workers do not
+      # exhaust Postgres max_connections within seconds of boot.
+      doctrine_processor_config:
+        global_limit: 5
+
+# SwooleBundleResetterBundle is only enabled in prod + dev (config/bundles.php), so its
+# config lives in per-environment blocks rather than at the top level.
+when@dev:
+  swoole_bundle_resetter:
+    # Roll back a transaction left open by a coroutine that failed mid-flight, so the next
+    # coroutine to check out that pooled connection does not trip "There is already an
+    # active transaction".
+    check_active_transactions: true
 
 when@prod:
   swoole_bundle_resetter:
-    # default 0 - if set, the connection ping operation will be executed each X seconds
-    # (instead of at the beginning of each request)
-    ping_interval: 29
-    # default false - if set to true, the app will check if there is an active transaction
-    # in the processed connection, and it will rollback the transaction
     check_active_transactions: true
+    # If set, the connection ping runs every X seconds instead of at the start of each request.
+    ping_interval: 29
+
+# To enable coroutines in production once validated, drop a config/packages/prod/swoole.yaml
+# containing:
+#   swoole:
+#     platform:
+#       coroutines:
+#         enabled: true
+# The stateful_services / max_concurrency / doctrine_processor_config above already apply.

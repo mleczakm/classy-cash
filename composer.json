@@ -163,6 +163,11 @@
       "Drop and recreate schema": "bin/console doctrine:schema:drop --force --env=test",
       "Functional tests schema": "bin/console doctrine:schema:update --force --env=test"
     },
+    "coverage": {
+      "Setup": "@tests:functional:setup",
+      "Unit and functional coverage": "bin/phpunit --group unit --group functional --coverage-clover target/coverage/clover.xml --coverage-html target/coverage/html",
+      "Enforce minimum total coverage": "vendor/bin/coverage-check target/coverage/clover.xml 60"
+    },
     "qa:fix": [
       "@sa:fix"
     ],
