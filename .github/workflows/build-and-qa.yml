@@ -78,7 +78,7 @@ jobs:
         run: |
             echo "NETWORK_NAME=$(docker network ls --filter name=github --format '{{.Name}}')" >> $GITHUB_ENV
 
-      - name: Run unit and functional tests with coverage
+      - name: Run tests with coverage
         run: |
           mkdir -p target/coverage
           docker run --rm \
@@ -86,7 +86,7 @@ jobs:
             -e DATABASE_URL \
             -v "$PWD/target/coverage:/app/target/coverage" \
             ${{ steps.meta.outputs.tags }} \
-            sh -lc 'composer tests:functional:setup && bin/phpunit --group unit --group functional \
+            sh -lc 'composer tests:functional:setup && bin/phpunit \
               --coverage-clover target/coverage/clover.xml \
               --coverage-cobertura target/coverage/cobertura.xml \
               --coverage-html target/coverage/html'
@@ -119,11 +119,6 @@ jobs:
           name: test-coverage
           path: target/coverage
           if-no-files-found: error
-
-      - name: Run smoke tests
-        run: docker run --rm --network "$NETWORK_NAME" ${{ steps.meta.outputs.tags }} composer tests:smoke
-        env:
-          DATABASE_URL: "postgresql://app:!ChangeMe!@db:5432/app_test?serverVersion=15&charset=utf8"
 
       - name: Extract production metadata
         if: success()

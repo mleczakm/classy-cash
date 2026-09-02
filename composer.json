@@ -165,7 +165,7 @@
     },
     "coverage": {
       "Setup": "@tests:functional:setup",
-      "Unit and functional coverage": "bin/phpunit --group unit --group functional --coverage-clover target/coverage/clover.xml --coverage-html target/coverage/html",
+      "Coverage": "bin/phpunit --coverage-clover target/coverage/clover.xml --coverage-html target/coverage/html",
       "Enforce minimum total coverage": "vendor/bin/coverage-check target/coverage/clover.xml 60"
     },
     "qa:fix": [
