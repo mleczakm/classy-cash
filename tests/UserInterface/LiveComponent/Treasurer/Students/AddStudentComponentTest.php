@@ -28,7 +28,11 @@ class AddStudentComponentTest extends FunctionalTestCase
 
     public function testComponentValidatesRequiredFields(): void
     {
-        $this->markTestSkipped();
+        $this->markTestSkipped(
+            'Exercises LiveComponent form submission / action round-trips that do not yet '
+            . 'behave under InteractsWithLiveComponents (form data binding + parent-selection '
+            . 'ordering). Tracked separately from the coroutine parity work.',
+        );
 
         $classRoom = $this->createClassRoom('4B');
 
@@ -46,7 +50,11 @@ class AddStudentComponentTest extends FunctionalTestCase
 
     public function testComponentCreatesStudentSuccessfully(): void
     {
-        $this->markTestSkipped();
+        $this->markTestSkipped(
+            'Exercises LiveComponent form submission / action round-trips that do not yet '
+            . 'behave under InteractsWithLiveComponents (form data binding + parent-selection '
+            . 'ordering). Tracked separately from the coroutine parity work.',
+        );
 
         $classRoom = $this->createClassRoom('4B');
         $parent1 = $this->createUser('parent1@example.com', 'password');
@@ -89,7 +97,11 @@ class AddStudentComponentTest extends FunctionalTestCase
 
     public function testComponentEmitsStudentAddedEvent(): void
     {
-        $this->markTestSkipped();
+        $this->markTestSkipped(
+            'Exercises LiveComponent form submission / action round-trips that do not yet '
+            . 'behave under InteractsWithLiveComponents (form data binding + parent-selection '
+            . 'ordering). Tracked separately from the coroutine parity work.',
+        );
 
         $classRoom = $this->createClassRoom('4B');
 
@@ -105,7 +117,11 @@ class AddStudentComponentTest extends FunctionalTestCase
 
     public function testComponentSearchesParents(): void
     {
-        $this->markTestSkipped();
+        $this->markTestSkipped(
+            'Exercises LiveComponent form submission / action round-trips that do not yet '
+            . 'behave under InteractsWithLiveComponents (form data binding + parent-selection '
+            . 'ordering). Tracked separately from the coroutine parity work.',
+        );
 
         $classRoom = $this->createClassRoom('4B');
         $parent1 = $this->createUser('parent1@example.com', 'password');
@@ -135,7 +151,11 @@ class AddStudentComponentTest extends FunctionalTestCase
 
     public function testComponentManagesParentSelection(): void
     {
-        $this->markTestSkipped();
+        $this->markTestSkipped(
+            'Exercises LiveComponent form submission / action round-trips that do not yet '
+            . 'behave under InteractsWithLiveComponents (form data binding + parent-selection '
+            . 'ordering). Tracked separately from the coroutine parity work.',
+        );
 
         $classRoom = $this->createClassRoom('4B');
         $parent1 = $this->createUser('parent1@example.com', 'password');

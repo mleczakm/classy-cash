@@ -57,7 +57,11 @@ final class OnboardingTest extends KernelTestCase
             ],
         ], 'submit');
 
-        $this->markTestSkipped();
+        $this->markTestSkipped(
+            'Multi-step wizard navigation (step transition after a successful submitForm) '
+            . 'does not advance under InteractsWithLiveComponents yet; the identity-step '
+            . 'validation above is covered by testValidationErrors.',
+        );
         // Should be on Step 'class_details' now
         /** @var Onboarding $onboardingComponent */
         $onboardingComponent = $component->component();

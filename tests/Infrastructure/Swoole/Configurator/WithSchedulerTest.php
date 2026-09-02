@@ -19,6 +19,15 @@ use Symfony\Contracts\Service\ResetInterface;
 #[Group('unit')]
 final class WithSchedulerTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        // Leave no Swoole timers behind: a pending timer makes the extension's
+        // shutdown handler call the deprecated Event::wait().
+        Timer::clearAll();
+
+        parent::tearDown();
+    }
+
     public function testRegisterSwooleTick(): void
     {
         self::assertEmpty(iterator_to_array(Timer::list()));
