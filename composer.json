@@ -182,6 +182,7 @@
     },
     "tests:functional:setup": {
       "Functional tests setup": "bin/console doctrine:database:create --if-not-exists --env=test",
+      "App schema namespace": "bin/console dbal:run-sql 'CREATE SCHEMA IF NOT EXISTS classycash' --env=test",
       "Functional tests schema": "bin/console doctrine:migrations:migrate --no-interaction --env=test"
     },
     "coverage": {

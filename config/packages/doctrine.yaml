@@ -1,7 +1,9 @@
 doctrine:
     dbal:
         url: '%env(resolve:DATABASE_URL)%&schema=classycash&options=search_path%3Dclassycash'
-        schema_filter: '~^classycash\.~'
+        # Also allow the migrations tracking table: without it the schema manager hides
+        # doctrine_migration_versions and migrate re-issues its CREATE TABLE.
+        schema_filter: '~(^classycash\.|doctrine_migration_versions)~'
         options:
             1002: "SET search_path TO classycash"
             schema: 'classycash'
