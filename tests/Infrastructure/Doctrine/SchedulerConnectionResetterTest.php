@@ -91,7 +91,7 @@ class SchedulerConnectionResetterTest extends TestCase
             ->with('SELECT 1')
             ->willReturnCallback(function () use (&$attempts): Result {
                 if (++$attempts < 3) {
-                    throw new Exception('no connection to the server');
+                    throw self::dbalException('no connection to the server');
                 }
 
                 return $this->createMock(Result::class);
@@ -114,7 +114,7 @@ class SchedulerConnectionResetterTest extends TestCase
             ->method('executeQuery')
             ->with('SELECT 1')
             ->willReturnCallback(function (): Result {
-                throw new Exception('no connection to the server');
+                throw self::dbalException('no connection to the server');
             });
         $connection->expects($this->exactly(2))
             ->method('close');
@@ -124,5 +124,14 @@ class SchedulerConnectionResetterTest extends TestCase
 
         new SchedulerConnectionResetter($connection)
             ->ensureConnection();
+    }
+
+    /**
+     * DBAL 4 turned Doctrine\DBAL\Exception into an interface, so it can no longer be
+     * instantiated directly - build a throwable that satisfies the type the resetter catches.
+     */
+    private static function dbalException(string $message): Exception&\Throwable
+    {
+        return new class ($message) extends \RuntimeException implements Exception {};
     }
 }

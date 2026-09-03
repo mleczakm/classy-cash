@@ -56,25 +56,13 @@ class RegisterUser extends AbstractController
                 'mapped' => false,
                 'label' => 'form.register.first_name',
                 'data' => $this->firstName,
-                'constraints' => [
-                    new Assert\NotBlank(),
-                    new Assert\Length([
-                        'min' => 2,
-                        'max' => 100,
-                    ]),
-                ],
+                'constraints' => [new Assert\NotBlank(), new Assert\Length(min: 2, max: 100)],
             ])
             ->add('lastName', TextType::class, [
                 'mapped' => false,
                 'label' => 'form.register.last_name',
                 'data' => $this->lastName,
-                'constraints' => [
-                    new Assert\NotBlank(),
-                    new Assert\Length([
-                        'min' => 2,
-                        'max' => 100,
-                    ]),
-                ],
+                'constraints' => [new Assert\NotBlank(), new Assert\Length(min: 2, max: 100)],
             ])
             ->add('email', EmailType::class, [
                 'constraints' => [new Assert\NotBlank(), new Assert\Email()],

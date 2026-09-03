@@ -74,29 +74,25 @@ class AddStudentComponent extends AbstractController
             ->add('firstName', TextType::class, [
                 'label' => 'Imię',
                 'constraints' => [
-                    new Assert\NotBlank([
-                        'message' => 'Imię jest wymagane',
-                    ]),
-                    new Assert\Length([
-                        'min' => 2,
-                        'max' => 100,
-                        'minMessage' => 'Imię musi mieć co najmniej {{ limit }} znaków',
-                        'maxMessage' => 'Imię nie może mieć więcej niż {{ limit }} znaków',
-                    ]),
+                    new Assert\NotBlank(message: 'Imię jest wymagane'),
+                    new Assert\Length(
+                        min: 2,
+                        max: 100,
+                        minMessage: 'Imię musi mieć co najmniej {{ limit }} znaków',
+                        maxMessage: 'Imię nie może mieć więcej niż {{ limit }} znaków',
+                    ),
                 ],
             ])
             ->add('lastName', TextType::class, [
                 'label' => 'Nazwisko',
                 'constraints' => [
-                    new Assert\NotBlank([
-                        'message' => 'Nazwisko jest wymagane',
-                    ]),
-                    new Assert\Length([
-                        'min' => 2,
-                        'max' => 100,
-                        'minMessage' => 'Nazwisko musi mieć co najmniej {{ limit }} znaków',
-                        'maxMessage' => 'Nazwisko nie może mieć więcej niż {{ limit }} znaków',
-                    ]),
+                    new Assert\NotBlank(message: 'Nazwisko jest wymagane'),
+                    new Assert\Length(
+                        min: 2,
+                        max: 100,
+                        minMessage: 'Nazwisko musi mieć co najmniej {{ limit }} znaków',
+                        maxMessage: 'Nazwisko nie może mieć więcej niż {{ limit }} znaków',
+                    ),
                 ],
             ])
             ->add('submit', SubmitType::class, [

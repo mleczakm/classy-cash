@@ -27,8 +27,9 @@ final class SchedulerConnectionResetterFunctionalTest extends KernelTestCase
 
     public function testOnPreRunEnsuresConnectionIsActive(): void
     {
-        // Ensure connection is initially connected
-        $this->connection->connect();
+        // Ensure connection is initially connected (executeQuery auto-connects; connect() is
+        // protected as of DBAL 4).
+        $this->connection->executeQuery('SELECT 1');
         $this->assertTrue($this->connection->isConnected());
 
         // Create a mock PreRunEvent
