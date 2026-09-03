@@ -98,8 +98,7 @@ return [
         'test' => true,
     ],
     SwooleBundleResetterBundle::class => [
-        'prod' => true,
-        'dev' => true,
+        'all' => true,
     ],
     SymfonyHealthCheckBundle::class => [
         'all' => true,

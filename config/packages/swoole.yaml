@@ -1,4 +1,7 @@
 swoole:
+  session:
+    max_data_bytes: 16384
+    max_active_sessions: 4096
   http_server:
     static: advanced
     exception_handler:
@@ -11,7 +14,14 @@ swoole:
         enabled: true
     trusted_proxies: '*'
     settings:
-      worker_count: 4
+      # One HTTP worker: with coroutines on it serves all in-flight requests concurrently,
+      # and a single process sidesteps the worker_max_request recycle race that took the
+      # site down in kiddo (ESRCH on WORKER_STOP). The service-pool leak that recycling
+      # used to guard against is fixed in the pinned swoole-bundle fork.
+      worker_count: 1
+      # 0 = the HTTP worker is never recycled by request count.
+      worker_max_request: 0
+      log_level: debug
       log_file: '/proc/self/fd/2'
       # Default 2 MiB is too small for heavy pages rendering many LiveComponents.
       buffer_output_size: 8388608
@@ -19,17 +29,13 @@ swoole:
     services:
       reset_handler: true
     settings:
-      worker_count: 4
+      worker_count: 2
   platform:
     coroutines:
-      # Off by default. The bundle reads this flag at container-build time, so it must be a
-      # literal (an %env()% / %param% placeholder is a truthy string here) - turn coroutines
-      # on for a single environment by overriding it in config/packages/<env>/swoole.yaml
-      # once the stateful-service pinning below has been validated there under real traffic
-      # (a mis-pinned mutable service leaks one user's state into another concurrent request).
-      # Keep it off in test: PHPUnit's WebTestCase never runs inside the real Swoole HTTP
-      # server, and the bundle's kernel-cloning under coroutines breaks KernelTestCase teardown.
-      enabled: false
+      # On. Disabled only in test (see when@test): PHPUnit's WebTestCase never runs inside
+      # the real Swoole HTTP server, and the bundle's kernel-cloning under coroutines breaks
+      # KernelTestCase teardown.
+      enabled: true
       # This app's traffic never needs anywhere near the bundle's default ceiling of
       # max_coroutines live instances per pooled service; bounding it caps RSS growth.
       max_concurrency: 50
@@ -54,25 +60,25 @@ swoole:
       doctrine_processor_config:
         global_limit: 5
 
-# SwooleBundleResetterBundle is only enabled in prod + dev (config/bundles.php), so its
-# config lives in per-environment blocks rather than at the top level.
-when@dev:
-  swoole_bundle_resetter:
-    # Roll back a transaction left open by a coroutine that failed mid-flight, so the next
-    # coroutine to check out that pooled connection does not trip "There is already an
-    # active transaction".
-    check_active_transactions: true
+swoole_bundle_resetter:
+  # Roll back a transaction left open by a coroutine that failed mid-flight, so the next
+  # coroutine to check out that pooled connection does not trip "There is already an active
+  # transaction". Needed in every env now that connections are pooled per coroutine.
+  check_active_transactions: true
 
 when@prod:
   swoole_bundle_resetter:
-    check_active_transactions: true
     # If set, the connection ping runs every X seconds instead of at the start of each request.
     ping_interval: 29
 
-# To enable coroutines in production once validated, drop a config/packages/prod/swoole.yaml
-# containing:
-#   swoole:
-#     platform:
-#       coroutines:
-#         enabled: true
-# The stateful_services / max_concurrency / doctrine_processor_config above already apply.
+# Coroutines only matter for the real Swoole HTTP server process, which PHPUnit never starts.
+# With coroutines on, swoole-bundle swaps the container's `kernel` service for a clone that
+# deliberately shares bundle instances with the original; KernelBrowser reboots that clone
+# between requests, and its first shutdown() nulls the container on bundle objects the real
+# KernelTestCase kernel still holds, crashing tearDown(). Disabling coroutines for tests
+# sidesteps the clone entirely.
+when@test:
+  swoole:
+    platform:
+      coroutines:
+        enabled: false

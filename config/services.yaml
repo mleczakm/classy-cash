@@ -119,13 +119,19 @@ services:
   Symfony\Contracts\Service\ResetInterface:
     alias: services_resetter
 
+  # readonly resettable services can't be proxified for coroutine pooling; they hold no
+  # per-request state so mark them safe to share as-is.
   App\Infrastructure\Doctrine\EntityManagerResetter:
     arguments:
       $env: '%kernel.environment%'
     public: true
+    tags:
+      - { name: swoole_bundle.safe_stateful_service }
 
   App\Infrastructure\ImapEngine\ConnectionCloserOnResetSubscriber:
     public: true
+    tags:
+      - { name: swoole_bundle.safe_stateful_service }
 
   App\Infrastructure\Swoole\CurrentWorkerRestarterInterface:
     alias: App\Infrastructure\Swoole\SwooleCurrentWorkerRestarter
@@ -184,11 +190,22 @@ services:
         # CRUCIAL: Forces the explicit schema mapping prefix
         db_table: 'classycash.cache_items'
 
+# SentryBundle is prod-only (config/bundles.php), so dev/test have no real, DSN-bound Hub.
+# The coroutine proxifier eagerly wraps SentryHandler and needs its $hub resolvable, so fall
+# back to the bare SDK singleton here - it never gets a client bound, so captures are no-ops.
+when@dev:
+  services:
+    Sentry\State\HubInterface:
+      factory: ['Sentry\SentrySdk', 'getCurrentHub']
+
 when@test:
   services:
     _defaults:
       autowire: true
       autoconfigure: true
+
+    Sentry\State\HubInterface:
+      factory: ['Sentry\SentrySdk', 'getCurrentHub']
 
     # The real Swoole task-worker constraint this guards against does not exist under
     # PHPUnit, and some tests deliberately route nested commands to the fake transport.
