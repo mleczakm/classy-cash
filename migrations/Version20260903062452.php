@@ -9,8 +9,8 @@ use Doctrine\Migrations\AbstractMigration;
 
 /**
  * Baseline schema. Generated from the entity mappings; before this the schema was managed
- * with doctrine:schema:update. Guarded with skipIf so it is a no-op on the existing
- * production/dev database.
+ * with doctrine:schema:update. Existing installations return normally without replaying the
+ * baseline, allowing Doctrine to record the version as executed.
  */
 final class Version20260903062452 extends AbstractMigration
 {
@@ -21,10 +21,11 @@ final class Version20260903062452 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $this->skipIf(
-            $this->connection->executeQuery("SELECT to_regclass('classycash.setting')")->fetchOne() !== null,
-            'Baseline schema already present - skipping (existing database).',
-        );
+        if ($this->connection->executeQuery("SELECT to_regclass('classycash.setting')")->fetchOne() !== null) {
+            $this->write('Baseline schema already present; recording migration without replaying it.');
+
+            return;
+        }
 
         $this->addSql('CREATE SCHEMA IF NOT EXISTS classycash');
         $this->addSql('CREATE SEQUENCE classycash.payment_code_id_seq INCREMENT BY 1 MINVALUE 1 START 1');

@@ -40,6 +40,15 @@
 # Migrations run in a one-shot container before the live container is replaced. Doctrine is
 # constrained to the `classycash` search path and every migration uses schema-qualified
 # `classycash.*` objects, so the Kiddo schema in the shared database is outside its scope.
+- name: "Ensure ClassyCash database schema exists"
+  command: >
+    docker run --rm
+    --env-file "/tmp/{{ app.name }}.env"
+    {{ app.image }}
+    php bin/console dbal:run-sql 'CREATE SCHEMA IF NOT EXISTS classycash'
+  register: schema_result
+  changed_when: true
+
 - name: "Run database migrations"
   command: >
     docker run --rm
