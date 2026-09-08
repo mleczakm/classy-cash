@@ -7,14 +7,6 @@
 - name: "Pull Docker image: {{ app.image }}"
   command: "docker pull {{ app.image }}"
 
-- name: "Stop existing container: {{ app.name }}"
-  command: "docker stop {{ app.name }}"
-  ignore_errors: yes
-
-- name: "Remove existing container: {{ app.name }}"
-  command: "docker rm {{ app.name }}"
-  ignore_errors: yes
-
 - name: "Read .env.production file"
   slurp:
     src: "{{ env_file_path }}"
@@ -43,6 +35,31 @@
       {% endfor %}
     dest: "/tmp/{{ app.name }}.env"
     mode: '0600'
+  no_log: true
+
+# Migrations run in a one-shot container before the live container is replaced. Doctrine is
+# constrained to the `classycash` search path and every migration uses schema-qualified
+# `classycash.*` objects, so the Kiddo schema in the shared database is outside its scope.
+- name: "Run database migrations"
+  command: >
+    docker run --rm
+    --env-file "/tmp/{{ app.name }}.env"
+    {{ app.image }}
+    php bin/console doctrine:migrations:migrate --no-interaction
+  register: migration_result
+  changed_when: true
+
+- name: "Display migration result"
+  debug:
+    var: migration_result.stdout_lines
+
+- name: "Stop existing container: {{ app.name }}"
+  command: "docker stop {{ app.name }}"
+  ignore_errors: yes
+
+- name: "Remove existing container: {{ app.name }}"
+  command: "docker rm {{ app.name }}"
+  ignore_errors: yes
 
 - name: "Run new container: {{ app.name }}"
   command: >
@@ -62,18 +79,9 @@
   wait_for:
     timeout: 30
 
-- name: "Run Doctrine schema update"
-  command: "docker exec {{ app.name }} php bin/console doctrine:schema:update --force"
-  register: schema_update_result
-
-- name: "Display schema update result"
-  debug:
-    var: schema_update_result.stdout_lines
-
 - name: "Run cash state recalculation"
   command: "docker exec {{ app.name }} php bin/console app:recalculate-cash-state"
   register: recalc_result
-  when: schema_update_result.rc == 0
 
 - name: "Display cash recalculation result"
   debug:

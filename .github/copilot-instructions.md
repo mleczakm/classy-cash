@@ -20,7 +20,7 @@
 - **Composer dependencies:**
   - Install with: `docker compose run --rm php composer install`
 - **Database:**
-  - Migrations: `docker compose run --rm php bin/console doctrine:schema:update --force`
+  - Migrations: `docker compose run --rm php bin/console doctrine:migrations:migrate --no-interaction`
 
 ### Build/Bootstrap
 - No explicit build step; ensure dependencies are installed and migrations are run.
@@ -103,4 +103,3 @@
 ---
 
 For further details, consult `README.md` and config files in the repo root and `config/`.
-
