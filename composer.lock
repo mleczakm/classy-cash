@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7e388516163c896d970f3d91c9850fa3",
+    "content-hash": "03a97bd5014ef4741a0714c9e158bf15",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -5059,16 +5059,16 @@
         },
         {
             "name": "swoole-bundle/swoole-bundle",
-            "version": "dev-fix/nonshared-service-pool-leak",
+            "version": "v0.34.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/mleczakm/swoole-bundle.git",
-                "reference": "8e36abf3277a70faa5c74af8e2e1948fe52e6569"
+                "url": "https://github.com/symfony-swoole/swoole-bundle.git",
+                "reference": "a248fbc824db88ebcfdb413f2ba8753278ebb1a9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mleczakm/swoole-bundle/zipball/8e36abf3277a70faa5c74af8e2e1948fe52e6569",
-                "reference": "8e36abf3277a70faa5c74af8e2e1948fe52e6569",
+                "url": "https://api.github.com/repos/symfony-swoole/swoole-bundle/zipball/a248fbc824db88ebcfdb413f2ba8753278ebb1a9",
+                "reference": "a248fbc824db88ebcfdb413f2ba8753278ebb1a9",
                 "shasum": ""
             },
             "require": {
@@ -5214,79 +5214,7 @@
                     "SwooleBundle\\SwooleBundle\\": "src"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "SwooleBundle\\SwooleBundle\\Tests\\": "tests"
-                },
-                "files": [
-                    "tests/Bridge/Tideways/TidewaysMock.php"
-                ]
-            },
-            "scripts": {
-                "console": [
-                    "php tests/Fixtures/Symfony/app/console --ansi"
-                ],
-                "static-analyse-src": [
-                    "phpstan analyze -c phpstan.neon --ansi --memory-limit=512M"
-                ],
-                "static-analyse-tests": [
-                    "phpstan analyze -c phpstan.tests.neon --ansi --memory-limit=512M"
-                ],
-                "cs-analyse": [
-                    "php-cs-fixer fix -v --dry-run --diff --stop-on-violation --ansi"
-                ],
-                "cs-fix": [
-                    "php-cs-fixer fix -v --diff --ansi"
-                ],
-                "analyse": [
-                    "@static-analyse-src",
-                    "@static-analyse-tests",
-                    "@cs-analyse"
-                ],
-                "test": [
-                    "@analyse",
-                    "@unit-tests"
-                ],
-                "feature-tests": [
-                    "paratest -c phpunit.feature.xml --processes=${PARATEST_PROCESSES:-4} --process-isolation --colors=always"
-                ],
-                "feature-tests-serial": [
-                    "phpunit tests/Feature --process-isolation --colors=always"
-                ],
-                "feature-tests-junit": [
-                    "paratest -c phpunit.feature.xml --processes=${PARATEST_PROCESSES:-4} --process-isolation --colors=always --log-junit phpunit/junit.xml"
-                ],
-                "unit-code-coverage": [
-                    "phpunit tests/Unit --coverage-php cov/unit-tests-${SWOOLE:-unknown}.cov --colors=always"
-                ],
-                "feature-code-coverage": [
-                    "COVERAGE=1 paratest -c phpunit.feature.xml --processes=${PARATEST_PROCESSES:-4} --process-isolation --coverage-php cov/feature-tests-${SWOOLE:-unknown}.cov --colors=always"
-                ],
-                "feature-code-coverage-serial": [
-                    "COVERAGE=1 phpunit tests/Feature --coverage-php cov/feature-tests-${SWOOLE:-unknown}.cov --colors=always --process-isolation"
-                ],
-                "merge-code-coverage": [
-                    "php -dmemory_limit=512M ./vendor/bin/phpcov merge cov --clover=clover.xml"
-                ],
-                "unit-tests": [
-                    "phpunit tests/Unit --colors=always"
-                ],
-                "unit-tests-junit": [
-                    "phpunit tests/Unit --colors=always --log-junit phpunit/junit.xml"
-                ],
-                "grumphp_complete": [
-                    "grumphp run --testsuite=complete"
-                ],
-                "grumphp_tests": [
-                    "grumphp run --testsuite=tests"
-                ],
-                "phpcs": [
-                    "phpcs --standard=phpcs.xml --extensions=php --tab-width=4 -sp src tests"
-                ],
-                "phpcbf": [
-                    "phpcbf --standard=phpcs.xml --extensions=php --tab-width=4 -sp src tests"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -5305,28 +5233,42 @@
             "description": "Open/Swoole Symfony Bundle",
             "homepage": "https://github.com/symfony-swoole/swoole-bundle",
             "keywords": [
-                "Async",
-                "Bundle",
-                "HTTP",
-                "OpenSwoole",
-                "PHP",
-                "Server",
-                "Swoole"
+                "async",
+                "bundle",
+                "http",
+                "openswoole",
+                "php",
+                "server",
+                "swoole"
             ],
-            "time": "2026-09-02T20:51:45+00:00"
+            "support": {
+                "issues": "https://github.com/symfony-swoole/swoole-bundle/issues",
+                "source": "https://github.com/symfony-swoole/swoole-bundle/tree/v0.34.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/Rastusik",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/symfony-swoole",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-08-28T10:18:32+00:00"
         },
         {
             "name": "swoole-bundle/z-engine",
-            "version": "dev-fix/get-raw-class-alias-ptr",
+            "version": "8.5.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/mleczakm/z-engine.git",
-                "reference": "707487f2f9b9611d3099cc35e8d74e5c8ea05a88"
+                "url": "https://github.com/symfony-swoole/z-engine.git",
+                "reference": "5c06419c4a1aaf87fda0d8065dd050c7e3d5380e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mleczakm/z-engine/zipball/707487f2f9b9611d3099cc35e8d74e5c8ea05a88",
-                "reference": "707487f2f9b9611d3099cc35e8d74e5c8ea05a88",
+                "url": "https://api.github.com/repos/symfony-swoole/z-engine/zipball/5c06419c4a1aaf87fda0d8065dd050c7e3d5380e",
+                "reference": "5c06419c4a1aaf87fda0d8065dd050c7e3d5380e",
                 "shasum": ""
             },
             "require": {
@@ -5342,11 +5284,7 @@
                     "ZEngine\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "ZEngine\\": "tests/"
-                }
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -5357,7 +5295,10 @@
                 }
             ],
             "description": "Library that provides direct access to native PHP structures",
-            "time": "2026-08-08T13:59:31+00:00"
+            "support": {
+                "source": "https://github.com/symfony-swoole/z-engine/tree/8.5.2"
+            },
+            "time": "2026-08-28T09:14:42+00:00"
         },
         {
             "name": "symfony/asset",
@@ -17187,27 +17128,13 @@
             "version": "9999999-dev",
             "alias": "3.0.2",
             "alias_normalized": "3.0.2.0"
-        },
-        {
-            "package": "swoole-bundle/swoole-bundle",
-            "version": "dev-fix/nonshared-service-pool-leak",
-            "alias": "v0.32.0",
-            "alias_normalized": "0.32.0.0"
-        },
-        {
-            "package": "swoole-bundle/z-engine",
-            "version": "dev-fix/get-raw-class-alias-ptr",
-            "alias": "8.5.1",
-            "alias_normalized": "8.5.1.0"
         }
     ],
     "minimum-stability": "stable",
     "stability-flags": {
         "logdash/php-sdk": 20,
         "novaway/feature-flag-bundle": 20,
-        "roave/security-advisories": 20,
-        "swoole-bundle/swoole-bundle": 20,
-        "swoole-bundle/z-engine": 20
+        "roave/security-advisories": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

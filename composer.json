@@ -13,16 +13,6 @@
     },
     {
       "type": "vcs",
-      "url": "https://github.com/mleczakm/z-engine.git",
-      "no-api": true
-    },
-    {
-      "type": "vcs",
-      "url": "https://github.com/mleczakm/swoole-bundle.git",
-      "no-api": true
-    },
-    {
-      "type": "vcs",
       "url": "https://github.com/mleczakm/zip-bomb-honeypot.git"
     }
   ],
@@ -54,8 +44,8 @@
     "scienta/doctrine-json-functions": "^6.5",
     "sentry/sentry-symfony": "^5.13.0",
     "swoole-bundle/resetter-bundle": "^2.0.1",
-    "swoole-bundle/swoole-bundle": "dev-fix/nonshared-service-pool-leak as v0.32.0",
-    "swoole-bundle/z-engine": "dev-fix/get-raw-class-alias-ptr as 8.5.1",
+    "swoole-bundle/swoole-bundle": "^0.34.0",
+    "swoole-bundle/z-engine": "8.5.2",
     "symfony/asset": "8.0.*",
     "symfony/asset-mapper": "8.0.*",
     "symfony/brevo-mailer": "8.0.*",
