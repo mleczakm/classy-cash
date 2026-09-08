@@ -1523,9 +1523,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         commands?: list<Param|string|list<scalar|Param|null>>,
  *     },
  *     platform?: array{
- *         logging?: array{
- *             worker_context?: bool|Param, // Adds worker, cid and command to the extra of every monolog record, so a line of a log every worker and every coroutine writes to says which of them wrote it. Off by default, because it changes what every log line looks like. // Default: false
- *         },
  *         fiber_context?: array{
  *             enabled?: "auto"|"off"|"on"|Param, // Default: "auto"
  *         },
@@ -1673,6 +1670,31 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     failover_connections?: mixed, // Master slave connections reader/writer configuration. // Default: []
  *     redis_cluster_connections?: mixed, // Redis cluster connections for alive keeping. // Default: []
  * }
+ * @psalm-type SwooleBundleSchedulerConfig = array{
+ *     enabled?: bool|Param, // Register the Swoole Timer::tick scheduler polling loop as a server configurator. // Default: false
+ *     interval?: int|Param, // How often, in seconds, to poll Symfony Scheduler schedules for due messages. // Default: 60
+ *     pre_run?: scalar|Param|null, // Optional service id, invoked as a callable before each poll pass and before each message dispatch (e.g. a database connection liveness check). Must be invokable. // Default: null
+ *     after_tick?: scalar|Param|null, // Optional service id, invoked as a callable after every tick whether it succeeded or not (e.g. resetting shared, non-pooled app state). Must be invokable. // Default: null
+ *     lock?: array{ // Cross-process lock around each tick, to stop a spillover tick in a second OS process double-dispatching.
+ *         enabled?: bool|Param, // Default: false
+ *         factory?: scalar|Param|null, // Service id of a Symfony\Component\Lock\LockFactory backed by a cross-process store. // Default: "lock.factory"
+ *         resource?: scalar|Param|null, // Lock resource name. // Default: "swoole-scheduler-tick"
+ *     },
+ *     watchdog?: array{ // Timer::after deadline for a single Scheduler::run() pass; past it the tick is abandoned and the lock force-released.
+ *         enabled?: bool|Param, // Default: false
+ *         timeout?: int|Param, // Seconds a single Scheduler::run() pass is allowed before the watchdog force-releases the tick. // Default: 15
+ *     },
+ *     heartbeat?: array{ // Record a "last completed tick" timestamp after every successful run, for an HTTP-worker health check to read.
+ *         enabled?: bool|Param, // Default: false
+ *         cache?: scalar|Param|null, // Cache pool service id (PSR-6). Must be a cross-process, deploy-surviving store (Redis / DBAL), not an in-memory pool. // Default: "cache.app"
+ *         key?: scalar|Param|null, // Default: "scheduler_last_tick_at"
+ *         ttl?: int|Param, // Default: 86400
+ *     },
+ *     health_check?: array{ // Register a macpaw/symfony-health-check-bundle check that fails when ticks stop completing. Implies heartbeat.
+ *         enabled?: bool|Param, // Default: false
+ *         max_silence?: int|Param, // Seconds without a completed tick above which the /health check fails. // Default: 90
+ *     },
+ * }
  * @psalm-type SymfonyHealthCheckConfig = array{
  *     ping_error_response_code?: mixed, // Default: null
  *     health_error_response_code?: mixed, // Default: null
@@ -1819,6 +1841,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     misd_phone_number?: MisdPhoneNumberConfig,
  *     dunglas_doctrine_json_odm?: DunglasDoctrineJsonOdmConfig,
  *     swoole_bundle_resetter?: SwooleBundleResetterConfig,
+ *     swoole_bundle_scheduler?: SwooleBundleSchedulerConfig,
  *     symfony_health_check?: SymfonyHealthCheckConfig,
  *     novaway_feature_flag?: NovawayFeatureFlagConfig,
  *     doctrine_migrations?: DoctrineMigrationsConfig,
@@ -1846,6 +1869,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         zenstruck_foundry?: ZenstruckFoundryConfig,
  *         dunglas_doctrine_json_odm?: DunglasDoctrineJsonOdmConfig,
  *         swoole_bundle_resetter?: SwooleBundleResetterConfig,
+ *         swoole_bundle_scheduler?: SwooleBundleSchedulerConfig,
  *         symfony_health_check?: SymfonyHealthCheckConfig,
  *         novaway_feature_flag?: NovawayFeatureFlagConfig,
  *         doctrine_migrations?: DoctrineMigrationsConfig,
@@ -1870,6 +1894,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         misd_phone_number?: MisdPhoneNumberConfig,
  *         dunglas_doctrine_json_odm?: DunglasDoctrineJsonOdmConfig,
  *         swoole_bundle_resetter?: SwooleBundleResetterConfig,
+ *         swoole_bundle_scheduler?: SwooleBundleSchedulerConfig,
  *         symfony_health_check?: SymfonyHealthCheckConfig,
  *         sentry?: SentryConfig,
  *         novaway_feature_flag?: NovawayFeatureFlagConfig,
@@ -1898,6 +1923,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         dunglas_doctrine_json_odm?: DunglasDoctrineJsonOdmConfig,
  *         dama_doctrine_test?: DamaDoctrineTestConfig,
  *         swoole_bundle_resetter?: SwooleBundleResetterConfig,
+ *         swoole_bundle_scheduler?: SwooleBundleSchedulerConfig,
  *         symfony_health_check?: SymfonyHealthCheckConfig,
  *         novaway_feature_flag?: NovawayFeatureFlagConfig,
  *         doctrine_migrations?: DoctrineMigrationsConfig,

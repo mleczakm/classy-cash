@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Infrastructure\Doctrine;
 
 use App\Infrastructure\Doctrine\SchedulerConnectionResetter;
-use App\Infrastructure\Symfony\Scheduler;
+use App\Infrastructure\Doctrine\SchedulerConnectionGuard;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -82,12 +82,8 @@ final class SchedulerConnectionResetterFunctionalTest extends KernelTestCase
         $this->connection->close();
         $this->assertFalse($this->connection->isConnected());
 
-        // Get the scheduler from container
-        $scheduler = self::getContainer()->get(Scheduler::class);
-
-        // Run the scheduler - this should call ensureConnection() internally
-        // before accessing the checkpoint cache
-        $scheduler->run();
+        // Exercise the pre-run hook configured for swoole-bundle-scheduler.
+        self::getContainer()->get(SchedulerConnectionGuard::class)();
 
         // Verify connection is reconnected and can execute queries
         $this->assertTrue($this->connection->isConnected());
@@ -103,11 +99,8 @@ final class SchedulerConnectionResetterFunctionalTest extends KernelTestCase
             $this->connection->close();
             $this->assertFalse($this->connection->isConnected());
 
-            // Get the scheduler from container
-            $scheduler = self::getContainer()->get(Scheduler::class);
-
-            // Run the scheduler - should reconnect before checkpoint cache access
-            $scheduler->run();
+            // The scheduler bundle invokes this guard before each poll and dispatch.
+            self::getContainer()->get(SchedulerConnectionGuard::class)();
 
             // Verify connection is reconnected
             $this->assertTrue($this->connection->isConnected());

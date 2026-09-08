@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "03a97bd5014ef4741a0714c9e158bf15",
+    "content-hash": "4e0562542606d471db11c4085f466c0d",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -3309,6 +3309,82 @@
                 }
             ],
             "time": "2025-12-13T18:00:33+00:00"
+        },
+        {
+            "name": "mleczakm/swoole-bundle-scheduler",
+            "version": "v0.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mleczakm/swoole-bundle-scheduler.git",
+                "reference": "5c6077c006b028532706e822ae7d33e27886023e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mleczakm/swoole-bundle-scheduler/zipball/5c6077c006b028532706e822ae7d33e27886023e",
+                "reference": "5c6077c006b028532706e822ae7d33e27886023e",
+                "shasum": ""
+            },
+            "require": {
+                "ext-swoole": "*",
+                "php": "^8.3",
+                "psr/cache": "^2.0 || ^3.0",
+                "psr/clock": "^1.0",
+                "psr/event-dispatcher": "^1.0",
+                "psr/log": "^3.0",
+                "swoole-bundle/swoole-bundle": "^0.32 || ^0.33 || ^0.34",
+                "symfony/cache": "^7.4 || ^8.0",
+                "symfony/clock": "^7.4 || ^8.0",
+                "symfony/config": "^7.4 || ^8.0",
+                "symfony/dependency-injection": "^7.4 || ^8.0",
+                "symfony/http-kernel": "^7.4 || ^8.0",
+                "symfony/messenger": "^7.4 || ^8.0",
+                "symfony/scheduler": "^7.4 || ^8.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.94",
+                "macpaw/symfony-health-check-bundle": "^2.1",
+                "phpstan/extension-installer": "^1.4",
+                "phpstan/phpstan": "^2.1",
+                "phpstan/phpstan-phpunit": "^2.0",
+                "phpunit/phpunit": "^11.5 || ^12.5",
+                "symfony/framework-bundle": "^7.4 || ^8.0",
+                "symfony/lock": "^7.4 || ^8.0"
+            },
+            "suggest": {
+                "macpaw/symfony-health-check-bundle": "Enables the /health scheduler heartbeat check (swoole_bundle_scheduler.health_check)",
+                "symfony/lock": "Enables the opt-in cross-process tick lock (swoole_bundle_scheduler.lock)"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-4": {
+                    "SwooleBundle\\Scheduler\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michał Mleczko",
+                    "email": "do@mleczki.pl"
+                }
+            ],
+            "description": "Run Symfony Scheduler inside the Swoole HTTP server on a Swoole\\Timer::tick() loop instead of a blocking messenger:consume worker.",
+            "keywords": [
+                "Messenger",
+                "cron",
+                "openswoole",
+                "scheduler",
+                "swoole",
+                "swoole-bundle",
+                "symfony"
+            ],
+            "support": {
+                "issues": "https://github.com/mleczakm/swoole-bundle-scheduler/issues",
+                "source": "https://github.com/mleczakm/swoole-bundle-scheduler/tree/v0.1.1"
+            },
+            "time": "2026-09-08T17:52:13+00:00"
         },
         {
             "name": "mleczakm/zip-bomb-honeypot",
@@ -17139,12 +17215,12 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
+        "php": ">=8.5",
         "ext-ctype": "*",
         "ext-ds": "*",
         "ext-iconv": "*",
         "ext-swoole": "*",
-        "ext-zlib": "*",
-        "php": ">=8.5"
+        "ext-zlib": "*"
     },
     "platform-dev": {},
     "platform-overrides": {

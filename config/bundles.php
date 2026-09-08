@@ -24,6 +24,7 @@ use Zenstruck\Foundry\ZenstruckFoundryBundle;
 use Dunglas\DoctrineJsonOdm\Bundle\DunglasDoctrineJsonOdmBundle;
 use DAMA\DoctrineTestBundle\DAMADoctrineTestBundle;
 use SwooleBundle\ResetterBundle\SwooleBundleResetterBundle;
+use SwooleBundle\Scheduler\SwooleBundleSchedulerBundle;
 use SymfonyHealthCheckBundle\SymfonyHealthCheckBundle;
 use Sentry\SentryBundle\SentryBundle;
 use Zenstruck\Mailer\Test\ZenstruckMailerTestBundle;
@@ -98,6 +99,9 @@ return [
         'test' => true,
     ],
     SwooleBundleResetterBundle::class => [
+        'all' => true,
+    ],
+    SwooleBundleSchedulerBundle::class => [
         'all' => true,
     ],
     SymfonyHealthCheckBundle::class => [

@@ -4,6 +4,10 @@ framework:
 
     # Note that the session will be started ONLY if you read or write from it.
     session:
+        # Native PHP session state is process-global and unsafe when requests run in
+        # concurrent Swoole coroutines. Keep request state in the coroutine-local table and
+        # delegate persistence to the PDO handler below.
+        storage_factory_id: swoole_bundle.session.table_storage_factory
         handler_id: Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler
 
     #esi: true

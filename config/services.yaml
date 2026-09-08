@@ -4,9 +4,8 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
-  # Deadline (seconds) for one Symfony Scheduler tick inside the Swoole master; past this the
-  # WithScheduler watchdog releases its reentrancy guard so the next tick can proceed.
   env(SCHEDULER_TICK_TIMEOUT_SECONDS): '15'
+  env(HEALTHCHECK_SCHEDULER_MAX_SILENCE_SECONDS): '90'
 
 services:
   # default configuration for services in *this* file
@@ -58,17 +57,6 @@ services:
     public: true
     autowire: false
     autoconfigure: false
-
-  App\Infrastructure\Symfony\Scheduler:
-    arguments:
-      $scheduleProviders:
-        - '@App\Infrastructure\Symfony\Scheduler\MainSchedule'
-
-  App\Infrastructure\Swoole\Configurator\WithScheduler:
-    arguments:
-      $tickTimeoutSeconds: '%env(int:SCHEDULER_TICK_TIMEOUT_SECONDS)%'
-    tags:
-      - 'swoole_bundle.server_configurator'
 
   DirectoryTree\ImapEngine\MailboxInterface:
     class: DirectoryTree\ImapEngine\Mailbox

@@ -7,11 +7,13 @@ namespace App\Infrastructure\Symfony\Scheduler;
 use App\Application\Command\CheckExpiredPayments;
 use App\Application\Command\ImportTransfersFromMail;
 use App\Application\Command\TriggerMatchPaymentForTransferForPastTransfers;
+use Symfony\Component\Scheduler\Attribute\AsSchedule;
 use Symfony\Component\Scheduler\RecurringMessage;
 use Symfony\Component\Scheduler\Schedule;
 use Symfony\Component\Scheduler\ScheduleProviderInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 
+#[AsSchedule('main')]
 final readonly class MainSchedule implements ScheduleProviderInterface
 {
     public function __construct(
