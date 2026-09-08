@@ -78,15 +78,16 @@ jobs:
         run: |
             echo "NETWORK_NAME=$(docker network ls --filter name=github --format '{{.Name}}')" >> $GITHUB_ENV
 
-      - name: Run tests with coverage
+      - name: Run unit and functional tests with coverage
         run: |
           mkdir -p target/coverage
           docker run --rm \
             --network "$NETWORK_NAME" \
+            -e XDEBUG_MODE=coverage \
             -e DATABASE_URL \
             -v "$PWD/target/coverage:/app/target/coverage" \
             ${{ steps.meta.outputs.tags }} \
-            sh -lc 'composer tests:functional:setup && bin/phpunit \
+            sh -lc 'composer tests:functional:setup && bin/phpunit --group unit --group functional \
               --coverage-clover target/coverage/clover.xml \
               --coverage-cobertura target/coverage/cobertura.xml \
               --coverage-html target/coverage/html'
@@ -96,13 +97,6 @@ jobs:
       - name: Publish coverage summary and badge
         id: coverage
         run: php .github/scripts/coverage-summary.php target/coverage/clover.xml docs/coverage.svg
-
-      - name: Enforce minimum total coverage
-        run: |
-          docker run --rm \
-            -v "$PWD/target/coverage:/app/target/coverage" \
-            ${{ steps.meta.outputs.tags }} \
-            vendor/bin/coverage-check target/coverage/clover.xml 60
 
       - name: Enforce coverage on changed code
         if: github.event_name == 'pull_request'

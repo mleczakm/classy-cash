@@ -5,6 +5,25 @@
 
 **Classy Cash** to nowoczesna aplikacja webowa stworzona z myślą o skarbnikach szkolnych. Jej zadaniem jest automatyzacja zbierania składek, monitorowanie wpłat oraz ułatwienie rozliczeń z rodzicami i uczniami.
 
+## Tests and code quality
+
+Start PostgreSQL before running database-backed tests:
+
+```bash
+docker compose up -d db
+```
+
+| Goal | Command |
+| --- | --- |
+| All tests | `docker compose run --rm php composer tests` |
+| Unit tests | `docker compose run --rm php bin/phpunit --group unit` |
+| Unit and functional coverage | `docker compose run --rm -e XDEBUG_MODE=coverage php composer coverage` |
+| Smoke tests | `docker compose run --rm php composer tests:smoke` |
+| Functional tests | `docker compose run --rm php composer tests:functional` |
+| Full quality gate | `docker compose run --rm php composer qa` |
+
+CI publishes Clover, Cobertura, and HTML reports as the `test-coverage` artifact and updates the coverage badge above. As in Kiddo, pull requests must cover at least 50% of executable lines added or changed.
+
 ## 🚀 Szybki start (Docker)
 
 Aplikacja jest dostarczana jako obraz kontenerowy, co zapewnia powtarzalność środowiska. Do poprawnego działania wymagana jest baza danych **PostgreSQL**.
