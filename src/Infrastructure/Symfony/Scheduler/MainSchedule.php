@@ -6,6 +6,7 @@ namespace App\Infrastructure\Symfony\Scheduler;
 
 use App\Application\Command\CheckExpiredPayments;
 use App\Application\Command\ImportTransfersFromMail;
+use App\Application\Command\SampleResourceUsage;
 use App\Application\Command\TriggerMatchPaymentForTransferForPastTransfers;
 use Symfony\Component\Scheduler\Attribute\AsSchedule;
 use Symfony\Component\Scheduler\RecurringMessage;
@@ -28,6 +29,7 @@ final readonly class MainSchedule implements ScheduleProviderInterface
             ->add(
                 RecurringMessage::every('5 minutes', new CheckExpiredPayments(expirationMinutes: 24 * 60)),
                 RecurringMessage::every(30, new ImportTransfersFromMail()),
+                RecurringMessage::every(60, new SampleResourceUsage()),
                 RecurringMessage::every(60, new TriggerMatchPaymentForTransferForPastTransfers()),
             );
     }

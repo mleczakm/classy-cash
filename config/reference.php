@@ -1695,6 +1695,12 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         max_silence?: int|Param, // Seconds without a completed tick above which the /health check fails. // Default: 90
  *     },
  * }
+ * @psalm-type SwooleBundleObservabilityConfig = array{
+ *     health_checks?: bool|Param, // Default: true
+ *     max_processes?: int|Param, // Default: 20
+ *     max_rss_mib?: int|Param, // Default: 1536
+ *     http_url?: scalar|Param|null, // Default: "https://connectivitycheck.gstatic.com/generate_204"
+ * }
  * @psalm-type SymfonyHealthCheckConfig = array{
  *     ping_error_response_code?: mixed, // Default: null
  *     health_error_response_code?: mixed, // Default: null
@@ -1842,6 +1848,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     dunglas_doctrine_json_odm?: DunglasDoctrineJsonOdmConfig,
  *     swoole_bundle_resetter?: SwooleBundleResetterConfig,
  *     swoole_bundle_scheduler?: SwooleBundleSchedulerConfig,
+ *     swoole_bundle_observability?: SwooleBundleObservabilityConfig,
  *     symfony_health_check?: SymfonyHealthCheckConfig,
  *     novaway_feature_flag?: NovawayFeatureFlagConfig,
  *     doctrine_migrations?: DoctrineMigrationsConfig,
@@ -1870,6 +1877,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         dunglas_doctrine_json_odm?: DunglasDoctrineJsonOdmConfig,
  *         swoole_bundle_resetter?: SwooleBundleResetterConfig,
  *         swoole_bundle_scheduler?: SwooleBundleSchedulerConfig,
+ *         swoole_bundle_observability?: SwooleBundleObservabilityConfig,
  *         symfony_health_check?: SymfonyHealthCheckConfig,
  *         novaway_feature_flag?: NovawayFeatureFlagConfig,
  *         doctrine_migrations?: DoctrineMigrationsConfig,
@@ -1895,6 +1903,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         dunglas_doctrine_json_odm?: DunglasDoctrineJsonOdmConfig,
  *         swoole_bundle_resetter?: SwooleBundleResetterConfig,
  *         swoole_bundle_scheduler?: SwooleBundleSchedulerConfig,
+ *         swoole_bundle_observability?: SwooleBundleObservabilityConfig,
  *         symfony_health_check?: SymfonyHealthCheckConfig,
  *         sentry?: SentryConfig,
  *         novaway_feature_flag?: NovawayFeatureFlagConfig,
@@ -1924,6 +1933,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         dama_doctrine_test?: DamaDoctrineTestConfig,
  *         swoole_bundle_resetter?: SwooleBundleResetterConfig,
  *         swoole_bundle_scheduler?: SwooleBundleSchedulerConfig,
+ *         swoole_bundle_observability?: SwooleBundleObservabilityConfig,
  *         symfony_health_check?: SymfonyHealthCheckConfig,
  *         novaway_feature_flag?: NovawayFeatureFlagConfig,
  *         doctrine_migrations?: DoctrineMigrationsConfig,

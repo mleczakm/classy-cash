@@ -4,6 +4,9 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+  env(HTTP_CLIENT_HEALTHCHECK_URL): 'https://connectivitycheck.gstatic.com/generate_204'
+  env(HEALTHCHECK_MAX_PROCESSES): '20'
+  env(HEALTHCHECK_MAX_RSS_MIB): '1536'
   env(SCHEDULER_TICK_TIMEOUT_SECONDS): '15'
   env(HEALTHCHECK_SCHEDULER_MAX_SILENCE_SECONDS): '90'
 
@@ -144,14 +147,6 @@ services:
     arguments:
       - '%env(DATABASE_URL)%'
       - { db_table: 'classycash.sessions' }
-
-  # Symfony builds this via HttpClient::create(), whose concrete return type is only known at
-  # runtime, so the coroutine proxifier - which skips services without a statically known
-  # class - never pools it, leaving every coroutine sharing one client's native curl handles.
-  # Pinning the class (what the factory picks anyway, since ext-curl is compiled into Swoole)
-  # makes it poolable via swoole.yaml's stateful_services list.
-  http_client.transport:
-    class: Symfony\Component\HttpClient\CurlHttpClient
 
   App\Infrastructure\Twig\MoneyExtension:
     tags: [ 'twig.extension' ]

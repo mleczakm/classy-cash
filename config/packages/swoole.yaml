@@ -54,7 +54,7 @@ swoole:
         # CurlHttpClient holds a native curl multi-handle Swoole refuses to share across
         # coroutines ("This cURL handle is currently executing in coroutine#N"). The class
         # is pinned in services.yaml so the proxifier can see it.
-        - http_client.transport
+        - Sentry\SentryBundle\Tracing\HttpClient\TraceableHttpClient.inner
       # Cap pooled Doctrine connections per process so scheduler polling + workers do not
       # exhaust Postgres max_connections within seconds of boot.
       doctrine_processor_config:

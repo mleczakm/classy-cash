@@ -14,6 +14,10 @@
     {
       "type": "vcs",
       "url": "https://github.com/mleczakm/zip-bomb-honeypot.git"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/mleczakm/swoole-bundle-observability.git"
     }
   ],
   "require": {
@@ -37,6 +41,7 @@
     "macpaw/symfony-health-check-bundle": "^2.1",
     "martin-georgiev/postgresql-for-doctrine": "^3.7.0",
     "mleczakm/swoole-bundle-scheduler": "^0.1.1",
+    "mleczakm/swoole-bundle-observability": "^0.1.2",
     "mleczakm/zip-bomb-honeypot": "^1.0.1",
     "novaway/feature-flag-bundle": "dev-master as 3.0.2",
     "nyholm/psr7": "^1.8.2",
