@@ -17,7 +17,8 @@
     },
     {
       "type": "vcs",
-      "url": "https://github.com/mleczakm/swoole-bundle-observability.git"
+      "url": "https://github.com/mleczakm/swoole-bundle-observability.git",
+      "no-api": true
     }
   ],
   "require": {
