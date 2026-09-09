@@ -3318,16 +3318,16 @@
         },
         {
             "name": "mleczakm/swoole-bundle-observability",
-            "version": "v0.1.2",
+            "version": "v0.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mleczakm/swoole-bundle-observability.git",
-                "reference": "5bea4d9467d47b6dfc74b471350f7d1040a56dff"
+                "reference": "778f61a40b048e85de2d66ad97eb502f78875057"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mleczakm/swoole-bundle-observability/zipball/5bea4d9467d47b6dfc74b471350f7d1040a56dff",
-                "reference": "5bea4d9467d47b6dfc74b471350f7d1040a56dff",
+                "url": "https://api.github.com/repos/mleczakm/swoole-bundle-observability/zipball/778f61a40b048e85de2d66ad97eb502f78875057",
+                "reference": "778f61a40b048e85de2d66ad97eb502f78875057",
                 "shasum": ""
             },
             "require": {
@@ -3375,7 +3375,7 @@
                 "swoole",
                 "symfony"
             ],
-            "time": "2026-09-09T05:12:35+00:00"
+            "time": "2026-09-09T05:30:52+00:00"
         },
         {
             "name": "mleczakm/swoole-bundle-scheduler",
