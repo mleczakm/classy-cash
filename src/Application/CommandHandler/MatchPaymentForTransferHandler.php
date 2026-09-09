@@ -10,6 +10,7 @@ use App\Application\Command\RecalculateCashState;
 use App\Application\Service\TransferPaymentMatcher;
 use App\Entity\Transfer;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\DispatchAfterCurrentBusStamp;
@@ -20,6 +21,7 @@ final readonly class MatchPaymentForTransferHandler
     public function __construct(
         private EntityManagerInterface $entityManager,
         private TransferPaymentMatcher $transferPaymentMatcher,
+        #[Autowire(service: 'state_machine.payment')]
         private WorkflowInterface $paymentStateMachine,
         private MessageBusInterface $messageBus,
     ) {}

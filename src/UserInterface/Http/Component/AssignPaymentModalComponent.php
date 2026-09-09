@@ -49,6 +49,7 @@ class AssignPaymentModalComponent extends AbstractController
         private readonly PaymentRepository $paymentRepository,
         private readonly TransferPaymentMatcher $transferPaymentMatcher,
         private readonly EntityManagerInterface $entityManager,
+        #[Autowire(service: 'state_machine.payment')]
         private readonly WorkflowInterface $paymentStateMachine,
         private readonly StudentPaymentRepository $studentPayments,
         #[Autowire(service: 'state_machine.student_payment')]
