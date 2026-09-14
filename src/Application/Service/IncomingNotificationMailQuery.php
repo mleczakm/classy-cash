@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Application\CommandHandler;
+namespace App\Application\Service;
 
 use DirectoryTree\ImapEngine\MessageQueryInterface;
 

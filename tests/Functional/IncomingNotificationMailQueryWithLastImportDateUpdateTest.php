@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional;
 
-use App\Application\CommandHandler\IncomingNotificationMailQuery;
 use App\Application\CommandHandler\IncomingNotificationMailQueryWithLastImportDateUpdate;
+use App\Application\Service\IncomingNotificationMailQuery;
 use App\Settings\Settings;
 use DirectoryTree\ImapEngine\Testing\FakeFolder;
 use DirectoryTree\ImapEngine\Testing\FakeMessage;

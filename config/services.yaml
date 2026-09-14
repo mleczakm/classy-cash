@@ -44,7 +44,7 @@ services:
     arguments:
       $inner: '@.inner'
 
-  App\Application\CommandHandler\IncomingNotificationMailQuery: '@App\Application\CommandHandler\IncomingNotificationMailQueryWithLastImportDateUpdate'
+  App\Application\Service\IncomingNotificationMailQuery: '@App\Application\CommandHandler\IncomingNotificationMailQueryWithLastImportDateUpdate'
 
   App\Application\CommandHandler\SendLoginNotificationHandler:
     arguments:

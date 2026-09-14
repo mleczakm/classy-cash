@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Application\Service;
+namespace App\Tests\Domain;
 
 use PHPUnit\Framework\Attributes\Group;
-use App\Application\Service\TransferMoneyParser;
+use App\Domain\TransferMoneyParser;
 use Brick\Money\Money;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;

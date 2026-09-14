@@ -6,6 +6,7 @@ namespace App\Application\CommandHandler;
 
 use App\Application\Command\ImportTransfersFromMail;
 use App\Application\Command\SaveTransfer;
+use App\Application\Service\IncomingNotificationMailQuery;
 use App\Application\Service\TransferNotificationMailParserInterface;
 use App\Entity\Transfer;
 use DirectoryTree\ImapEngine\Message;

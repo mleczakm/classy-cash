@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\CommandHandler;
 
+use App\Application\Service\IncomingNotificationMailQuery;
 use App\Settings\Settings;
 use DirectoryTree\ImapEngine\MessageQueryInterface;
 use Symfony\Component\Clock\Clock;

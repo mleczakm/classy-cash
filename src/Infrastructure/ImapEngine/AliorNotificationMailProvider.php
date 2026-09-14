@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\ImapEngine;
 
-use App\Application\CommandHandler\IncomingNotificationMailQuery;
+use App\Application\Service\IncomingNotificationMailQuery;
 use App\Infrastructure\Swoole\CurrentWorkerRestarterInterface;
 use DirectoryTree\ImapEngine\MailboxInterface;
 use DirectoryTree\ImapEngine\MessageQueryInterface;

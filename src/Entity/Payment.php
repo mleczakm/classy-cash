@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Application\Service\TransferMoneyParser;
+use App\Domain\TransferMoneyParser;
 use App\Entity\ClassCouncil\StudentPayment;
 use App\Repository\PaymentRepository;
 use Brick\Money\Money;
