@@ -1,0 +1,7 @@
+# LOGDASH_API_KEY committed to .env in 2025-07, from before the classy-cash /
+# kiddo split; the value was removed from .env in a later commit (see the
+# commit that removed the line above this file). Keeping these two historical
+# commits allowlisted rather than rewriting published history for a key
+# that's already rotated/removed.
+cece373732338ffdc87e2e53773958129438bfd1:.env:generic-api-key:56
+1372b649717249463aa0fb1a01e89188fcfd9309:.env:generic-api-key:56
