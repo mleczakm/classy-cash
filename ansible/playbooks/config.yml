@@ -8,6 +8,7 @@ apps:
     env:
       APP_ENV: prod
       APP_VERSION: "{{ app_version | default('latest') }}"
+      APP_URL: "https://skarbiec.mleczki.pl"
     healthcheck_enabled: true
     ipv6: "{{ mikrus_ipv6 }}"
     cytrus_host: "{{ cytrus_host }}"
