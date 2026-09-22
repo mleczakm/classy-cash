@@ -45,24 +45,22 @@ jobs:
             APP_VERSION=${{ github.ref_name }}
             APP_REVISION=${{ github.sha }}
 
-      - name: Checkout infrastructure-mikrus for shared roles
-        uses: actions/checkout@v4
-        with:
-          repository: mleczakm/infrastructure-mikrus
-          path: infrastructure-mikrus
-          token: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
+      # Used to depend on a checkout of the private mleczakm/infrastructure-mikrus repo for
+      # these two files (nothing else - it has no ansible/roles for this app to use). The
+      # default GITHUB_TOKEN can never read another private repo, so that checkout has 404'd
+      # since 2026-09-16 and every deploy since has failed before touching the container -
+      # vendored here instead so this pipeline has no cross-repo dependency.
       - name: Install Ansible and dependencies
         run: |
           python -m pip install --upgrade pip
           pip install ansible-core
-          pip install -r infrastructure-mikrus/requirements.txt
-          ansible-galaxy install -r infrastructure-mikrus/ansible-collections-requirements.yml
+          pip install -r requirements.txt
+          ansible-galaxy install -r ansible-collections-requirements.yml
 
       - name: Setup SSH key
         run: |
@@ -88,4 +86,4 @@ jobs:
             --extra-vars "env_file_path=${{ env.ENV_FILE_PATH }}"
         env:
           ANSIBLE_HOST_KEY_CHECKING: False
-          ANSIBLE_ROLES_PATH: ./ansible/roles:./infrastructure-mikrus/ansible/roles
+          ANSIBLE_ROLES_PATH: ./ansible/roles
