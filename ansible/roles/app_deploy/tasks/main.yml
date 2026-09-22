@@ -70,14 +70,30 @@
   command: "docker rm {{ app.name }}"
   ignore_errors: yes
 
+# The image ships a HEALTHCHECK, but plain `docker run` never acts on the resulting
+# "unhealthy" state - `--restart always` only reacts to the process exiting. This container
+# sat unhealthy (memory + stuck scheduler, 2026-09-22 incident) for ~20h without anyone
+# noticing because it carried neither label the docker-autoheal container on this host
+# looks for. kiddo's app_deploy role hit the same gap first - mirroring its labels and
+# shared network here so autoheal actually restarts this container next time.
 - name: "Run new container: {{ app.name }}"
   command: >
     docker run -d
     --name {{ app.name }}
     --restart always
+    --label autoheal.monitor.enable=true
+    --label autoheal.restart.enable=true
     -p "[{{ app.ipv6 }}]:{{ app.port }}:9501"
     --env-file "/tmp/{{ app.name }}.env"
     {{ app.image }}
+
+- name: "Attach container to the shared mikrus network"
+  command: "docker network connect {{ app.shared_network | default('mikrus') }} {{ app.name }}"
+  register: network_connect_result
+  failed_when:
+    - network_connect_result.rc != 0
+    - '"already exists" not in network_connect_result.stderr'
+  changed_when: network_connect_result.rc == 0
 
 - name: "Remove temporary .env file"
   file:
