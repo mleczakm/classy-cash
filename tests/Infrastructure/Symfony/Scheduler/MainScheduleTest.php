@@ -17,7 +17,9 @@ class MainScheduleTest extends TestCase
         $schedule = new MainSchedule(new NullAdapter())
             ->getSchedule();
 
-        self::assertCount(4, $schedule->getRecurringMessages());
+        // ImportTransfersFromMail is disabled (see MainSchedule) until the IMAP stream
+        // timeout bug is fixed - down from 4 recurring messages.
+        self::assertCount(3, $schedule->getRecurringMessages());
 
         self::assertNotNull($schedule->getState());
     }
