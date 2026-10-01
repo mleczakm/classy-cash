@@ -3,7 +3,13 @@ when@prod:
     dsn: '%env(SENTRY_DSN)%'
     register_error_listener: false # Disabled to avoid duplicated Sentry events
     register_error_handler: false # Disabled to avoid duplicated Sentry events, see https://github.com/getsentry/sentry-symfony/pull/687
-    tracing: true
+    tracing:
+      enabled: true
+      # Cache tracing decorates every cache pool with final Traceable* adapters, which
+      # swoole-bundle >= 0.35 tries to pool/proxy under coroutines ("is final and cannot be
+      # proxied") and the prod container fails to compile.
+      cache:
+        enabled: false
     messenger: false # Duplicates Sentry events as it is already managed through Monolog.
     options:
       attach_stacktrace: false # Disabled to avoid stacktrace on pure logs

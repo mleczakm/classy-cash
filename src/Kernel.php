@@ -11,6 +11,9 @@ use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 
 class Kernel extends BaseKernel implements WarmableInterface
 {
-    use MicroKernelTrait;
     use CoroutinesSupportingKernel;
+    use MicroKernelTrait {
+        CoroutinesSupportingKernel::initializeContainer insteadof MicroKernelTrait;
+        CoroutinesSupportingKernel::getContainerBaseClass insteadof MicroKernelTrait;
+    }
 }

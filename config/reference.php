@@ -174,7 +174,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         allow_revalidate?: bool|Param,
  *         stale_while_revalidate?: int|Param,
  *         stale_if_error?: int|Param,
- *         terminate_on_cache_hit?: bool|Param,
+ *         terminate_on_cache_hit?: bool|Param, // Deprecated: Setting the "framework.http_cache.terminate_on_cache_hit.terminate_on_cache_hit" configuration option is deprecated. It will be removed in version 9.0.
  *     },
  *     esi?: bool|array{ // ESI configuration
  *         enabled?: bool|Param, // Default: false
@@ -194,7 +194,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         only_exceptions?: bool|Param, // Default: false
  *         only_main_requests?: bool|Param, // Default: false
  *         dsn?: scalar|Param|null, // Default: "file:%kernel.cache_dir%/profiler"
- *         collect_serializer_data?: true|Param, // Default: true
+ *         collect_serializer_data?: true|Param, // Deprecated: Setting the "framework.profiler.collect_serializer_data.collect_serializer_data" configuration option is deprecated. It will be removed in version 9.0. // Default: true
  *     },
  *     workflows?: bool|array{
  *         enabled?: bool|Param, // Default: false
@@ -346,6 +346,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *             endpoint?: scalar|Param|null, // API endpoint for the NotCompromisedPassword Validator. // Default: null
  *         },
  *         disable_translation?: bool|Param, // Default: false
+ *         property_metadata_existence_check?: bool|Param, // When enabled, validateProperty() and validatePropertyValue() throw an exception if no metadata is found for the given property. // Default: false
  *         auto_mapping?: array<string, array{ // Default: []
  *             services?: list<scalar|Param|null>,
  *         }>,
@@ -402,6 +403,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *             provider?: scalar|Param|null, // Overwrite the setting from the default provider for this adapter.
  *             early_expiration_message_bus?: scalar|Param|null,
  *             clearer?: scalar|Param|null,
+ *             marshaller?: scalar|Param|null, // The marshaller service to use for this pool.
  *         }>,
  *     },
  *     php_errors?: array{ // PHP errors handling configuration
@@ -426,9 +428,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     },
  *     messenger?: bool|array{ // Messenger configuration
  *         enabled?: bool|Param, // Default: true
- *         routing?: array<string, Param|string|array{ // Default: []
- *             senders?: list<scalar|Param|null>,
- *         }>,
+ *         routing?: array<string, Param|string|list<scalar|Param|null>>,
  *         serializer?: array{
  *             default_serializer?: scalar|Param|null, // Service id to use as the default serializer for the transports. // Default: "messenger.transport.native_php_serializer"
  *             symfony_serializer?: array{
@@ -504,7 +504,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *                 enabled?: bool|Param, // Default: false
  *                 cache_pool?: string|Param, // The taggable cache pool to use for storing the responses. // Default: "cache.http_client"
  *                 shared?: bool|Param, // Indicates whether the cache is shared (public) or private. // Default: true
- *                 max_ttl?: int|Param, // The maximum TTL (in seconds) allowed for cached responses. Null means no cap. // Default: null
+ *                 max_ttl?: int|Param, // The maximum TTL (in seconds) allowed for cached responses. // Default: 86400
  *             },
  *             retry_failed?: bool|array{
  *                 enabled?: bool|Param, // Default: false
@@ -520,7 +520,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *                 jitter?: float|Param, // Randomness in percent (between 0 and 1) to apply to the delay. // Default: 0.1
  *             },
  *         },
- *         mock_response_factory?: scalar|Param|null, // The id of the service that should generate mock responses. It should be either an invokable or an iterable.
+ *         mock_response_factory?: scalar|Param|null, // `true` to always return empty 200 responses, or the id of the service to use to generate mock responses - which should be either an invokable or an iterable.
  *         scoped_clients?: array<string, Param|string|array{ // Default: []
  *             scope?: scalar|Param|null, // The regular expression that the request URL must match before adding the other options. When none is provided, the base URI is used instead.
  *             base_uri?: scalar|Param|null, // The URI to resolve relative URLs, following rules in RFC 3985, section 2.
@@ -551,13 +551,14 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *                 md5?: mixed,
  *             },
  *             crypto_method?: scalar|Param|null, // The minimum version of TLS to accept; must be one of STREAM_CRYPTO_METHOD_TLSv*_CLIENT constants.
+ *             mock_response_factory?: scalar|Param|null, // `true` to always return empty 200 responses, `false` to disable mocking, or the id of the service to use to generate mock responses (invokable or iterable).
  *             extra?: array<string, mixed>,
  *             rate_limiter?: scalar|Param|null, // Rate limiter name to use for throttling requests. // Default: null
  *             caching?: bool|array{ // Caching configuration.
  *                 enabled?: bool|Param, // Default: false
  *                 cache_pool?: string|Param, // The taggable cache pool to use for storing the responses. // Default: "cache.http_client"
  *                 shared?: bool|Param, // Indicates whether the cache is shared (public) or private. // Default: true
- *                 max_ttl?: int|Param, // The maximum TTL (in seconds) allowed for cached responses. Null means no cap. // Default: null
+ *                 max_ttl?: int|Param, // The maximum TTL (in seconds) allowed for cached responses. // Default: 86400
  *             },
  *             retry_failed?: bool|array{
  *                 enabled?: bool|Param, // Default: false
@@ -641,6 +642,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *                 interval?: scalar|Param|null, // Configures the rate interval. The value must be a number followed by "second", "minute", "hour", "day", "week" or "month" (or their plural equivalent).
  *                 amount?: int|Param, // Amount of tokens to add each interval. // Default: 1
  *             },
+ *             anchor_at?: scalar|Param|null, // Aligns the "fixed_window" policy to a calendar (e.g. "2024-01-05 00:00:00 UTC" combined with `interval: 1 month` resets the counter on the 5th of each month). UTC if not specified. // Default: null
  *         }>,
  *     },
  *     uid?: bool|array{ // Uid configuration
@@ -650,10 +652,12 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         name_based_uuid_namespace?: scalar|Param|null,
  *         time_based_uuid_version?: 7|6|1|Param, // Default: 7
  *         time_based_uuid_node?: scalar|Param|null,
+ *         uuid47_secret?: scalar|Param|null, // A high-entropy secret used by the "uuid47_transformer" service. Defaults to "kernel.secret". // Default: null
  *     },
  *     html_sanitizer?: bool|array{ // HtmlSanitizer configuration
  *         enabled?: bool|Param, // Default: true
  *         sanitizers?: array<string, array{ // Default: []
+ *             default_action?: "drop"|"block"|"allow"|Param, // Defines how the sanitizer must behave by default.
  *             allow_safe_elements?: bool|Param, // Allows "safe" elements and attributes. // Default: false
  *             allow_static_elements?: bool|Param, // Allows all static elements and attributes from the W3C Sanitizer API standard. // Default: false
  *             allow_elements?: array<string, mixed>,
@@ -677,16 +681,24 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     webhook?: bool|array{ // Webhook configuration
  *         enabled?: bool|Param, // Default: false
  *         message_bus?: scalar|Param|null, // The message bus to use. // Default: "messenger.default_bus"
+ *         event_header_name?: scalar|Param|null, // Default: "Webhook-Event"
+ *         id_header_name?: scalar|Param|null, // Default: "Webhook-Id"
+ *         signature_header_name?: scalar|Param|null, // Default: "Webhook-Signature"
+ *         signing_algorithm?: scalar|Param|null, // Default: "sha256"
  *         routing?: array<string, array{ // Default: []
  *             service?: scalar|Param|null,
- *             secret?: scalar|Param|null, // Default: ""
+ *             secret?: scalar|Param|null, // The secret used to verify incoming request signatures. It must be set in production: with an empty value, requests from any sender are accepted. // Default: ""
  *         }>,
  *     },
- *     remote-event?: bool|array{ // RemoteEvent configuration
+ *     remote_event?: bool|array{ // RemoteEvent configuration
  *         enabled?: bool|Param, // Default: false
  *     },
  *     json_streamer?: bool|array{ // JSON streamer configuration
  *         enabled?: bool|Param, // Default: false
+ *         default_options?: array{
+ *             include_null_properties?: bool|Param, // Encode the properties with null value // Default: false
+ *             ...<string, mixed>
+ *         },
  *     },
  * }
  * @psalm-type DoctrineConfig = array{
@@ -771,8 +783,11 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *                 MultipleActiveResultSets?: bool|Param, // Configuring MultipleActiveResultSets for the pdo_sqlsrv driver
  *                 instancename?: scalar|Param|null, // Optional parameter, complete whether to add the INSTANCE_NAME parameter in the connection. It is generally used to connect to an Oracle RAC server to select the name of a particular instance.
  *                 connectstring?: scalar|Param|null, // Complete Easy Connect connection descriptor, see https://docs.oracle.com/database/121/NETAG/naming.htm.When using this option, you will still need to provide the user and password parameters, but the other parameters will no longer be used. Note that when using this parameter, the getHost and getPort methods from Doctrine\DBAL\Connection will no longer function as expected.
+ *                 ...<string, mixed>
  *             }>,
+ *             ...<string, mixed>
  *         }>,
+ *         ...<string, mixed>
  *     },
  *     orm?: array{
  *         default_entity_manager?: scalar|Param|null,
@@ -807,6 +822,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *                         }>,
  *                     }>,
  *                 }>,
+ *                 ...<string, mixed>
  *             },
  *             connection?: scalar|Param|null,
  *             class_metadata_factory_name?: scalar|Param|null, // Default: "Doctrine\\ORM\\Mapping\\ClassMetadataFactory"
@@ -867,10 +883,12 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *                 class?: scalar|Param|null,
  *                 enabled?: bool|Param, // Default: false
  *                 parameters?: array<string, mixed>,
+ *                 ...<string, mixed>
  *             }>,
  *             identity_generation_preferences?: array<string, scalar|Param|null>,
  *         }>,
  *         resolve_target_entities?: array<string, scalar|Param|null>,
+ *         ...<string, mixed>
  *     },
  * }
  * @psalm-type DebugConfig = array{
@@ -886,6 +904,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         id?: scalar|Param|null,
  *         type?: scalar|Param|null,
  *         value?: mixed,
+ *         ...<string, mixed>
  *     }>,
  *     autoescape_service?: scalar|Param|null, // Default: null
  *     autoescape_service_method?: scalar|Param|null, // Default: null
@@ -1292,6 +1311,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  * }
  * @psalm-type MonologConfig = array{
  *     use_microseconds?: scalar|Param|null, // Default: true
+ *     timezone?: string|Param, // The timezone used for the timestamp of every log record (e.g. "UTC" or "Europe/Paris"). Defaults to the PHP default timezone. // Default: null
  *     channels?: list<scalar|Param|null>,
  *     handlers?: array<string, array{ // Default: []
  *         type?: scalar|Param|null,
@@ -1303,17 +1323,19 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         interactive_only?: bool|Param, // Default: false
  *         app_name?: scalar|Param|null, // Default: null
  *         include_stacktraces?: bool|Param, // Default: false
+ *         base_path?: scalar|Param|null, // Default: null
  *         process_psr_3_messages?: array{
  *             enabled?: bool|Param|null, // Default: null
  *             date_format?: scalar|Param|null,
  *             remove_used_context_fields?: bool|Param,
+ *             ...<string, mixed>
  *         },
  *         path?: scalar|Param|null, // Default: "%kernel.logs_dir%/%kernel.environment%.log"
  *         file_permission?: scalar|Param|null, // Default: null
  *         use_locking?: bool|Param, // Default: false
  *         filename_format?: scalar|Param|null, // Default: "{filename}-{date}"
  *         date_format?: scalar|Param|null, // Default: "Y-m-d"
- *         ident?: scalar|Param|null, // Default: false
+ *         ident?: scalar|Param|null, // Default: "php"
  *         logopts?: scalar|Param|null, // Default: 1
  *         facility?: scalar|Param|null, // Default: "user"
  *         max_files?: scalar|Param|null, // Default: 0
@@ -1350,6 +1372,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         title?: scalar|Param|null, // Default: null
  *         host?: scalar|Param|null, // Default: null
  *         port?: scalar|Param|null, // Default: 514
+ *         rfc?: scalar|Param|null, // Default: 1
  *         config?: list<scalar|Param|null>,
  *         members?: list<scalar|Param|null>,
  *         connection_string?: scalar|Param|null,
@@ -1360,6 +1383,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         connection_timeout?: scalar|Param|null,
  *         persistent?: bool|Param,
  *         message_type?: scalar|Param|null, // Default: 0
+ *         expand_newlines?: bool|Param, // Default: false
  *         parse_mode?: scalar|Param|null, // Default: null
  *         disable_webpage_preview?: bool|Param|null, // Default: null
  *         disable_notification?: bool|Param|null, // Default: null
@@ -1406,7 +1430,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *             database?: scalar|Param|null, // Default: 0
  *             key_name?: scalar|Param|null, // Default: "monolog_redis"
  *         },
- *         predis?: Param|string|array{
+ *         predis?: Param|string|array{ // Deprecated: The "predis" option is deprecated and ignored, use the "redis" option to configure the Predis client.
  *             id?: scalar|Param|null,
  *             host?: scalar|Param|null,
  *         },
@@ -1415,6 +1439,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         subject?: scalar|Param|null,
  *         content_type?: scalar|Param|null, // Default: null
  *         headers?: list<scalar|Param|null>,
+ *         parameters?: list<scalar|Param|null>,
  *         mailer?: scalar|Param|null, // Default: null
  *         email_prototype?: Param|string|array{
  *             id?: scalar|Param|null,
@@ -1430,6 +1455,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         channels?: Param|string|array{
  *             type?: scalar|Param|null,
  *             elements?: list<scalar|Param|null>,
+ *             ...<string, mixed>
  *         },
  *     }>,
  * }
@@ -1455,6 +1481,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *             enabled?: bool|Param, // Default: false
  *             host?: scalar|Param|null, // Default: "0.0.0.0"
  *             port?: scalar|Param|null, // Default: 9200
+ *             ...<string, mixed>
  *         },
  *         healthcheck?: array{ // Liveness endpoint served by a dedicated process, unaffected by worker pool saturation.
  *             enabled?: bool|Param, // Default: false
@@ -1465,6 +1492,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *                 interval?: int|Param, // Seconds between two passes over every registered check. // Default: 5
  *                 staleness_threshold?: int|Param, // Seconds after which a verdict no longer counts as current and the endpoint reports unhealthy. // Default: 15
  *             },
+ *             ...<string, mixed>
  *         },
  *         static?: Param|string|array{
  *             strategy?: "off"|"default"|"advanced"|"auto"|Param, // Default: "auto"
@@ -1523,6 +1551,9 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         commands?: list<Param|string|list<scalar|Param|null>>,
  *     },
  *     platform?: array{
+ *         logging?: array{
+ *             worker_context?: bool|Param, // Adds worker, cid and command to the extra of every monolog record, so a line of a log every worker and every coroutine writes to says which of them wrote it. Off by default, because it changes what every log line looks like. // Default: false
+ *         },
  *         fiber_context?: array{
  *             enabled?: "auto"|"off"|"on"|Param, // Default: "auto"
  *         },
@@ -1589,19 +1620,23 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         enabled?: scalar|Param|null, // Default: true
  *         default_region?: scalar|Param|null, // Default: "ZZ"
  *         format?: \libphonenumber\PhoneNumberFormat::E164|\libphonenumber\PhoneNumberFormat::INTERNATIONAL|\libphonenumber\PhoneNumberFormat::NATIONAL|\libphonenumber\PhoneNumberFormat::RFC3966|Param, // Default: 0
+ *         ...<string, mixed>
  *     },
  *     form?: array{
  *         enabled?: scalar|Param|null, // Default: true
+ *         ...<string, mixed>
  *     },
  *     serializer?: array{
  *         enabled?: scalar|Param|null, // Default: true
  *         default_region?: scalar|Param|null, // Default: "ZZ"
  *         format?: \libphonenumber\PhoneNumberFormat::E164|\libphonenumber\PhoneNumberFormat::INTERNATIONAL|\libphonenumber\PhoneNumberFormat::NATIONAL|\libphonenumber\PhoneNumberFormat::RFC3966|Param, // Default: 0
+ *         ...<string, mixed>
  *     },
  *     validator?: array{
  *         enabled?: scalar|Param|null, // Default: true
  *         default_region?: scalar|Param|null, // Default: "ZZ"
  *         format?: \libphonenumber\PhoneNumberFormat::E164|\libphonenumber\PhoneNumberFormat::INTERNATIONAL|\libphonenumber\PhoneNumberFormat::NATIONAL|\libphonenumber\PhoneNumberFormat::RFC3966|Param, // Default: 1
+ *         ...<string, mixed>
  *     },
  * }
  * @psalm-type ZenstruckFoundryConfig = array{
@@ -1694,6 +1729,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         enabled?: bool|Param, // Default: false
  *         max_silence?: int|Param, // Seconds without a completed tick above which the /health check fails. // Default: 90
  *     },
+ *     ...<string, mixed>
  * }
  * @psalm-type SwooleBundleObservabilityConfig = array{
  *     health_checks?: bool|Param, // Default: true

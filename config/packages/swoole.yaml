@@ -16,8 +16,9 @@ swoole:
     settings:
       # One HTTP worker: with coroutines on it serves all in-flight requests concurrently,
       # and a single process sidesteps the worker_max_request recycle race that took the
-      # site down in kiddo (ESRCH on WORKER_STOP). The service-pool leak that recycling
-      # used to guard against is fixed in the pinned swoole-bundle fork.
+      # site down in kiddo (ESRCH on WORKER_STOP). The service-pool heap leak is fixed
+      # upstream in swoole-bundle >= 0.35.0 (prod ran 0.34.0 and the worker RSS climbed to
+      # ~750 MiB); the memory_usage healthcheck stays as the last-resort backstop.
       worker_count: 1
       # 0 = the HTTP worker is never recycled by request count.
       worker_max_request: 0
@@ -38,7 +39,8 @@ swoole:
       enabled: true
       # This app's traffic never needs anywhere near the bundle's default ceiling of
       # max_coroutines live instances per pooled service; bounding it caps RSS growth.
-      max_concurrency: 50
+      # 25 matches kiddo, where the HTTP worker plateaus ~170 MiB instead of climbing.
+      max_concurrency: 25
       stateful_services:
         # Symfony's form registry keeps a mutable resolution stack; without a
         # coroutine-local instance, concurrent form rendering can falsely report a
