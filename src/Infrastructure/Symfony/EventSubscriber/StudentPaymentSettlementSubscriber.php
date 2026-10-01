@@ -33,6 +33,9 @@ final readonly class StudentPaymentSettlementSubscriber
         private TwigEnvironment $twig,
     ) {}
 
+    /**
+     * @param EnteredEvent<object> $event
+     */
     public function onPaymentEnteredPaid(EnteredEvent $event): void
     {
         $subject = $event->getSubject();
