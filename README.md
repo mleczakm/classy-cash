@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> **To repozytorium zawiera archiwalną wersję Classy Cash w PHP i nie jest już rozwijane.** Projekt jest przepisywany w Go. Aktualny rozwój i nowe repozytoria znajdują się w organizacji [Classy Cash](https://github.com/classy-cash).
+
 ![Classy Cash - Nowoczesne zarządzanie finansami dla skrbnika klasowego](assets/images/classy-cash-banner.png)
 
 [![Build and QA](https://github.com/mleczakm/classy-cash/actions/workflows/build-and-qa.yml/badge.svg)](https://github.com/mleczakm/classy-cash/actions/workflows/build-and-qa.yml)
